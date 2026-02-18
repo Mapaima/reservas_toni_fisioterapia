@@ -390,8 +390,10 @@
 
                 let data = await response.json();
 
-                // Si n8n devuelve un array (común en ciertos nodos), cogemos el primer elemento
+                // --- ROBUSTEZ PARA N8N ---
                 if (Array.isArray(data)) data = data[0];
+                if (data && data.json) data = data.json;
+                // -------------------------
 
                 if (!data || !data.success || !data.slots) throw new Error('No hay horarios disponibles en este momento.');
 
