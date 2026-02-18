@@ -357,8 +357,8 @@
     <script>
         // 🔧 CONFIGURACIÓN - ACTUALIZAR CON TUS URLs FINALES DE N8N
         const CONFIG = {
-            WEBHOOK_GET_SLOTS: 'https://vuestra-url-n8n.host/webhook/slots-disponibles',
-            WEBHOOK_POST_CITA: 'https://vuestra-url-n8n.host/webhook/formulario-cita'
+            WEBHOOK_GET_SLOTS: 'https://mapaima-n8n.1zsf1t.easypanel.host/webhook/openemr-actions',
+            WEBHOOK_POST_CITA: 'https://mapaima-n8n.1zsf1t.easypanel.host/webhook/openemr-actions'
         };
 
         let slotsDisponibles = {};
@@ -380,7 +380,11 @@
         // Cargar slots disponibles
         async function cargarSlots() {
             try {
-                const response = await fetch(CONFIG.WEBHOOK_GET_SLOTS);
+                const response = await fetch(CONFIG.WEBHOOK_GET_SLOTS, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ action: 'get_slots' })
+                });
 
                 if (!response.ok) throw new Error('Error al conectar con el servidor.');
 
@@ -431,6 +435,7 @@
             submitBtn.textContent = 'Enviando...';
 
             const formData = {
+                action: 'create_appointment', // 👈 Indicamos la acción al router de n8n
                 id: remoteJid,
                 nombre: document.getElementById('nombre').value.trim(),
                 email: document.getElementById('email').value.trim(),
