@@ -314,43 +314,41 @@
                     </select>
                 </div>
 
-                <div id="formFields" class="hidden">
-                    <div class="form-group">
-                        <label for="nombre">Nombre completo <span class="required">*</span></label>
-                        <input type="text" id="nombre" name="nombre" required placeholder="Ej. Juan Pérez">
-                    </div>
-
-                    <div class="form-group">
-                        <label for="email">Correo electrónico <span class="required">*</span></label>
-                        <input type="email" id="email" name="email" required placeholder="juan@correo.com">
-                    </div>
-
-                    <div class="form-group">
-                        <label for="telefono">Teléfono <span class="required">*</span></label>
-                        <input type="tel" id="telefono" name="telefono" required placeholder="600 000 000">
-                    </div>
-
-                    <div class="form-group">
-                        <label for="fecha">Fecha <span class="required">*</span></label>
-                        <select id="fecha" name="fecha" required>
-                            <option value="">Selecciona una fecha</option>
-                        </select>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="hora">Hora <span class="required">*</span></label>
-                        <select id="hora" name="hora" required disabled>
-                            <option value="">Primero selecciona una fecha</option>
-                        </select>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="motivo">Motivo consulta <span class="required">*</span></label>
-                        <textarea id="motivo" name="motivo" required placeholder="¿En qué podemos ayudarte?"></textarea>
-                    </div>
-
-                    <button type="submit" id="submitBtn">Confirmar Cita</button>
+                <div class="form-group">
+                    <label for="nombre">Nombre completo <span class="required">*</span></label>
+                    <input type="text" id="nombre" name="nombre" required placeholder="Ej. Juan Pérez">
                 </div>
+
+                <div class="form-group">
+                    <label for="email">Correo electrónico <span class="required">*</span></label>
+                    <input type="email" id="email" name="email" required placeholder="juan@correo.com">
+                </div>
+
+                <div class="form-group">
+                    <label for="telefono">Teléfono <span class="required">*</span></label>
+                    <input type="tel" id="telefono" name="telefono" required placeholder="600 000 000">
+                </div>
+
+                <div class="form-group">
+                    <label for="fecha">Fecha <span class="required">*</span></label>
+                    <select id="fecha" name="fecha" required disabled>
+                        <option value="">Selecciona primero especialista</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="hora">Hora <span class="required">*</span></label>
+                    <select id="hora" name="hora" required disabled>
+                        <option value="">Selecciona primero especialista y día</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="motivo">Motivo consulta <span class="required">*</span></label>
+                    <textarea id="motivo" name="motivo" required placeholder="¿En qué podemos ayudarte?"></textarea>
+                </div>
+
+                <button type="submit" id="submitBtn">Confirmar Cita</button>
             </form>
 
             <!-- Success State -->
@@ -393,8 +391,13 @@
         // Cargar slots disponibles
         async function cargarSlots(especialista) {
             loadingState.classList.remove('hidden');
-            formFields.classList.add('hidden');
             errorState.classList.add('hidden');
+
+            // Reset y Deshabilitar mientras carga
+            selectFecha.disabled = true;
+            selectFecha.innerHTML = '<option value="">Cargando disponibilidad...</option>';
+            selectHora.innerHTML = '<option value="">Selecciona primero especialista y día</option>';
+            selectHora.disabled = true;
 
             try {
                 const response = await fetch(CONFIG.WEBHOOK_GET_SLOTS, {
@@ -417,7 +420,8 @@
                 }
 
                 if (!data || !data.success || !data.slots) {
-                    throw new Error('No hay horarios disponibles para este especialista.');
+                    const debugInfo = JSON.stringify(data || rawData).substring(0, 50);
+                    throw new Error(`Sin respuesta válida del servidor (${debugInfo})`);
                 }
 
                 slotsDisponibles = data.slots;
@@ -432,11 +436,14 @@
                 });
 
                 loadingState.classList.add('hidden');
-                formFields.classList.remove('hidden');
+                selectFecha.disabled = false;
             } catch (error) {
                 loadingState.classList.add('hidden');
                 errorMessage.textContent = error.message;
                 errorState.classList.remove('hidden');
+
+                // Volver al estado inicial si hay error
+                selectFecha.innerHTML = '<option value="">Selecciona primero especialista</option>';
             }
         }
 
@@ -445,7 +452,10 @@
             if (especialista) {
                 cargarSlots(especialista);
             } else {
-                formFields.classList.add('hidden');
+                selectFecha.disabled = true;
+                selectFecha.innerHTML = '<option value="">Selecciona primero especialista</option>';
+                selectHora.disabled = true;
+                selectHora.innerHTML = '<option value="">Selecciona primero especialista y día</option>';
             }
         });
 
