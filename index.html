@@ -10,14 +10,10 @@
         rel="stylesheet">
     <style>
         :root {
-            /* Toni Vercher Premium Palette - Basada en el logo y clínica */
             --primary-color: #ffffff;
-            /* Blanco para contraste */
             --primary-dark: #e2e8f0;
             --secondary-color: #1a1a1a;
-            /* Negro de la fachada */
             --accent-gray: #4a4a4a;
-            /* Gris antracita */
             --background-dark: #121212;
             --surface-color: #1e1e1e;
             --text-primary: #ffffff;
@@ -36,7 +32,6 @@
         body {
             font-family: 'Outfit', sans-serif;
             background-color: var(--background-dark);
-            /* Fondo elegante y sobrio */
             background-image:
                 radial-gradient(circle at 15% 50%, rgba(255, 255, 255, 0.03) 0%, transparent 25%),
                 radial-gradient(circle at 85% 30%, rgba(255, 255, 255, 0.02) 0%, transparent 25%);
@@ -61,7 +56,6 @@
             position: relative;
         }
 
-        /* Barra superior elegante */
         .container::before {
             content: '';
             position: absolute;
@@ -212,7 +206,6 @@
             box-shadow: none;
         }
 
-        /* Estados */
         .loading,
         .error,
         .success {
@@ -264,7 +257,6 @@
             display: none;
         }
 
-        /* Responsive */
         @media (max-width: 480px) {
             .container {
                 border-radius: 0;
@@ -364,10 +356,9 @@
     </div>
 
     <script>
-        // 🔧 CONFIGURACIÓN - ACTUALIZAR CON TUS URLs FINALES DE N8N
+        // 🔧 CONFIGURACIÓN - Tu URL de webhook de n8n
         const CONFIG = {
-            WEBHOOK_GET_SLOTS: 'https://mapaima-n8n.1zsf1t.easypanel.host/webhook/openemr-actions',
-            WEBHOOK_POST_CITA: 'https://mapaima-n8n.1zsf1t.easypanel.host/webhook/openemr-actions'
+            WEBHOOK_URL: 'https://mapaima-n8n.1zsf1t.easypanel.host/webhook/openemr-actions'
         };
 
         let slotsDisponibles = {};
@@ -379,7 +370,6 @@
         const form = document.getElementById('citaForm');
         const successState = document.getElementById('successState');
         const selectEspecialista = document.getElementById('especialista');
-        const formFields = document.getElementById('formFields');
         const selectFecha = document.getElementById('fecha');
         const selectHora = document.getElementById('hora');
         const submitBtn = document.getElementById('submitBtn');
@@ -388,42 +378,62 @@
         const urlParams = new URLSearchParams(window.location.search);
         const remoteJid = urlParams.get('id') || urlParams.get('remoteJid') || '';
 
-        // Cargar slots disponibles
+        // ==========================================
+        // CARGAR SLOTS DISPONIBLES
+        // ==========================================
         async function cargarSlots(especialista) {
             loadingState.classList.remove('hidden');
             errorState.classList.add('hidden');
-
-            // Reset y Deshabilitar mientras carga
             selectFecha.disabled = true;
             selectFecha.innerHTML = '<option value="">Cargando disponibilidad...</option>';
             selectHora.innerHTML = '<option value="">Selecciona primero especialista y día</option>';
             selectHora.disabled = true;
 
             try {
-                const response = await fetch(`${CONFIG.WEBHOOK_GET_SLOTS}?action=get_slots&especialista=${especialista}`, {
-                    method: 'GET'
+                // POST con form-urlencoded (NO genera preflight CORS como application/json)
+                const response = await fetch(CONFIG.WEBHOOK_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body: new URLSearchParams({
+                        action: 'get_slots',
+                        especialista: especialista
+                    })
                 });
 
-                if (!response.ok) throw new Error('Error al conectar con el servidor.');
+                console.log('Response status:', response.status);
 
-                let rawData = await response.json();
-                let data = rawData;
-
-                for (let i = 0; i < 3; i++) {
-                    if (Array.isArray(data) && data.length > 0) data = data[0];
-                    if (data && data.json) data = data.json;
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    console.error('Server error:', errorText);
+                    throw new Error('Error del servidor: ' + response.status);
                 }
 
+                const rawText = await response.text();
+                console.log('Raw response:', rawText);
+
+                let data;
+                try {
+                    data = JSON.parse(rawText);
+                } catch (e) {
+                    throw new Error('Respuesta no válida: ' + rawText.substring(0, 100));
+                }
+
+                // Desempaquetar respuesta de n8n (puede venir anidada)
+                if (Array.isArray(data)) data = data[0];
+                if (data && data.json) data = data.json;
+                if (Array.isArray(data)) data = data[0];
+                if (data && data.json) data = data.json;
+
+                console.log('Parsed data:', data);
+
                 if (!data || !data.success || !data.slots) {
-                    const debugInfo = JSON.stringify(data || rawData).substring(0, 50);
-                    throw new Error(`Sin respuesta válida del servidor (${debugInfo})`);
+                    throw new Error('Sin horarios disponibles. Respuesta: ' + JSON.stringify(data).substring(0, 80));
                 }
 
                 slotsDisponibles = data.slots;
                 selectFecha.innerHTML = '<option value="">Selecciona una fecha</option>';
 
-                const fechas = Object.keys(slotsDisponibles).sort();
-                fechas.forEach(fecha => {
+                Object.keys(slotsDisponibles).sort().forEach(fecha => {
                     const option = document.createElement('option');
                     option.value = fecha;
                     option.textContent = formatearFecha(fecha);
@@ -432,16 +442,19 @@
 
                 loadingState.classList.add('hidden');
                 selectFecha.disabled = false;
+
             } catch (error) {
+                console.error('Error completo:', error);
                 loadingState.classList.add('hidden');
                 errorMessage.textContent = error.message;
                 errorState.classList.remove('hidden');
-
-                // Volver al estado inicial si hay error
                 selectFecha.innerHTML = '<option value="">Selecciona primero especialista</option>';
             }
         }
 
+        // ==========================================
+        // EVENTOS
+        // ==========================================
         selectEspecialista.addEventListener('change', function () {
             const especialista = this.value;
             if (especialista) {
@@ -453,9 +466,6 @@
                 selectHora.innerHTML = '<option value="">Selecciona primero especialista y día</option>';
             }
         });
-
-        // Ya no cargamos slots al inicio, esperamos a elegir especialista
-        // cargarSlots(); 
 
         selectFecha.addEventListener('change', function () {
             const fecha = this.value;
@@ -474,27 +484,24 @@
 
         form.addEventListener('submit', async function (e) {
             e.preventDefault();
-
             submitBtn.disabled = true;
             submitBtn.textContent = 'Enviando...';
 
-            const formData = {
-                action: 'create_appointment', // 👈 Indicamos la acción al router de n8n
-                especialista: document.getElementById('especialista').value,
-                id: remoteJid,
-                nombre: document.getElementById('nombre').value.trim(),
-                email: document.getElementById('email').value.trim(),
-                telefono: document.getElementById('telefono').value.trim(),
-                fecha: document.getElementById('fecha').value,
-                hora: document.getElementById('hora').value,
-                motivo: document.getElementById('motivo').value.trim()
-            };
-
             try {
-                const response = await fetch(CONFIG.WEBHOOK_POST_CITA, {
+                const response = await fetch(CONFIG.WEBHOOK_URL, {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(formData)
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body: new URLSearchParams({
+                        action: 'create_appointment',
+                        especialista: selectEspecialista.value,
+                        id: remoteJid,
+                        nombre: document.getElementById('nombre').value.trim(),
+                        email: document.getElementById('email').value.trim(),
+                        telefono: document.getElementById('telefono').value.trim(),
+                        fecha: selectFecha.value,
+                        hora: selectHora.value,
+                        motivo: document.getElementById('motivo').value.trim()
+                    })
                 });
 
                 if (!response.ok) throw new Error();
@@ -508,6 +515,9 @@
             }
         });
 
+        // ==========================================
+        // UTILIDADES
+        // ==========================================
         function formatearFecha(fecha) {
             const [year, month, day] = fecha.split('-');
             const fechaObj = new Date(year, month - 1, day);
@@ -515,10 +525,6 @@
             const meses = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
             return `${dias[fechaObj.getDay()]}, ${parseInt(day)} de ${meses[fechaObj.getMonth()]}`;
         }
-
-
-        // Ya no cargamos nada al inicio, el flujo empieza cuando se elige especialista
-        // cargarSlots();
     </script>
 </body>
 
