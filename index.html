@@ -288,7 +288,7 @@
 
         <div class="content">
             <!-- Loading State -->
-            <div id="loadingState">
+            <div id="loadingState" class="hidden">
                 <div class="loading">
                     <div class="spinner"></div>
                     <p style="opacity: 0.7;">Consultando disponibilidad...</p>
@@ -400,13 +400,8 @@
             selectHora.disabled = true;
 
             try {
-                const response = await fetch(CONFIG.WEBHOOK_GET_SLOTS, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        action: 'get_slots',
-                        especialista: especialista
-                    })
+                const response = await fetch(`${CONFIG.WEBHOOK_GET_SLOTS}?action=get_slots&especialista=${especialista}`, {
+                    method: 'GET'
                 });
 
                 if (!response.ok) throw new Error('Error al conectar con el servidor.');
