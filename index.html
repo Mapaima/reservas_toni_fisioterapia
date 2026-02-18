@@ -388,14 +388,24 @@
 
                 if (!response.ok) throw new Error('Error al conectar con el servidor.');
 
-                let data = await response.json();
+                let rawData = await response.json();
+                console.log('Datos raw de n8n:', rawData);
 
-                // --- ROBUSTEZ PARA N8N ---
-                if (Array.isArray(data)) data = data[0];
-                if (data && data.json) data = data.json;
-                // -------------------------
+                let data = rawData;
 
-                if (!data || !data.success || !data.slots) throw new Error('No hay horarios disponibles en este momento.');
+                // Desenvolver cualquier estructura de n8n (puede venir en arrays o con la clave 'json')
+                // Hacemos esto varias veces por si viene anidado: [{json: [...]}]
+                for (let i = 0; i < 3; i++) {
+                    if (Array.isArray(data) && data.length > 0) data = data[0];
+                    if (data && data.json) data = data.json;
+                }
+
+                console.log('Datos procesados:', data);
+
+                if (!data || !data.success || !data.slots) {
+                    console.error('Estructura de datos no válida:', data);
+                    throw new Error('Error de formato en los datos recibidos.');
+                }
 
                 slotsDisponibles = data.slots;
 
