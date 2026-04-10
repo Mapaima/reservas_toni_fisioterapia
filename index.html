@@ -332,11 +332,29 @@
                 </div>
 
                 <div class="form-group">
+                    <label for="tratamiento">Tratamiento <span class="required">*</span></label>
+                    <select id="tratamiento" name="tratamiento" required>
+                        <option value="">Selecciona un tratamiento</option>
+                        <option value="sesion_fisioterapia">Sesión de Fisioterapia</option>
+                        <option value="bomba">Bomba</option>
+                        <option value="combinado">Combinado</option>
+                    </select>
+                </div>
+
+                <div id="bomba-info" class="hidden" style="background: rgba(255,255,255,0.05); padding: 15px; border-radius: 14px; margin-bottom: 24px; border: 1px solid rgba(255,255,255,0.1);">
+                    <p style="font-size: 14px; margin-bottom: 10px; line-height: 1.5; color: #ddd;">
+                        <strong>Aviso sobre la Bomba:</strong> La sesión de bomba habitualmente la asigna Toni después de una o varias sesiones previas de fisioterapia. Por favor, asegúrate de que es esto lo que necesitas reservar.
+                    </p>
+                    <label style="display: flex; align-items: flex-start; cursor: pointer; text-transform: none; font-size: 14px; line-height: 1.4;">
+                        <input type="checkbox" id="acepta-bomba" name="acepta_bomba" style="width: auto; margin-top: 3px; margin-right: 12px; accent-color: white;">
+                        Comprendo y acepto las condiciones. Confirmo que quiero reservar este tratamiento.
+                    </label>
+                </div>
+
+                <div class="form-group">
                     <label for="especialista">Especialista <span class="required">*</span></label>
-                    <select id="especialista" name="especialista" required>
-                        <option value="">Selecciona un profesional</option>
-                        <option value="toni">Toni Vercher (Fisioterapia)</option>
-                        <option value="patri">Patri Gomez (Fisioterapia)</option>
+                    <select id="especialista" name="especialista" required disabled>
+                        <option value="">Selecciona primero un tratamiento</option>
                     </select>
                 </div>
 
@@ -388,10 +406,29 @@
         const errorMessage = document.getElementById('errorMessage');
         const form = document.getElementById('citaForm');
         const successState = document.getElementById('successState');
+        const selectTratamiento = document.getElementById('tratamiento');
         const selectEspecialista = document.getElementById('especialista');
+        const bombaInfo = document.getElementById('bomba-info');
+        const aceptaBomba = document.getElementById('acepta-bomba');
         const selectFecha = document.getElementById('fecha');
         const selectHora = document.getElementById('hora');
         const submitBtn = document.getElementById('submitBtn');
+
+        // Mapa de especialistas vinculables
+        const especialistasPorTratamiento = {
+            'sesion_fisioterapia': [
+                { value: 'toni', text: 'Toni Vercher (Fisioterapia)' },
+                { value: 'patri', text: 'Patri Gómez (Fisioterapia)' }
+            ],
+            'bomba': [
+                { value: 'oscar', text: 'Óscar Tormo (Enfermero)' },
+                { value: 'laura', text: 'Laura Bas (Enfermera)' }
+            ],
+            'combinado': [
+                { value: 'toni', text: 'Toni Vercher (Fisioterapia)' },
+                { value: 'patri', text: 'Patri Gómez (Fisioterapia)' }
+            ]
+        };
 
         // Obtener ID/remoteJid de la URL
         const urlParams = new URLSearchParams(window.location.search);
@@ -415,7 +452,8 @@
                     headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
                     body: new URLSearchParams({
                         action: 'get_slots',
-                        especialista: especialista
+                        especialista: especialista,
+                        tratamiento: selectTratamiento.value
                     })
                 });
 
@@ -474,6 +512,42 @@
         // ==========================================
         // EVENTOS
         // ==========================================
+        selectTratamiento.addEventListener('change', function () {
+            const tratamiento = this.value;
+            
+            // Mostrar texto de la bomba
+            if (tratamiento === 'bomba' || tratamiento === 'combinado') {
+                bombaInfo.classList.remove('hidden');
+                aceptaBomba.required = true;
+            } else {
+                bombaInfo.classList.add('hidden');
+                aceptaBomba.required = false;
+                aceptaBomba.checked = false;
+            }
+
+            // Actualizar especialistas disponibles
+            selectEspecialista.innerHTML = '<option value="">Selecciona un profesional</option>';
+            
+            if (tratamiento && especialistasPorTratamiento[tratamiento]) {
+                selectEspecialista.disabled = false;
+                especialistasPorTratamiento[tratamiento].forEach(esp => {
+                    const option = document.createElement('option');
+                    option.value = esp.value;
+                    option.textContent = esp.text;
+                    selectEspecialista.appendChild(option);
+                });
+            } else {
+                selectEspecialista.disabled = true;
+                selectEspecialista.innerHTML = '<option value="">Selecciona primero un tratamiento</option>';
+            }
+
+            // Limpiar fecha y hora
+            selectFecha.disabled = true;
+            selectFecha.innerHTML = '<option value="">Selecciona primero especialista</option>';
+            selectHora.disabled = true;
+            selectHora.innerHTML = '<option value="">Selecciona primero especialista y día</option>';
+        });
+
         selectEspecialista.addEventListener('change', function () {
             const especialista = this.value;
             if (especialista) {
@@ -520,6 +594,7 @@
                         genero: document.getElementById('genero').value,
                         email: document.getElementById('email').value.trim(),
                         telefono: document.getElementById('telefono').value.trim(),
+                        tratamiento: selectTratamiento.value,
                         fecha: selectFecha.value,
                         hora: selectHora.value,
                         motivo: document.getElementById('motivo').value.trim()
