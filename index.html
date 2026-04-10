@@ -342,7 +342,7 @@
                 </div>
 
                 <div id="bomba-info" class="hidden" style="background: rgba(255,255,255,0.05); padding: 15px; border-radius: 14px; margin-bottom: 24px; border: 1px solid rgba(255,255,255,0.1);">
-                    <p style="font-size: 14px; margin-bottom: 10px; line-height: 1.5; color: #ddd;">
+                    <p id="bomba-text" style="font-size: 14px; margin-bottom: 10px; line-height: 1.5; color: #ddd;">
                         <strong>Aviso sobre la Bomba:</strong> La sesión de bomba habitualmente la asigna Toni después de una o varias sesiones previas de fisioterapia. Por favor, asegúrate de que es esto lo que necesitas reservar.
                     </p>
                     <label style="display: flex; align-items: flex-start; cursor: pointer; text-transform: none; font-size: 14px; line-height: 1.4;">
@@ -409,6 +409,7 @@
         const selectTratamiento = document.getElementById('tratamiento');
         const selectEspecialista = document.getElementById('especialista');
         const bombaInfo = document.getElementById('bomba-info');
+        const bombaText = document.getElementById('bomba-text');
         const aceptaBomba = document.getElementById('acepta-bomba');
         const selectFecha = document.getElementById('fecha');
         const selectHora = document.getElementById('hora');
@@ -512,41 +513,61 @@
         // ==========================================
         // EVENTOS
         // ==========================================
+        function actualizarEspecialistas() {
+            const tratamiento = selectTratamiento.value;
+            const requiereAceptacion = tratamiento === 'bomba' || tratamiento === 'combinado';
+            const haAceptado = aceptaBomba.checked;
+
+            selectEspecialista.innerHTML = '<option value="">Selecciona un profesional</option>';
+            
+            if (tratamiento && especialistasPorTratamiento[tratamiento]) {
+                if (requiereAceptacion && !haAceptado) {
+                    selectEspecialista.disabled = true;
+                    selectEspecialista.innerHTML = '<option value="">Acepta la condición primero</option>';
+                } else {
+                    selectEspecialista.disabled = false;
+                    especialistasPorTratamiento[tratamiento].forEach(esp => {
+                        const option = document.createElement('option');
+                        option.value = esp.value;
+                        option.textContent = esp.text;
+                        selectEspecialista.appendChild(option);
+                    });
+                }
+            } else {
+                selectEspecialista.disabled = true;
+                selectEspecialista.innerHTML = '<option value="">Selecciona primero un tratamiento</option>';
+            }
+
+            // Al cambiar los especialistas o tratamientos, bloqueamos la fecha
+            selectFecha.disabled = true;
+            selectFecha.innerHTML = '<option value="">Selecciona primero especialista</option>';
+            selectHora.disabled = true;
+            selectHora.innerHTML = '<option value="">Selecciona primero especialista y día</option>';
+        }
+
         selectTratamiento.addEventListener('change', function () {
             const tratamiento = this.value;
             
-            // Mostrar texto de la bomba
-            if (tratamiento === 'bomba' || tratamiento === 'combinado') {
+            if (tratamiento === 'bomba') {
                 bombaInfo.classList.remove('hidden');
+                bombaText.innerHTML = '<strong>Aviso sobre la Bomba:</strong> La sesión de bomba habitualmente la asigna Toni después de una o varias sesiones previas de fisioterapia. Por favor, asegúrate de que es esto lo que necesitas reservar.';
                 aceptaBomba.required = true;
+                aceptaBomba.checked = false; // Forzar a volver a aceptar
+            } else if (tratamiento === 'combinado') {
+                bombaInfo.classList.remove('hidden');
+                bombaText.innerHTML = '<strong>Aviso Tratamiento Combinado:</strong> El tratamiento combinado consiste en fisioterapia + bomba. La sesión de bomba habitualmente la asigna Toni después de una o varias sesiones previas de fisioterapia. Por favor, asegúrate de que es esto lo que necesitas reservar.';
+                aceptaBomba.required = true;
+                aceptaBomba.checked = false; // Forzar a volver a aceptar
             } else {
                 bombaInfo.classList.add('hidden');
                 aceptaBomba.required = false;
                 aceptaBomba.checked = false;
             }
 
-            // Actualizar especialistas disponibles
-            selectEspecialista.innerHTML = '<option value="">Selecciona un profesional</option>';
-            
-            if (tratamiento && especialistasPorTratamiento[tratamiento]) {
-                selectEspecialista.disabled = false;
-                especialistasPorTratamiento[tratamiento].forEach(esp => {
-                    const option = document.createElement('option');
-                    option.value = esp.value;
-                    option.textContent = esp.text;
-                    selectEspecialista.appendChild(option);
-                });
-            } else {
-                selectEspecialista.disabled = true;
-                selectEspecialista.innerHTML = '<option value="">Selecciona primero un tratamiento</option>';
-            }
-
-            // Limpiar fecha y hora
-            selectFecha.disabled = true;
-            selectFecha.innerHTML = '<option value="">Selecciona primero especialista</option>';
-            selectHora.disabled = true;
-            selectHora.innerHTML = '<option value="">Selecciona primero especialista y día</option>';
+            actualizarEspecialistas();
         });
+
+        aceptaBomba.addEventListener('change', actualizarEspecialistas);
 
         selectEspecialista.addEventListener('change', function () {
             const especialista = this.value;
