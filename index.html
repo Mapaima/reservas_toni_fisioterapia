@@ -267,6 +267,83 @@
                 padding: 0;
             }
         }
+
+        /* --- Modal Lista de Espera --- */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(5px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .modal-content {
+            background: var(--surface-color);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            width: 90%;
+            max-width: 450px;
+            padding: 30px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+            transform: translateY(20px);
+            transition: transform 0.3s ease;
+        }
+
+        .modal-overlay.active .modal-content {
+            transform: translateY(0);
+        }
+
+        .modal-header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .modal-header h3 {
+            font-size: 22px;
+            color: white;
+            margin-bottom: 10px;
+        }
+
+        .modal-header p {
+            color: var(--text-secondary);
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            font-size: 24px;
+            cursor: pointer;
+            box-shadow: none;
+            padding: 0;
+            width: auto;
+            margin: 0;
+        }
+
+        .modal-close:hover {
+            color: white;
+            transform: none;
+            background: none;
+        }
     </style>
 </head>
 
@@ -293,6 +370,14 @@
                     <p style="margin-bottom: 5px;"><strong>⚠️ Vaya, algo ha fallado</strong></p>
                     <p id="errorMessage" style="opacity: 0.8; font-size: 0.9em;"></p>
                 </div>
+            </div>
+
+            <!-- Waitlist Alert State -->
+            <div id="waitlistAlert" class="hidden" style="background: rgba(255, 165, 0, 0.05); border: 1px solid rgba(255, 165, 0, 0.3); border-radius: 16px; padding: 25px; margin-bottom: 25px; text-align: center;">
+                <p id="waitlistMessage" style="font-size: 15px; line-height: 1.6; color: #f0f0f0; margin-bottom: 15px;">
+                    Lo sentimos, en este momento no hay sesiones disponibles con este especialista. Selecciona otro especialista o únete a la lista de espera y te avisaremos cuando quede un hueco libre.
+                </p>
+                <button type="button" id="btnOpenWaitlist" style="background: transparent; border: 2px solid white; color: white; padding: 12px; font-size: 14px; margin-top: 0;">Unirse a lista de espera</button>
             </div>
 
             <!-- Form -->
@@ -392,6 +477,36 @@
         </div>
     </div>
 
+    <!-- Modal Lista Espera -->
+    <div class="modal-overlay" id="waitlistModal">
+        <div class="modal-content">
+            <button class="modal-close" id="closeWaitlist">×</button>
+            <div class="modal-header">
+                <h3>📝 Lista de Espera</h3>
+                <p>Déjanos tus datos y te avisaremos en cuanto se libere un hueco para ti.</p>
+            </div>
+            <form id="waitlistForm">
+                <div class="form-group" style="margin-bottom: 15px;">
+                    <label>Nombre</label>
+                    <input type="text" id="wl_nombre" required placeholder="Tu nombre">
+                </div>
+                <div class="form-group" style="margin-bottom: 15px;">
+                    <label>Apellidos</label>
+                    <input type="text" id="wl_apellidos" required placeholder="Tus apellidos">
+                </div>
+                <div class="form-group" style="margin-bottom: 15px;">
+                    <label>Teléfono</label>
+                    <input type="tel" id="wl_telefono" required placeholder="Tú móvil para WhatsApp">
+                </div>
+                <div class="form-group" style="margin-bottom: 20px;">
+                    <label>Email</label>
+                    <input type="email" id="wl_email" required placeholder="Tu correo electrónico">
+                </div>
+                <button type="submit" id="btnSubmitWaitlist" style="margin-top: 0;">Apuntarme a la lista</button>
+            </form>
+        </div>
+    </div>
+
     <script>
         // 🔧 CONFIGURACIÓN - Tu URL de webhook de n8n
         const CONFIG = {
@@ -488,18 +603,41 @@
                     throw new Error('Sin horarios disponibles. Respuesta: ' + JSON.stringify(data).substring(0, 80));
                 }
 
-                slotsDisponibles = data.slots;
-                selectFecha.innerHTML = '<option value="">Selecciona una fecha</option>';
+                // ---------- ¡TRUCO DE HACKER ACTIVO! ---------
+                // data.slots son los verdaderos que manda n8n.
+                // Como le forzamos a tragarse unas llaves vacías {},
+                // simulará que TODOS los dias están 100% llenos.
+                
+                slotsDisponibles = {}; // <--- AQUÍ ESTÁ LA MAGIA PARA PROBAR LA LISTA DE ESPERA
+                // slotsDisponibles = data.slots; // <--- ESTO ES LO QUE ESTABA ANTES
+                // ---------------------------------------------
+                
+                const arrayFechas = Object.keys(slotsDisponibles).sort();
 
-                Object.keys(slotsDisponibles).sort().forEach(fecha => {
-                    const option = document.createElement('option');
-                    option.value = fecha;
-                    option.textContent = formatearFecha(fecha);
-                    selectFecha.appendChild(option);
-                });
-
+                if (arrayFechas.length === 0) {
+                    // MODO LISTA DE ESPERA - No hay huecos
+                    const espName = selectEspecialista.options[selectEspecialista.selectedIndex].text.split(' ')[0];
+                    document.getElementById('waitlistMessage').innerHTML = `Lo sentimos, en este momento no hay sesiones disponibles con <strong>${espName}</strong>. Selecciona otro especialista o únete a la lista de espera y te avisaremos cuando quede un hueco libre.`;
+                    
+                    form.classList.add('hidden');
+                    document.getElementById('waitlistAlert').classList.remove('hidden');
+                } else {
+                    // MODO NORMAL - Hay huecos
+                    document.getElementById('waitlistAlert').classList.add('hidden');
+                    form.classList.remove('hidden');
+                    
+                    selectFecha.innerHTML = '<option value="">Selecciona una fecha</option>';
+                    arrayFechas.forEach(fecha => {
+                        const option = document.createElement('option');
+                        option.value = fecha;
+                        option.textContent = formatearFecha(fecha);
+                        selectFecha.appendChild(option);
+                    });
+                    
+                    selectFecha.disabled = false;
+                }
+                
                 loadingState.classList.add('hidden');
-                selectFecha.disabled = false;
 
             } catch (error) {
                 console.error('Error completo:', error);
@@ -630,6 +768,66 @@
                 alert('Hubo un error al procesar tu cita. Por favor, inténtalo de nuevo.');
                 submitBtn.disabled = false;
                 submitBtn.textContent = 'Confirmar Cita';
+            }
+        });
+
+        // ==========================================
+        // LISTA DE ESPERA EVENTOS
+        // ==========================================
+        const waitlistModal = document.getElementById('waitlistModal');
+        
+        document.getElementById('btnOpenWaitlist').addEventListener('click', () => {
+            // Pre-rellenar con lo que el usuario ya hubiera escrito por no hacerle teclear dos veces
+            document.getElementById('wl_nombre').value = document.getElementById('nombre').value;
+            document.getElementById('wl_apellidos').value = document.getElementById('apellidos').value;
+            document.getElementById('wl_telefono').value = document.getElementById('telefono').value;
+            document.getElementById('wl_email').value = document.getElementById('email').value;
+            
+            waitlistModal.classList.add('active');
+        });
+
+        document.getElementById('closeWaitlist').addEventListener('click', () => {
+            waitlistModal.classList.remove('active');
+        });
+
+        document.getElementById('waitlistForm').addEventListener('submit', async function (e) {
+            e.preventDefault();
+            const btn = document.getElementById('btnSubmitWaitlist');
+            btn.disabled = true;
+            btn.textContent = 'Apuntando...';
+
+            try {
+                const response = await fetch(CONFIG.WEBHOOK_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body: new URLSearchParams({
+                        action: 'join_waitlist',
+                        especialista: selectEspecialista.value,
+                        tratamiento: selectTratamiento.value,
+                        nombre: document.getElementById('wl_nombre').value.trim(),
+                        apellidos: document.getElementById('wl_apellidos').value.trim(),
+                        telefono: document.getElementById('wl_telefono').value.trim(),
+                        email: document.getElementById('wl_email').value.trim()
+                    })
+                });
+
+                if (!response.ok) throw new Error();
+
+                waitlistModal.classList.remove('active');
+                document.getElementById('waitlistAlert').classList.add('hidden');
+                
+                successState.innerHTML = `
+                    <div class="success">
+                        <div class="success-icon">📝</div>
+                        <h2 style="margin-bottom: 15px;">¡Apuntado a la lista!</h2>
+                        <p style="color: var(--text-secondary); line-height: 1.6;">Te avisaremos al instante en cuanto se libere un hueco para ti.</p>
+                    </div>
+                `;
+                successState.classList.remove('hidden');
+            } catch (error) {
+                alert('Hubo un error al apuntarte. Por favor, inténtalo de nuevo.');
+                btn.disabled = false;
+                btn.textContent = 'Apuntarme a la lista';
             }
         });
 
