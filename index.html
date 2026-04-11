@@ -611,14 +611,7 @@
                     throw new Error('Sin horarios disponibles. Respuesta: ' + JSON.stringify(data).substring(0, 80));
                 }
 
-                // ---------- ¡TRUCO DE HACKER ACTIVO! ---------
-                // data.slots son los verdaderos que manda n8n.
-                // Como le forzamos a tragarse unas llaves vacías {},
-                // simulará que TODOS los dias están 100% llenos.
-                
-                slotsDisponibles = {}; // <--- AQUÍ ESTÁ LA MAGIA PARA PROBAR LA LISTA DE ESPERA
-                // slotsDisponibles = data.slots; // <--- ESTO ES LO QUE ESTABA ANTES
-                // ---------------------------------------------
+                slotsDisponibles = data.slots;
                 
                 const arrayFechas = Object.keys(slotsDisponibles).sort();
 
