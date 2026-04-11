@@ -372,14 +372,6 @@
                 </div>
             </div>
 
-            <!-- Waitlist Alert State -->
-            <div id="waitlistAlert" class="hidden" style="background: rgba(255, 165, 0, 0.05); border: 1px solid rgba(255, 165, 0, 0.3); border-radius: 16px; padding: 25px; margin-bottom: 25px; text-align: center;">
-                <p id="waitlistMessage" style="font-size: 15px; line-height: 1.6; color: #f0f0f0; margin-bottom: 15px;">
-                    Lo sentimos, en este momento no hay sesiones disponibles con este especialista. Selecciona otro especialista o únete a la lista de espera y te avisaremos cuando quede un hueco libre.
-                </p>
-                <button type="button" id="btnOpenWaitlist" style="background: transparent; border: 2px solid white; color: white; padding: 12px; font-size: 14px; margin-top: 0;">Unirse a lista de espera</button>
-            </div>
-
             <!-- Form -->
             <form id="citaForm">
                 <div class="form-group">
@@ -443,21 +435,29 @@
                     </select>
                 </div>
 
-                <div class="form-group">
+                <!-- Waitlist Alert State (MUDADO AQUÍ DENTRO) -->
+                <div id="waitlistAlert" class="hidden" style="background: rgba(255, 165, 0, 0.05); border: 1px solid rgba(255, 165, 0, 0.3); border-radius: 16px; padding: 25px; margin-bottom: 25px; text-align: center;">
+                    <p id="waitlistMessage" style="font-size: 15px; line-height: 1.6; color: #f0f0f0; margin-bottom: 15px;">
+                        Lo sentimos, en este momento no hay sesiones disponibles con este especialista. Selecciona otro especialista o únete a la lista de espera y te avisaremos cuando quede un hueco libre.
+                    </p>
+                    <button type="button" id="btnOpenWaitlist" style="background: transparent; border: 2px solid white; color: white; padding: 12px; font-size: 14px; margin-top: 0;">Unirse a lista de espera</button>
+                </div>
+
+                <div class="form-group" id="grupo-fecha">
                     <label for="fecha">Fecha <span class="required">*</span></label>
                     <select id="fecha" name="fecha" required disabled>
                         <option value="">Selecciona primero especialista</option>
                     </select>
                 </div>
 
-                <div class="form-group">
+                <div class="form-group" id="grupo-hora">
                     <label for="hora">Hora <span class="required">*</span></label>
                     <select id="hora" name="hora" required disabled>
                         <option value="">Selecciona primero especialista y día</option>
                     </select>
                 </div>
 
-                <div class="form-group">
+                <div class="form-group" id="grupo-motivo">
                     <label for="motivo">Motivo consulta <span class="required">*</span></label>
                     <textarea id="motivo" name="motivo" required placeholder="¿En qué podemos ayudarte?"></textarea>
                 </div>
@@ -556,6 +556,14 @@
         async function cargarSlots(especialista) {
             loadingState.classList.remove('hidden');
             errorState.classList.add('hidden');
+            
+            // Restablecer vistas por si estaban ocultas por la alerta
+            document.getElementById('waitlistAlert').classList.add('hidden');
+            document.getElementById('grupo-fecha').classList.remove('hidden');
+            document.getElementById('grupo-hora').classList.remove('hidden');
+            document.getElementById('grupo-motivo').classList.remove('hidden');
+            submitBtn.classList.remove('hidden');
+            
             selectFecha.disabled = true;
             selectFecha.innerHTML = '<option value="">Cargando disponibilidad...</option>';
             selectHora.innerHTML = '<option value="">Selecciona primero especialista y día</option>';
@@ -619,12 +627,20 @@
                     const espName = selectEspecialista.options[selectEspecialista.selectedIndex].text.split(' ')[0];
                     document.getElementById('waitlistMessage').innerHTML = `Lo sentimos, en este momento no hay sesiones disponibles con <strong>${espName}</strong>. Selecciona otro especialista o únete a la lista de espera y te avisaremos cuando quede un hueco libre.`;
                     
-                    form.classList.add('hidden');
+                    // Ocultamos las partes de abajo del formulario sin ocultar los campos de arriba
+                    document.getElementById('grupo-fecha').classList.add('hidden');
+                    document.getElementById('grupo-hora').classList.add('hidden');
+                    document.getElementById('grupo-motivo').classList.add('hidden');
+                    submitBtn.classList.add('hidden');
+                    
                     document.getElementById('waitlistAlert').classList.remove('hidden');
                 } else {
                     // MODO NORMAL - Hay huecos
                     document.getElementById('waitlistAlert').classList.add('hidden');
-                    form.classList.remove('hidden');
+                    document.getElementById('grupo-fecha').classList.remove('hidden');
+                    document.getElementById('grupo-hora').classList.remove('hidden');
+                    document.getElementById('grupo-motivo').classList.remove('hidden');
+                    submitBtn.classList.remove('hidden');
                     
                     selectFecha.innerHTML = '<option value="">Selecciona una fecha</option>';
                     arrayFechas.forEach(fecha => {
@@ -729,119 +745,3 @@
                     const option = document.createElement('option');
                     option.value = hora;
                     option.textContent = hora;
-                    selectHora.appendChild(option);
-                });
-            }
-        });
-
-        form.addEventListener('submit', async function (e) {
-            e.preventDefault();
-            submitBtn.disabled = true;
-            submitBtn.textContent = 'Enviando...';
-
-            try {
-                const response = await fetch(CONFIG.WEBHOOK_URL, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                    body: new URLSearchParams({
-                        action: 'create_appointment',
-                        especialista: selectEspecialista.value,
-                        id: remoteJid,
-                        nombre: document.getElementById('nombre').value.trim(),
-                        apellidos: document.getElementById('apellidos').value.trim(),
-                        fechaNacimiento: document.getElementById('fechaNacimiento').value,
-                        genero: document.getElementById('genero').value,
-                        email: document.getElementById('email').value.trim(),
-                        telefono: document.getElementById('telefono').value.trim(),
-                        tratamiento: selectTratamiento.value,
-                        fecha: selectFecha.value,
-                        hora: selectHora.value,
-                        motivo: document.getElementById('motivo').value.trim()
-                    })
-                });
-
-                if (!response.ok) throw new Error();
-
-                form.classList.add('hidden');
-                successState.classList.remove('hidden');
-            } catch (error) {
-                alert('Hubo un error al procesar tu cita. Por favor, inténtalo de nuevo.');
-                submitBtn.disabled = false;
-                submitBtn.textContent = 'Confirmar Cita';
-            }
-        });
-
-        // ==========================================
-        // LISTA DE ESPERA EVENTOS
-        // ==========================================
-        const waitlistModal = document.getElementById('waitlistModal');
-        
-        document.getElementById('btnOpenWaitlist').addEventListener('click', () => {
-            // Pre-rellenar con lo que el usuario ya hubiera escrito por no hacerle teclear dos veces
-            document.getElementById('wl_nombre').value = document.getElementById('nombre').value;
-            document.getElementById('wl_apellidos').value = document.getElementById('apellidos').value;
-            document.getElementById('wl_telefono').value = document.getElementById('telefono').value;
-            document.getElementById('wl_email').value = document.getElementById('email').value;
-            
-            waitlistModal.classList.add('active');
-        });
-
-        document.getElementById('closeWaitlist').addEventListener('click', () => {
-            waitlistModal.classList.remove('active');
-        });
-
-        document.getElementById('waitlistForm').addEventListener('submit', async function (e) {
-            e.preventDefault();
-            const btn = document.getElementById('btnSubmitWaitlist');
-            btn.disabled = true;
-            btn.textContent = 'Apuntando...';
-
-            try {
-                const response = await fetch(CONFIG.WEBHOOK_URL, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                    body: new URLSearchParams({
-                        action: 'join_waitlist',
-                        especialista: selectEspecialista.value,
-                        tratamiento: selectTratamiento.value,
-                        nombre: document.getElementById('wl_nombre').value.trim(),
-                        apellidos: document.getElementById('wl_apellidos').value.trim(),
-                        telefono: document.getElementById('wl_telefono').value.trim(),
-                        email: document.getElementById('wl_email').value.trim()
-                    })
-                });
-
-                if (!response.ok) throw new Error();
-
-                waitlistModal.classList.remove('active');
-                document.getElementById('waitlistAlert').classList.add('hidden');
-                
-                successState.innerHTML = `
-                    <div class="success">
-                        <div class="success-icon">📝</div>
-                        <h2 style="margin-bottom: 15px;">¡Apuntado a la lista!</h2>
-                        <p style="color: var(--text-secondary); line-height: 1.6;">Te avisaremos al instante en cuanto se libere un hueco para ti.</p>
-                    </div>
-                `;
-                successState.classList.remove('hidden');
-            } catch (error) {
-                alert('Hubo un error al apuntarte. Por favor, inténtalo de nuevo.');
-                btn.disabled = false;
-                btn.textContent = 'Apuntarme a la lista';
-            }
-        });
-
-        // ==========================================
-        // UTILIDADES
-        // ==========================================
-        function formatearFecha(fecha) {
-            const [year, month, day] = fecha.split('-');
-            const fechaObj = new Date(year, month - 1, day);
-            const dias = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
-            const meses = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
-            return `${dias[fechaObj.getDay()]}, ${parseInt(day)} de ${meses[fechaObj.getMonth()]}`;
-        }
-    </script>
-</body>
-
-</html>
