@@ -254,7 +254,7 @@
         }
 
         .hidden {
-            display: none;
+            display: none !important;
         }
 
         @media (max-width: 480px) {
@@ -672,6 +672,7 @@
             const requiereAceptacion = tratamiento === 'bomba' || tratamiento === 'combinado';
             const haAceptado = aceptaBomba.checked;
 
+            const anteriorSeleccion = selectEspecialista.value;
             selectEspecialista.innerHTML = '<option value="">Selecciona un profesional</option>';
             
             if (tratamiento && especialistasPorTratamiento[tratamiento]) {
@@ -697,6 +698,12 @@
             selectFecha.innerHTML = '<option value="">Selecciona primero especialista</option>';
             selectHora.disabled = true;
             selectHora.innerHTML = '<option value="">Selecciona primero especialista y día</option>';
+            
+            document.getElementById('waitlistAlert').classList.add('hidden');
+            document.getElementById('grupo-fecha').classList.remove('hidden');
+            document.getElementById('grupo-hora').classList.remove('hidden');
+            document.getElementById('grupo-motivo').classList.remove('hidden');
+            submitBtn.classList.remove('hidden');
         }
 
         selectTratamiento.addEventListener('change', function () {
@@ -732,6 +739,11 @@
                 selectFecha.innerHTML = '<option value="">Selecciona primero especialista</option>';
                 selectHora.disabled = true;
                 selectHora.innerHTML = '<option value="">Selecciona primero especialista y día</option>';
+                document.getElementById('waitlistAlert').classList.add('hidden');
+                document.getElementById('grupo-fecha').classList.remove('hidden');
+                document.getElementById('grupo-hora').classList.remove('hidden');
+                document.getElementById('grupo-motivo').classList.remove('hidden');
+                submitBtn.classList.remove('hidden');
             }
         });
 
@@ -745,3 +757,121 @@
                     const option = document.createElement('option');
                     option.value = hora;
                     option.textContent = hora;
+                    selectHora.appendChild(option);
+                });
+            }
+        });
+
+        form.addEventListener('submit', async function (e) {
+            e.preventDefault();
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Enviando...';
+
+            try {
+                const response = await fetch(CONFIG.WEBHOOK_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body: new URLSearchParams({
+                        action: 'create_appointment',
+                        especialista: selectEspecialista.value,
+                        id: remoteJid,
+                        nombre: document.getElementById('nombre').value.trim(),
+                        apellidos: document.getElementById('apellidos').value.trim(),
+                        fechaNacimiento: document.getElementById('fechaNacimiento').value,
+                        genero: document.getElementById('genero').value,
+                        email: document.getElementById('email').value.trim(),
+                        telefono: document.getElementById('telefono').value.trim(),
+                        tratamiento: selectTratamiento.value,
+                        fecha: selectFecha.value,
+                        hora: selectHora.value,
+                        motivo: document.getElementById('motivo').value.trim()
+                    })
+                });
+
+                if (!response.ok) throw new Error();
+
+                form.classList.add('hidden');
+                successState.classList.remove('hidden');
+            } catch (error) {
+                alert('Hubo un error al procesar tu cita. Por favor, inténtalo de nuevo.');
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Confirmar Cita';
+            }
+        });
+
+        // ==========================================
+        // LISTA DE ESPERA EVENTOS
+        // ==========================================
+        const waitlistModal = document.getElementById('waitlistModal');
+        
+        document.getElementById('btnOpenWaitlist').addEventListener('click', () => {
+            // Pre-rellenar con lo que el usuario ya hubiera escrito por no hacerle teclear dos veces
+            document.getElementById('wl_nombre').value = document.getElementById('nombre').value;
+            document.getElementById('wl_apellidos').value = document.getElementById('apellidos').value;
+            document.getElementById('wl_telefono').value = document.getElementById('telefono').value;
+            document.getElementById('wl_email').value = document.getElementById('email').value;
+            
+            waitlistModal.classList.add('active');
+        });
+
+        document.getElementById('closeWaitlist').addEventListener('click', () => {
+            waitlistModal.classList.remove('active');
+        });
+
+        document.getElementById('waitlistForm').addEventListener('submit', async function (e) {
+            e.preventDefault();
+            const btn = document.getElementById('btnSubmitWaitlist');
+            btn.disabled = true;
+            btn.textContent = 'Apuntando...';
+
+            try {
+                const response = await fetch(CONFIG.WEBHOOK_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body: new URLSearchParams({
+                        action: 'join_waitlist',
+                        especialista: selectEspecialista.value,
+                        tratamiento: selectTratamiento.value,
+                        nombre: document.getElementById('wl_nombre').value.trim(),
+                        apellidos: document.getElementById('wl_apellidos').value.trim(),
+                        telefono: document.getElementById('wl_telefono').value.trim(),
+                        email: document.getElementById('wl_email').value.trim()
+                    })
+                });
+
+                // NO COMPROBAMOS response.ok AHORA PORQUE ES DE MENTIRA EN EL NODO
+                // Si quisieramos comprobarlo: if (!response.ok) throw new Error();
+
+                waitlistModal.classList.remove('active');
+                document.getElementById('waitlistAlert').classList.add('hidden');
+                form.classList.add('hidden'); // Ocultar form si tiene éxito apuntarse
+                
+                successState.innerHTML = `
+                    <div class="success">
+                        <div class="success-icon">📝</div>
+                        <h2 style="margin-bottom: 15px;">¡Apuntado a la lista!</h2>
+                        <p style="color: var(--text-secondary); line-height: 1.6;">Te avisaremos al instante en cuanto se libere un hueco para ti.</p>
+                    </div>
+                `;
+                successState.classList.remove('hidden');
+            } catch (error) {
+                alert('Hubo un error al apuntarte. Por favor, inténtalo de nuevo.');
+                btn.disabled = false;
+                btn.textContent = 'Apuntarme a la lista';
+            }
+        });
+
+        // ==========================================
+        // UTILIDADES
+        // ==========================================
+        function formatearFecha(fecha) {
+            const [year, month, day] = fecha.split('-');
+            const fechaObj = new Date(year, month - 1, day);
+            const dias = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
+            const meses = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
+            return `${dias[fechaObj.getDay()]}, ${parseInt(day)} de ${meses[fechaObj.getMonth()]}`;
+        }
+    </script>
+</body>
+
+</html>
