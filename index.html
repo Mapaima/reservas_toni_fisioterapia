@@ -792,20 +792,26 @@
             submitBtn.textContent = 'Verificando seguridad...';
 
             try {
-                // 2. Verificación reCAPTCHA v3
+                // 2. Verificación reCAPTCHA v3 (A prueba de bloqueos)
                 const recaptchaToken = await new Promise((resolve) => {
                     if (typeof grecaptcha === 'undefined') {
-                        resolve('sin_recaptcha_cargado'); // Por si usan bloqueador de scripts
+                        resolve('sin_recaptcha_cargado'); 
                     } else {
                         grecaptcha.ready(function() {
-                            grecaptcha.execute('TU_CLAVE_DE_SITIO_RECAPTCHA', {action: 'submit'})
-                                .then(function(token) { resolve(token); })
-                                .catch(function(err) { resolve('error_generando_token'); });
+                            try {
+                                grecaptcha.execute('6LcOYLcsAAAAAJChTMzGai-FB2hI2IpbT6IxlBzZ', {action: 'submit'})
+                                    .then(function(token) { resolve(token); })
+                                    .catch(function(err) { resolve('error_generando_token'); });
+                            } catch (error) {
+                                console.error("Error de configuración de reCAPTCHA:", error);
+                                resolve('error_sintaxis_recaptcha');
+                            }
                         });
                     }
                 });
 
                 submitBtn.textContent = 'Enviando...';
+
 
                 const response = await fetch(CONFIG.WEBHOOK_URL, {
                     method: 'POST',
