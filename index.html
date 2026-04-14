@@ -484,6 +484,15 @@
                 </div>
             </div>
         </div>
+    <!-- Modal Alerta Seguridad -->
+    <div class="modal-overlay" id="securityModal">
+        <div class="modal-content" style="text-align: center;">
+            <button class="modal-close" onclick="document.getElementById('securityModal').classList.remove('active')">×</button>
+            <div style="font-size: 50px; margin-bottom: 15px;">🛑</div>
+            <h3 style="color: white; margin-bottom: 15px; font-size: 22px;">Reserva Bloqueada</h3>
+            <p id="securityMessage" style="color: var(--text-secondary); line-height: 1.6; margin-bottom: 25px;"></p>
+            <button onclick="document.getElementById('securityModal').classList.remove('active')" style="margin-top: 0;">Entendido</button>
+        </div>
     </div>
 
     <!-- Modal Lista Espera -->
@@ -841,7 +850,8 @@
                 
                 // Si el servidor rechaza (ej: +2 citas, o bot)
                 if (data.success === false) {
-                    alert('Aviso: ' + (data.message || 'No se pudo reservar la cita.'));
+                    document.getElementById('securityMessage').textContent = data.message || 'No se pudo reservar la cita.';
+                    document.getElementById('securityModal').classList.add('active');
                     submitBtn.disabled = false;
                     submitBtn.textContent = 'Confirmar Cita';
                     return;
