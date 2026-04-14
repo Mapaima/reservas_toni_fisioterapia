@@ -8,6 +8,8 @@
     <!-- Google Fonts: Outfit -->
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap"
         rel="stylesheet">
+    <!-- reCAPTCHA v3 -->
+    <script src="https://www.google.com/recaptcha/api.js?render=TU_CLAVE_DE_SITIO_RECAPTCHA"></script>
     <style>
         :root {
             --primary-color: #ffffff;
@@ -462,6 +464,13 @@
                     <textarea id="motivo" name="motivo" required placeholder="¿En qué podemos ayudarte?"></textarea>
                 </div>
 
+                <div id="waitlistOptionalAlert" class="hidden" style="margin-bottom: 20px; text-align: center;">
+                    <p style="font-size: 14px; color: var(--text-secondary);">¿Las fechas disponibles son muy lejanas?<br><a href="#" id="btnOpenWaitlistOptional" style="color: white; text-decoration: underline;">Únete a nuestra lista de espera</a> y te avisaremos si se adelanta una cita.</p>
+                </div>
+
+                <!-- HONEYPOT (Filtro anti-bot) -->
+                <input type="text" name="website_hp" id="website_hp" style="display:none !important" tabindex="-1" autocomplete="off">
+
                 <button type="submit" id="submitBtn">Confirmar Cita</button>
             </form>
 
@@ -502,6 +511,14 @@
                     <label>Email</label>
                     <input type="email" id="wl_email" required placeholder="Tu correo electrónico">
                 </div>
+                
+                <div class="form-group" style="margin-bottom: 20px;">
+                    <label style="display: flex; align-items: flex-start; cursor: pointer; text-transform: none; font-size: 14px; line-height: 1.4;">
+                        <input type="checkbox" id="wl_cualquiera" style="width: auto; margin-top: 3px; margin-right: 12px; accent-color: white;">
+                        Me da igual el especialista, apuntadme para el primer hueco que quede libre (con cualquier profesional).
+                    </label>
+                </div>
+
                 <button type="submit" id="btnSubmitWaitlist" style="margin-top: 0;">Apuntarme a la lista</button>
             </form>
         </div>
@@ -529,6 +546,7 @@
         const selectFecha = document.getElementById('fecha');
         const selectHora = document.getElementById('hora');
         const submitBtn = document.getElementById('submitBtn');
+        const waitlistOptionalAlert = document.getElementById('waitlistOptionalAlert');
 
         // Mapa de especialistas vinculables
         const especialistasPorTratamiento = {
@@ -557,11 +575,12 @@
             loadingState.classList.remove('hidden');
             errorState.classList.add('hidden');
             
-            // Restablecer vistas por si estaban ocultas por la alerta
+            // Restablecer vistas cada vez que cargamos
             document.getElementById('waitlistAlert').classList.add('hidden');
             document.getElementById('grupo-fecha').classList.remove('hidden');
             document.getElementById('grupo-hora').classList.remove('hidden');
             document.getElementById('grupo-motivo').classList.remove('hidden');
+            waitlistOptionalAlert.classList.add('hidden');
             submitBtn.classList.remove('hidden');
             
             selectFecha.disabled = true;
@@ -624,6 +643,7 @@
                     document.getElementById('grupo-fecha').classList.add('hidden');
                     document.getElementById('grupo-hora').classList.add('hidden');
                     document.getElementById('grupo-motivo').classList.add('hidden');
+                    waitlistOptionalAlert.classList.add('hidden');
                     submitBtn.classList.add('hidden');
                     
                     document.getElementById('waitlistAlert').classList.remove('hidden');
@@ -633,6 +653,7 @@
                     document.getElementById('grupo-fecha').classList.remove('hidden');
                     document.getElementById('grupo-hora').classList.remove('hidden');
                     document.getElementById('grupo-motivo').classList.remove('hidden');
+                    waitlistOptionalAlert.classList.remove('hidden');
                     submitBtn.classList.remove('hidden');
                     
                     selectFecha.innerHTML = '<option value="">Selecciona una fecha</option>';
@@ -696,6 +717,7 @@
             document.getElementById('grupo-fecha').classList.remove('hidden');
             document.getElementById('grupo-hora').classList.remove('hidden');
             document.getElementById('grupo-motivo').classList.remove('hidden');
+            waitlistOptionalAlert.classList.add('hidden');
             submitBtn.classList.remove('hidden');
         }
 
@@ -736,6 +758,7 @@
                 document.getElementById('grupo-fecha').classList.remove('hidden');
                 document.getElementById('grupo-hora').classList.remove('hidden');
                 document.getElementById('grupo-motivo').classList.remove('hidden');
+                waitlistOptionalAlert.classList.add('hidden');
                 submitBtn.classList.remove('hidden');
             }
         });
@@ -757,15 +780,40 @@
 
         form.addEventListener('submit', async function (e) {
             e.preventDefault();
+
+            // 1. Verificación Honeypot (Filtro Anti-bot pasivo)
+            const hpFieldValue = document.getElementById('website_hp').value;
+            if (hpFieldValue !== '') {
+                console.warn('Bot detectado interceptado.');
+                return; // Fallo silencioso para no dar pistas al bot
+            }
+
             submitBtn.disabled = true;
-            submitBtn.textContent = 'Enviando...';
+            submitBtn.textContent = 'Verificando seguridad...';
 
             try {
+                // 2. Verificación reCAPTCHA v3
+                const recaptchaToken = await new Promise((resolve) => {
+                    if (typeof grecaptcha === 'undefined') {
+                        resolve('sin_recaptcha_cargado'); // Por si usan bloqueador de scripts
+                    } else {
+                        grecaptcha.ready(function() {
+                            grecaptcha.execute('TU_CLAVE_DE_SITIO_RECAPTCHA', {action: 'submit'})
+                                .then(function(token) { resolve(token); })
+                                .catch(function(err) { resolve('error_generando_token'); });
+                        });
+                    }
+                });
+
+                submitBtn.textContent = 'Enviando...';
+
                 const response = await fetch(CONFIG.WEBHOOK_URL, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
                     body: new URLSearchParams({
                         action: 'create_appointment',
+                        recaptcha_token: recaptchaToken,
+                        website_hp: hpFieldValue,
                         especialista: selectEspecialista.value,
                         id: remoteJid,
                         nombre: document.getElementById('nombre').value.trim(),
@@ -781,7 +829,17 @@
                     })
                 });
 
-                if (!response.ok) throw new Error();
+                if (!response.ok) throw new Error('Error de conexión.');
+
+                const data = await response.json();
+                
+                // Si el servidor rechaza (ej: +2 citas, o bot)
+                if (data.success === false) {
+                    alert('Aviso: ' + (data.message || 'No se pudo reservar la cita.'));
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = 'Confirmar Cita';
+                    return;
+                }
 
                 form.classList.add('hidden');
                 successState.classList.remove('hidden');
@@ -797,15 +855,24 @@
         // ==========================================
         const waitlistModal = document.getElementById('waitlistModal');
         
-        document.getElementById('btnOpenWaitlist').addEventListener('click', () => {
-            // Pre-rellenar con lo que el usuario ya hubiera escrito por no hacerle teclear dos veces
+        function openWaitlist() {
             document.getElementById('wl_nombre').value = document.getElementById('nombre').value;
             document.getElementById('wl_apellidos').value = document.getElementById('apellidos').value;
             document.getElementById('wl_telefono').value = document.getElementById('telefono').value;
             document.getElementById('wl_email').value = document.getElementById('email').value;
+            // Limpiar el checkbox por defecto por si habían entrado antes y lo habían modificado
+            document.getElementById('wl_cualquiera').checked = false;
             
             waitlistModal.classList.add('active');
-        });
+        }
+        
+        document.getElementById('btnOpenWaitlist').addEventListener('click', openWaitlist);
+        if (document.getElementById('btnOpenWaitlistOptional')) {
+            document.getElementById('btnOpenWaitlistOptional').addEventListener('click', function(e) {
+                e.preventDefault();
+                openWaitlist();
+            });
+        }
 
         document.getElementById('closeWaitlist').addEventListener('click', () => {
             waitlistModal.classList.remove('active');
@@ -823,7 +890,7 @@
                     headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
                     body: new URLSearchParams({
                         action: 'join_waitlist',
-                        especialista: selectEspecialista.value,
+                        especialista: document.getElementById('wl_cualquiera').checked ? 'cualquiera' : selectEspecialista.value,
                         tratamiento: selectTratamiento.value,
                         nombre: document.getElementById('wl_nombre').value.trim(),
                         apellidos: document.getElementById('wl_apellidos').value.trim(),
