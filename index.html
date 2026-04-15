@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Agendar Cita | Toni Vercher Fisioterapia</title>
+    <title>TEST (Huecos Llenos) | Toni Vercher Fisioterapia</title>
     <!-- Google Fonts: Outfit -->
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap"
         rel="stylesheet">
@@ -23,6 +23,23 @@
             --glass-border: rgba(255, 255, 255, 0.1);
             --glass-bg: rgba(30, 30, 30, 0.85);
             --accent-glow: rgba(255, 255, 255, 0.15);
+        }
+
+        /* Indicador de Modo Test */
+        body::after {
+            content: '🧪 MODO TEST: HUECOS COMPLETOS ACTIVADO';
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            background: #ff9800;
+            color: black;
+            padding: 5px 15px;
+            font-size: 12px;
+            font-weight: bold;
+            border-radius: 20px;
+            z-index: 9999;
+            pointer-events: none;
+            box-shadow: 0 0 15px rgba(255, 152, 0, 0.5);
         }
 
         * {
@@ -539,6 +556,9 @@
             WEBHOOK_URL: 'https://mapaima-n8n.1zsf1t.easypanel.host/webhook/openemr-actions'
         };
 
+        // 🧪 MODO TEST: Simula que todos los huecos están completos
+        const TEST_MODE_COMPLETO = true;
+
         let slotsDisponibles = {};
 
         // Elementos del DOM
@@ -598,48 +618,55 @@
             selectHora.disabled = true;
 
             try {
-                // POST con form-urlencoded (NO genera preflight CORS como application/json)
-                const response = await fetch(CONFIG.WEBHOOK_URL, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                    body: new URLSearchParams({
-                        action: 'get_slots',
-                        especialista: especialista,
-                        tratamiento: selectTratamiento.value
-                    })
-                });
+                // 🧪 MODO TEST: Simula huecos completos sin llamar al webhook
+                if (TEST_MODE_COMPLETO) {
+                    console.warn('🧪 TEST_MODE_COMPLETO activo: simulando que no hay huecos disponibles');
+                    await new Promise(r => setTimeout(r, 600)); // Simula latencia
+                    slotsDisponibles = {};
+                } else {
+                    // POST con form-urlencoded (NO genera preflight CORS como application/json)
+                    const response = await fetch(CONFIG.WEBHOOK_URL, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                        body: new URLSearchParams({
+                            action: 'get_slots',
+                            especialista: especialista,
+                            tratamiento: selectTratamiento.value
+                        })
+                    });
 
-                console.log('Response status:', response.status);
+                    console.log('Response status:', response.status);
 
-                if (!response.ok) {
-                    const errorText = await response.text();
-                    console.error('Server error:', errorText);
-                    throw new Error('Error del servidor: ' + response.status);
+                    if (!response.ok) {
+                        const errorText = await response.text();
+                        console.error('Server error:', errorText);
+                        throw new Error('Error del servidor: ' + response.status);
+                    }
+
+                    const rawText = await response.text();
+                    console.log('Raw response:', rawText);
+
+                    let data;
+                    try {
+                        data = JSON.parse(rawText);
+                    } catch (e) {
+                        throw new Error('Respuesta no válida: ' + rawText.substring(0, 100));
+                    }
+
+                    // Desempaquetar respuesta de n8n (puede venir anidada)
+                    if (Array.isArray(data)) data = data[0];
+                    if (data && data.json) data = data.json;
+                    if (Array.isArray(data)) data = data[0];
+                    if (data && data.json) data = data.json;
+
+                    console.log('Parsed data:', data);
+
+                    if (!data || !data.success || !data.slots) {
+                        throw new Error('Sin horarios disponibles. Respuesta: ' + JSON.stringify(data).substring(0, 80));
+                    }
+
+                    slotsDisponibles = data.slots;
                 }
-
-                const rawText = await response.text();
-                console.log('Raw response:', rawText);
-
-                let data;
-                try {
-                    data = JSON.parse(rawText);
-                } catch (e) {
-                    throw new Error('Respuesta no válida: ' + rawText.substring(0, 100));
-                }
-
-                // Desempaquetar respuesta de n8n (puede venir anidada)
-                if (Array.isArray(data)) data = data[0];
-                if (data && data.json) data = data.json;
-                if (Array.isArray(data)) data = data[0];
-                if (data && data.json) data = data.json;
-
-                console.log('Parsed data:', data);
-
-                if (!data || !data.success || !data.slots) {
-                    throw new Error('Sin horarios disponibles. Respuesta: ' + JSON.stringify(data).substring(0, 80));
-                }
-
-                slotsDisponibles = data.slots;
                 
                 const arrayFechas = Object.keys(slotsDisponibles).sort();
 
