@@ -358,8 +358,8 @@
         }
 
         .waitlist-optional-card.checked {
-            border-color: rgba(255, 255, 255, 0.3);
-            background: rgba(255, 255, 255, 0.06);
+            border-color: rgba(59, 130, 246, 0.4);
+            background: rgba(59, 130, 246, 0.05);
         }
 
         .wl-check-label {
@@ -375,6 +375,40 @@
             margin-bottom: 0;
         }
 
+        /* Checkbox personalizado con tick azul */
+        .wl-check-input {
+            appearance: none;
+            -webkit-appearance: none;
+            width: 20px;
+            height: 20px;
+            min-width: 20px;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            border-radius: 6px;
+            background: transparent;
+            cursor: pointer;
+            position: relative;
+            transition: all 0.2s ease;
+            margin-top: 2px;
+        }
+
+        .wl-check-input:checked {
+            background: #3b82f6;
+            border-color: #3b82f6;
+            box-shadow: 0 0 10px rgba(59, 130, 246, 0.35);
+        }
+
+        .wl-check-input:checked::after {
+            content: '✓';
+            position: absolute;
+            color: white;
+            font-size: 12px;
+            font-weight: 800;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            line-height: 1;
+        }
+
         .wl-pref-section {
             margin-top: 15px;
             padding-top: 15px;
@@ -384,9 +418,42 @@
         .wl-pref-section > p {
             font-size: 13px;
             color: var(--text-secondary);
-            margin-bottom: 12px;
+            margin-bottom: 10px;
         }
 
+        /* Radio personalizado con punto azul */
+        .wl-radio-input {
+            appearance: none;
+            -webkit-appearance: none;
+            width: 18px;
+            height: 18px;
+            min-width: 18px;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            background: transparent;
+            cursor: pointer;
+            position: relative;
+            transition: all 0.2s ease;
+        }
+
+        .wl-radio-input:checked {
+            border-color: #3b82f6;
+        }
+
+        .wl-radio-input:checked::after {
+            content: '';
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            background: #3b82f6;
+            border-radius: 50%;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            box-shadow: 0 0 6px rgba(59, 130, 246, 0.6);
+        }
+
+        /* Labels del radio como mini-cards que se iluminan al seleccionar */
         .wl-pref-label {
             display: flex;
             align-items: center;
@@ -396,8 +463,18 @@
             font-size: 14px;
             line-height: 1.5;
             letter-spacing: 0;
-            color: #d0d0d0;
-            margin-bottom: 8px;
+            color: rgba(255, 255, 255, 0.4);
+            margin-bottom: 6px;
+            padding: 8px 10px;
+            border-radius: 8px;
+            border: 1px solid transparent;
+            transition: all 0.2s ease;
+        }
+
+        .wl-pref-label:has(input:checked) {
+            color: white;
+            background: rgba(59, 130, 246, 0.08);
+            border-color: rgba(59, 130, 246, 0.3);
         }
 
         .wl-pref-label:last-child { margin-bottom: 0; }
@@ -543,17 +620,17 @@
                 <!-- Opción: Apuntarse también a la lista de espera al reservar (Escenario 2) -->
                 <div id="waitlistOptionalSection" class="hidden waitlist-optional-card">
                     <label class="wl-check-label">
-                        <input type="checkbox" id="also_waitlist" style="width: auto; margin-top: 3px; accent-color: white; flex-shrink: 0;">
+                        <input type="checkbox" id="also_waitlist" class="wl-check-input">
                         <span>⏰ <strong>¿Las fechas disponibles son lejanas?</strong> Apúntame también a la lista de espera por si se libera un hueco antes.</span>
                     </label>
                     <div id="waitlistPrefSection" class="wl-pref-section hidden">
                         <p>Si se libera un hueco, ¿con quién quieres que sea?</p>
                         <label class="wl-pref-label">
-                            <input type="radio" name="waitlist_pref" value="especialista" style="width: auto; accent-color: white;" checked>
+                            <input type="radio" name="waitlist_pref" value="especialista" class="wl-radio-input" checked>
                             Solo con <strong id="waitlistPrefEspName">el especialista seleccionado</strong>
                         </label>
                         <label class="wl-pref-label">
-                            <input type="radio" name="waitlist_pref" value="cualquiera" style="width: auto; accent-color: white;">
+                            <input type="radio" name="waitlist_pref" value="cualquiera" class="wl-radio-input">
                             Con cualquier profesional disponible
                         </label>
                     </div>
