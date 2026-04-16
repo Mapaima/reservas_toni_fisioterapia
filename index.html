@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TEST (Huecos Llenos) | Toni Vercher Fisioterapia</title>
+    <title>Agendar Cita | Toni Vercher Fisioterapia</title>
     <!-- Google Fonts: Outfit -->
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap"
         rel="stylesheet">
@@ -23,23 +23,6 @@
             --glass-border: rgba(255, 255, 255, 0.1);
             --glass-bg: rgba(30, 30, 30, 0.85);
             --accent-glow: rgba(255, 255, 255, 0.15);
-        }
-
-        /* Indicador de Modo Test */
-        body::after {
-            content: '🧪 MODO TEST: HUECOS COMPLETOS ACTIVADO';
-            position: fixed;
-            top: 10px;
-            right: 10px;
-            background: #ff9800;
-            color: black;
-            padding: 5px 15px;
-            font-size: 12px;
-            font-weight: bold;
-            border-radius: 20px;
-            z-index: 9999;
-            pointer-events: none;
-            box-shadow: 0 0 15px rgba(255, 152, 0, 0.5);
         }
 
         * {
@@ -363,6 +346,82 @@
             transform: none;
             background: none;
         }
+
+        /* --- Sección Lista de Espera Opcional (cuando hay huecos disponibles) --- */
+        .waitlist-optional-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 14px;
+            padding: 18px 20px;
+            margin-bottom: 24px;
+            transition: border-color 0.3s ease, background 0.3s ease;
+        }
+
+        .waitlist-optional-card.checked {
+            border-color: rgba(255, 255, 255, 0.3);
+            background: rgba(255, 255, 255, 0.06);
+        }
+
+        .wl-check-label {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            cursor: pointer;
+            text-transform: none;
+            font-size: 14px;
+            line-height: 1.5;
+            color: #d0d0d0;
+            letter-spacing: 0;
+            margin-bottom: 0;
+        }
+
+        .wl-pref-section {
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .wl-pref-section > p {
+            font-size: 13px;
+            color: var(--text-secondary);
+            margin-bottom: 12px;
+        }
+
+        .wl-pref-label {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            text-transform: none;
+            font-size: 14px;
+            line-height: 1.5;
+            letter-spacing: 0;
+            color: #d0d0d0;
+            margin-bottom: 8px;
+        }
+
+        .wl-pref-label:last-child { margin-bottom: 0; }
+
+        .btn-solo-espera {
+            background: transparent !important;
+            border: 1px solid rgba(255, 255, 255, 0.15) !important;
+            color: rgba(255, 255, 255, 0.5) !important;
+            padding: 13px !important;
+            font-size: 13px !important;
+            font-weight: 500 !important;
+            letter-spacing: 0.5px !important;
+            margin-top: 8px !important;
+            box-shadow: none !important;
+            text-transform: none !important;
+        }
+
+        .btn-solo-espera:hover:not(:disabled) {
+            border-color: rgba(255, 255, 255, 0.35) !important;
+            color: rgba(255, 255, 255, 0.85) !important;
+            transform: none !important;
+            box-shadow: none !important;
+            background: rgba(255, 255, 255, 0.04) !important;
+        }
     </style>
 </head>
 
@@ -481,14 +540,35 @@
                     <textarea id="motivo" name="motivo" required placeholder="¿En qué podemos ayudarte?"></textarea>
                 </div>
 
-                <div id="waitlistOptionalAlert" class="hidden" style="margin-bottom: 20px; text-align: center;">
-                    <p style="font-size: 14px; color: var(--text-secondary);">¿Las fechas disponibles son muy lejanas?<br><a href="#" id="btnOpenWaitlistOptional" style="color: white; text-decoration: underline;">Únete a nuestra lista de espera</a> y te avisaremos si se adelanta una cita.</p>
+                <!-- Opción: Apuntarse también a la lista de espera al reservar (Escenario 2) -->
+                <div id="waitlistOptionalSection" class="hidden waitlist-optional-card">
+                    <label class="wl-check-label">
+                        <input type="checkbox" id="also_waitlist" style="width: auto; margin-top: 3px; accent-color: white; flex-shrink: 0;">
+                        <span>⏰ <strong>¿Las fechas disponibles son lejanas?</strong> Apúntame también a la lista de espera por si se libera un hueco antes.</span>
+                    </label>
+                    <div id="waitlistPrefSection" class="wl-pref-section hidden">
+                        <p>Si se libera un hueco, ¿con quién quieres que sea?</p>
+                        <label class="wl-pref-label">
+                            <input type="radio" name="waitlist_pref" value="especialista" style="width: auto; accent-color: white;" checked>
+                            Solo con <strong id="waitlistPrefEspName">el especialista seleccionado</strong>
+                        </label>
+                        <label class="wl-pref-label">
+                            <input type="radio" name="waitlist_pref" value="cualquiera" style="width: auto; accent-color: white;">
+                            Con cualquier profesional disponible
+                        </label>
+                    </div>
                 </div>
 
                 <!-- HONEYPOT (Filtro anti-bot) -->
                 <input type="text" name="website_hp" id="website_hp" style="display:none !important" tabindex="-1" autocomplete="off">
 
                 <button type="submit" id="submitBtn">Confirmar Cita</button>
+
+                <!-- Opción: Solo unirse a lista de espera sin reservar (Escenario 3) -->
+                <div id="soloListaEsperaSection" class="hidden" style="text-align: center;">
+                    <p style="font-size: 13px; color: var(--text-secondary); margin-bottom: 0; margin-top: 5px;">¿Ninguna fecha te viene bien?</p>
+                    <button type="button" id="btnSoloListaEspera" class="btn-solo-espera">Unirme solo a la lista de espera →</button>
+                </div>
             </form>
 
             <!-- Success State -->
@@ -556,9 +636,6 @@
             WEBHOOK_URL: 'https://mapaima-n8n.1zsf1t.easypanel.host/webhook/openemr-actions'
         };
 
-        // 🧪 MODO TEST: Simula que todos los huecos están completos
-        const TEST_MODE_COMPLETO = true;
-
         let slotsDisponibles = {};
 
         // Elementos del DOM
@@ -575,7 +652,8 @@
         const selectFecha = document.getElementById('fecha');
         const selectHora = document.getElementById('hora');
         const submitBtn = document.getElementById('submitBtn');
-        const waitlistOptionalAlert = document.getElementById('waitlistOptionalAlert');
+        const waitlistOptionalSection = document.getElementById('waitlistOptionalSection');
+        const soloListaEsperaSection = document.getElementById('soloListaEsperaSection');
 
         // Mapa de especialistas vinculables
         const especialistasPorTratamiento = {
@@ -609,7 +687,11 @@
             document.getElementById('grupo-fecha').classList.remove('hidden');
             document.getElementById('grupo-hora').classList.remove('hidden');
             document.getElementById('grupo-motivo').classList.remove('hidden');
-            waitlistOptionalAlert.classList.add('hidden');
+            waitlistOptionalSection.classList.add('hidden');
+            soloListaEsperaSection.classList.add('hidden');
+            document.getElementById('also_waitlist').checked = false;
+            document.getElementById('waitlistPrefSection').classList.add('hidden');
+            waitlistOptionalSection.classList.remove('checked');
             submitBtn.classList.remove('hidden');
             
             selectFecha.disabled = true;
@@ -618,55 +700,48 @@
             selectHora.disabled = true;
 
             try {
-                // 🧪 MODO TEST: Simula huecos completos sin llamar al webhook
-                if (TEST_MODE_COMPLETO) {
-                    console.warn('🧪 TEST_MODE_COMPLETO activo: simulando que no hay huecos disponibles');
-                    await new Promise(r => setTimeout(r, 600)); // Simula latencia
-                    slotsDisponibles = {};
-                } else {
-                    // POST con form-urlencoded (NO genera preflight CORS como application/json)
-                    const response = await fetch(CONFIG.WEBHOOK_URL, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                        body: new URLSearchParams({
-                            action: 'get_slots',
-                            especialista: especialista,
-                            tratamiento: selectTratamiento.value
-                        })
-                    });
+                // POST con form-urlencoded (NO genera preflight CORS como application/json)
+                const response = await fetch(CONFIG.WEBHOOK_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body: new URLSearchParams({
+                        action: 'get_slots',
+                        especialista: especialista,
+                        tratamiento: selectTratamiento.value
+                    })
+                });
 
-                    console.log('Response status:', response.status);
+                console.log('Response status:', response.status);
 
-                    if (!response.ok) {
-                        const errorText = await response.text();
-                        console.error('Server error:', errorText);
-                        throw new Error('Error del servidor: ' + response.status);
-                    }
-
-                    const rawText = await response.text();
-                    console.log('Raw response:', rawText);
-
-                    let data;
-                    try {
-                        data = JSON.parse(rawText);
-                    } catch (e) {
-                        throw new Error('Respuesta no válida: ' + rawText.substring(0, 100));
-                    }
-
-                    // Desempaquetar respuesta de n8n (puede venir anidada)
-                    if (Array.isArray(data)) data = data[0];
-                    if (data && data.json) data = data.json;
-                    if (Array.isArray(data)) data = data[0];
-                    if (data && data.json) data = data.json;
-
-                    console.log('Parsed data:', data);
-
-                    if (!data || !data.success || !data.slots) {
-                        throw new Error('Sin horarios disponibles. Respuesta: ' + JSON.stringify(data).substring(0, 80));
-                    }
-
-                    slotsDisponibles = data.slots;
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    console.error('Server error:', errorText);
+                    throw new Error('Error del servidor: ' + response.status);
                 }
+
+                const rawText = await response.text();
+                console.log('Raw response:', rawText);
+
+                let data;
+                try {
+                    data = JSON.parse(rawText);
+                } catch (e) {
+                    throw new Error('Respuesta no válida: ' + rawText.substring(0, 100));
+                }
+
+                // Desempaquetar respuesta de n8n (puede venir anidada)
+                if (Array.isArray(data)) data = data[0];
+                if (data && data.json) data = data.json;
+                if (Array.isArray(data)) data = data[0];
+                if (data && data.json) data = data.json;
+
+                console.log('Parsed data:', data);
+
+                if (!data || !data.success || !data.slots) {
+                    throw new Error('Sin horarios disponibles. Respuesta: ' + JSON.stringify(data).substring(0, 80));
+                }
+
+                slotsDisponibles = data.slots;
                 
                 const arrayFechas = Object.keys(slotsDisponibles).sort();
 
@@ -679,7 +754,8 @@
                     document.getElementById('grupo-fecha').classList.add('hidden');
                     document.getElementById('grupo-hora').classList.add('hidden');
                     document.getElementById('grupo-motivo').classList.add('hidden');
-                    waitlistOptionalAlert.classList.add('hidden');
+                    waitlistOptionalSection.classList.add('hidden');
+                    soloListaEsperaSection.classList.add('hidden');
                     submitBtn.classList.add('hidden');
                     
                     document.getElementById('waitlistAlert').classList.remove('hidden');
@@ -689,7 +765,11 @@
                     document.getElementById('grupo-fecha').classList.remove('hidden');
                     document.getElementById('grupo-hora').classList.remove('hidden');
                     document.getElementById('grupo-motivo').classList.remove('hidden');
-                    waitlistOptionalAlert.classList.remove('hidden');
+                    waitlistOptionalSection.classList.remove('hidden');
+                    soloListaEsperaSection.classList.remove('hidden');
+                    // Actualizar el nombre del especialista en el radio de preferencia
+                    const espNameLabel = selectEspecialista.options[selectEspecialista.selectedIndex].text.split(' ')[0];
+                    document.getElementById('waitlistPrefEspName').textContent = espNameLabel;
                     submitBtn.classList.remove('hidden');
                     
                     selectFecha.innerHTML = '<option value="">Selecciona una fecha</option>';
@@ -753,7 +833,11 @@
             document.getElementById('grupo-fecha').classList.remove('hidden');
             document.getElementById('grupo-hora').classList.remove('hidden');
             document.getElementById('grupo-motivo').classList.remove('hidden');
-            waitlistOptionalAlert.classList.add('hidden');
+            waitlistOptionalSection.classList.add('hidden');
+            soloListaEsperaSection.classList.add('hidden');
+            document.getElementById('also_waitlist').checked = false;
+            document.getElementById('waitlistPrefSection').classList.add('hidden');
+            waitlistOptionalSection.classList.remove('checked');
             submitBtn.classList.remove('hidden');
         }
 
@@ -794,7 +878,11 @@
                 document.getElementById('grupo-fecha').classList.remove('hidden');
                 document.getElementById('grupo-hora').classList.remove('hidden');
                 document.getElementById('grupo-motivo').classList.remove('hidden');
-                waitlistOptionalAlert.classList.add('hidden');
+                waitlistOptionalSection.classList.add('hidden');
+                soloListaEsperaSection.classList.add('hidden');
+                document.getElementById('also_waitlist').checked = false;
+                document.getElementById('waitlistPrefSection').classList.add('hidden');
+                waitlistOptionalSection.classList.remove('checked');
                 submitBtn.classList.remove('hidden');
             }
         });
@@ -867,7 +955,9 @@
                         tratamiento: selectTratamiento.value,
                         fecha: selectFecha.value,
                         hora: selectHora.value,
-                        motivo: document.getElementById('motivo').value.trim()
+                        motivo: document.getElementById('motivo').value.trim(),
+                        also_waitlist: document.getElementById('also_waitlist').checked ? 'true' : 'false',
+                        waitlist_especialista: document.querySelector('input[name="waitlist_pref"]:checked')?.value === 'cualquiera' ? 'cualquiera' : selectEspecialista.value
                     })
                 });
 
@@ -910,12 +1000,19 @@
         }
         
         document.getElementById('btnOpenWaitlist').addEventListener('click', openWaitlist);
-        if (document.getElementById('btnOpenWaitlistOptional')) {
-            document.getElementById('btnOpenWaitlistOptional').addEventListener('click', function(e) {
-                e.preventDefault();
-                openWaitlist();
-            });
-        }
+
+        // Escenario 2: Checkbox "también lista de espera" → mostrar/ocultar preferencia
+        document.getElementById('also_waitlist').addEventListener('change', function() {
+            const prefSection = document.getElementById('waitlistPrefSection');
+            const card = document.getElementById('waitlistOptionalSection');
+            prefSection.classList.toggle('hidden', !this.checked);
+            card.classList.toggle('checked', this.checked);
+        });
+
+        // Escenario 3: Solo lista de espera (hay huecos pero no le vienen bien)
+        document.getElementById('btnSoloListaEspera').addEventListener('click', function() {
+            openWaitlist();
+        });
 
         document.getElementById('closeWaitlist').addEventListener('click', () => {
             waitlistModal.classList.remove('active');
