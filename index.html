@@ -1173,6 +1173,17 @@
         });
 
         // ==========================================
+        // UTILIDADES
+        // ==========================================
+        function formatearFecha(fecha) {
+            const [year, month, day] = fecha.split('-');
+            const fechaObj = new Date(year, month - 1, day);
+            const dias = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
+            const meses = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
+            return `${dias[fechaObj.getDay()]}, ${parseInt(day)} de ${meses[fechaObj.getMonth()]}`;
+        }
+
+        // ==========================================
         // INICIALIZACIÓN
         // ==========================================
         window.addEventListener('load', () => {
