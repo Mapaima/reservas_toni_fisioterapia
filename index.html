@@ -512,6 +512,13 @@
         </div>
 
         <div class="content">
+            <!-- Rescue Mode Banner -->
+            <div id="rescueBanner" class="hidden" style="background: rgba(59, 130, 246, 0.15); border: 1px solid rgba(59, 130, 246, 0.4); border-radius: 16px; padding: 15px; margin-bottom: 25px; text-align: center; display: flex; align-items: center; gap: 12px; justify-content: center;">
+                <span style="font-size: 20px;">✨</span>
+                <p style="font-size: 14px; margin: 0; color: #fff; font-weight: 500;">
+                    <strong>¡Hueco recuperado!</strong> Hemos bloqueado este horario para ti. Confirma tus datos abajo.
+                </p>
+            </div>
             <!-- Loading State -->
             <div id="loadingState" class="hidden">
                 <div class="loading">
@@ -736,22 +743,31 @@
         // Mapa de especialistas vinculables
         const especialistasPorTratamiento = {
             'sesion_fisioterapia': [
-                { value: 'toni', text: 'Toni Vercher (Fisioterapia)' },
-                { value: 'patri', text: 'Patri Gómez (Fisioterapia)' }
+                { value: 'toni', text: 'Toni Vercher' },
+                { value: 'patri', text: 'Patricia Jimenez' }
             ],
             'bomba': [
-                { value: 'oscar', text: 'Óscar Tormo (Enfermero)' },
-                { value: 'laura', text: 'Laura Bas (Enfermera)' }
+                { value: 'oscar', text: 'Oscar Tormo' },
+                { value: 'laura', text: 'Laura Bas' }
             ],
             'combinado': [
-                { value: 'toni', text: 'Toni Vercher (Fisioterapia)' },
-                { value: 'patri', text: 'Patri Gómez (Fisioterapia)' }
+                { value: 'toni', text: 'Toni Vercher' },
+                { value: 'patri', text: 'Patricia Jimenez' }
             ]
         };
 
-        // Obtener ID/remoteJid de la URL
+        // Obtener parámetros de la URL
         const urlParams = new URLSearchParams(window.location.search);
         const remoteJid = urlParams.get('id') || urlParams.get('remoteJid') || '';
+        
+        // Parámetros de Rescate
+        const rescueParams = {
+            esp: urlParams.get('esp'),
+            trat: urlParams.get('trat'),
+            fecha: urlParams.get('fecha'),
+            hora: urlParams.get('hora')
+        };
+        let isRescueMode = !!(rescueParams.esp && rescueParams.fecha && rescueParams.hora);
 
         // ==========================================
         // CARGAR SLOTS DISPONIBLES
@@ -843,22 +859,39 @@
                     document.getElementById('grupo-fecha').classList.remove('hidden');
                     document.getElementById('grupo-hora').classList.remove('hidden');
                     document.getElementById('grupo-motivo').classList.remove('hidden');
-                    waitlistOptionalSection.classList.remove('hidden');
-                    soloListaEsperaSection.classList.remove('hidden');
-                    // Actualizar el nombre del especialista en el radio de preferencia
-                    const espNameLabel = selectEspecialista.options[selectEspecialista.selectedIndex].text.split(' ')[0];
-                    document.getElementById('waitlistPrefEspName').textContent = espNameLabel;
+                    
+                    if (isRescueMode) {
+                        waitlistOptionalSection.classList.add('hidden'); // No tiene sentido si ya tiene hueco
+                        soloListaEsperaSection.classList.add('hidden');
+                        document.getElementById('rescueBanner').classList.remove('hidden');
+                        
+                        // Forzar solo la fecha y hora del rescate
+                        selectFecha.innerHTML = `<option value="${rescueParams.fecha}">${formatearFecha(rescueParams.fecha)}</option>`;
+                        selectFecha.value = rescueParams.fecha;
+                        selectFecha.disabled = true;
+                        
+                        selectHora.innerHTML = `<option value="${rescueParams.hora}">${rescueParams.hora}</option>`;
+                        selectHora.value = rescueParams.hora;
+                        selectHora.disabled = true;
+                    } else {
+                        waitlistOptionalSection.classList.remove('hidden');
+                        soloListaEsperaSection.classList.remove('hidden');
+                        document.getElementById('rescueBanner').classList.add('hidden');
+                        
+                        // Actualizar el nombre del especialista en el radio de preferencia
+                        const espNameLabel = selectEspecialista.options[selectEspecialista.selectedIndex].text.split(' ')[0];
+                        document.getElementById('waitlistPrefEspName').textContent = espNameLabel;
+                        
+                        selectFecha.innerHTML = '<option value="">Selecciona una fecha</option>';
+                        arrayFechas.forEach(fecha => {
+                            const option = document.createElement('option');
+                            option.value = fecha;
+                            option.textContent = formatearFecha(fecha);
+                            selectFecha.appendChild(option);
+                        });
+                        selectFecha.disabled = false;
+                    }
                     submitBtn.classList.remove('hidden');
-                    
-                    selectFecha.innerHTML = '<option value="">Selecciona una fecha</option>';
-                    arrayFechas.forEach(fecha => {
-                        const option = document.createElement('option');
-                        option.value = fecha;
-                        option.textContent = formatearFecha(fecha);
-                        selectFecha.appendChild(option);
-                    });
-                    
-                    selectFecha.disabled = false;
                 }
                 
                 loadingState.classList.add('hidden');
@@ -1140,15 +1173,28 @@
         });
 
         // ==========================================
-        // UTILIDADES
+        // INICIALIZACIÓN
         // ==========================================
-        function formatearFecha(fecha) {
-            const [year, month, day] = fecha.split('-');
-            const fechaObj = new Date(year, month - 1, day);
-            const dias = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
-            const meses = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
-            return `${dias[fechaObj.getDay()]}, ${parseInt(day)} de ${meses[fechaObj.getMonth()]}`;
-        }
+        window.addEventListener('load', () => {
+            if (rescueParams.trat) {
+                selectTratamiento.value = rescueParams.trat;
+                // Disparar el evento change manualmente
+                selectTratamiento.dispatchEvent(new Event('change'));
+                
+                if (rescueParams.esp) {
+                    // Esperar un poco a que actualizarEspecialistas termine
+                    setTimeout(() => {
+                        selectEspecialista.value = rescueParams.esp;
+                        if (isRescueMode) {
+                            selectEspecialista.disabled = true;
+                            selectTratamiento.disabled = true;
+                            aceptaBomba.disabled = true;
+                        }
+                        cargarSlots(rescueParams.esp);
+                    }, 100);
+                }
+            }
+        });
     </script>
 </body>
 
