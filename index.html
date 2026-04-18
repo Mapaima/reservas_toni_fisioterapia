@@ -585,18 +585,40 @@
                     </div>
 
                     <div class="form-group">
+                        <label for="telefono">Teléfono <span class="required">*</span></label>
+                        <input type="tel" id="telefono" name="telefono" required placeholder="600 000 000">
+                    </div>
+
+                    <div class="form-group">
                         <label for="ocupacion">Ocupación</label>
                         <input type="text" id="ocupacion" name="ocupacion" placeholder="Tu profesión">
                     </div>
 
                     <div class="form-group">
-                        <label for="direccion">Dirección completa</label>
-                        <input type="text" id="direccion" name="direccion" placeholder="Calle, número, piso...">
+                        <label for="direccion">Calle y número</label>
+                        <input type="text" id="direccion" name="direccion" placeholder="Ej. Calle Mayor 15, 2B">
                     </div>
 
-                    <div class="form-group">
-                        <label for="telefono">Teléfono <span class="required">*</span></label>
-                        <input type="tel" id="telefono" name="telefono" required placeholder="600 000 000">
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                        <div class="form-group">
+                            <label for="codigo_postal">Código Postal</label>
+                            <input type="text" id="codigo_postal" name="codigo_postal" placeholder="46000">
+                        </div>
+                        <div class="form-group">
+                            <label for="localidad">Localidad</label>
+                            <input type="text" id="localidad" name="localidad" placeholder="Ej. Valencia">
+                        </div>
+                    </div>
+
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                        <div class="form-group">
+                            <label for="provincia">Provincia</label>
+                            <input type="text" id="provincia" name="provincia" placeholder="Ej. Valencia">
+                        </div>
+                        <div class="form-group">
+                            <label for="pais">País</label>
+                            <input type="text" id="pais" name="pais" value="España">
+                        </div>
                     </div>
                 </div>
 
@@ -1144,9 +1166,13 @@
                         fechaNacimiento: document.getElementById('fechaNacimiento')?.value || '',
                         genero: document.getElementById('genero')?.value || '',
                         dni: document.getElementById('dni')?.value.trim() || '',
+                        telefono: document.getElementById('telefono')?.value.trim() || '',
                         ocupacion: document.getElementById('ocupacion')?.value.trim() || '',
                         direccion: document.getElementById('direccion')?.value.trim() || '',
-                        telefono: document.getElementById('telefono')?.value.trim() || '',
+                        cp: document.getElementById('codigo_postal')?.value.trim() || '',
+                        localidad: document.getElementById('localidad')?.value.trim() || '',
+                        provincia: document.getElementById('provincia')?.value.trim() || '',
+                        pais: document.getElementById('pais')?.value.trim() || '',
                         id_paciente_existente: existingPatientId,
                         tratamiento: selectTratamiento.value,
                         fecha: selectFecha.value,
