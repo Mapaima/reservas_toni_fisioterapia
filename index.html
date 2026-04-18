@@ -537,16 +537,16 @@
 
             <!-- Form -->
             <form id="citaForm">
-                <!-- CAMPO EMAIL SUBIDO AL PRINCIPIO -->
+                <!-- 1. EMAIL (Detector) -->
                 <div class="form-group">
                     <label for="email">Correo electrónico <span class="required">*</span></label>
                     <input type="email" id="email" name="email" required placeholder="juan@correo.com">
                 </div>
 
-                <!-- CONTENEDOR DE DATOS PERSONALES (Se ocultará si el paciente ya existe) -->
+                <!-- BLOQUE DATOS PERSONALES (Se oculta si existe) -->
                 <div id="personalDataSection">
-                    <div id="welcomePatientMessage" class="hidden" style="background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 12px; padding: 15px; margin-bottom: 20px; text-align: center;">
-                        <p style="margin-bottom: 0;">¡Hola de nuevo! Ya te hemos reconocido. Solo elige tu cita.</p>
+                    <div id="welcomePatientMessage" class="hidden" style="background: rgba(255, 255, 255, 0.05); border: 2px solid var(--accent); border-radius: 12px; padding: 15px; margin-bottom: 20px; text-align: center;">
+                        <p style="margin-bottom: 0; font-weight: 600;">✨ ¡Hola de nuevo! Te hemos reconocido. Solo elige tu tratamiento y cita.</p>
                     </div>
 
                     <div class="form-group">
@@ -580,11 +580,27 @@
                     </div>
 
                     <div class="form-group">
+                        <label for="dni">DNI / NIE / NIF <span class="required">*</span></label>
+                        <input type="text" id="dni" name="dni" required placeholder="Ej. 12345678X">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="ocupacion">Ocupación</label>
+                        <input type="text" id="ocupacion" name="ocupacion" placeholder="Tu profesión">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="direccion">Dirección completa</label>
+                        <input type="text" id="direccion" name="direccion" placeholder="Calle, número, piso...">
+                    </div>
+
+                    <div class="form-group">
                         <label for="telefono">Teléfono <span class="required">*</span></label>
                         <input type="tel" id="telefono" name="telefono" required placeholder="600 000 000">
                     </div>
                 </div>
 
+                <!-- 10. TRATAMIENTO Y ESPECIALISTA -->
                 <div class="form-group">
                     <label for="tratamiento">Tratamiento <span class="required">*</span></label>
                     <select id="tratamiento" name="tratamiento" required>
@@ -765,6 +781,7 @@
                     document.getElementById('primer_apellido').required = false;
                     document.getElementById('fechaNacimiento').required = false;
                     document.getElementById('genero').required = false;
+                    document.getElementById('dni').required = false;
                     document.getElementById('telefono').required = false;
                     
                     personalDataSection.querySelectorAll('.form-group').forEach(group => group.classList.add('hidden'));
@@ -777,6 +794,7 @@
                     document.getElementById('primer_apellido').required = true;
                     document.getElementById('fechaNacimiento').required = true;
                     document.getElementById('genero').required = true;
+                    document.getElementById('dni').required = true;
                     document.getElementById('telefono').required = true;
                     
                     personalDataSection.querySelectorAll('.form-group').forEach(group => group.classList.remove('hidden'));
@@ -1125,6 +1143,9 @@
                         segundoApellido: document.getElementById('segundo_apellido')?.value.trim() || '',
                         fechaNacimiento: document.getElementById('fechaNacimiento')?.value || '',
                         genero: document.getElementById('genero')?.value || '',
+                        dni: document.getElementById('dni')?.value.trim() || '',
+                        ocupacion: document.getElementById('ocupacion')?.value.trim() || '',
+                        direccion: document.getElementById('direccion')?.value.trim() || '',
                         telefono: document.getElementById('telefono')?.value.trim() || '',
                         id_paciente_existente: existingPatientId,
                         tratamiento: selectTratamiento.value,
