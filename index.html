@@ -537,38 +537,52 @@
 
             <!-- Form -->
             <form id="citaForm">
-                <div class="form-group">
-                    <label for="nombre">Nombre <span class="required">*</span></label>
-                    <input type="text" id="nombre" name="nombre" required placeholder="Ej. Juan">
-                </div>
-
-                <div class="form-group">
-                    <label for="apellidos">Apellidos <span class="required">*</span></label>
-                    <input type="text" id="apellidos" name="apellidos" required placeholder="Ej. Pérez García">
-                </div>
-
-                <div class="form-group">
-                    <label for="fechaNacimiento">Fecha de Nacimiento <span class="required">*</span></label>
-                    <input type="date" id="fechaNacimiento" name="fechaNacimiento" required>
-                </div>
-
-                <div class="form-group">
-                    <label for="genero">Género <span class="required">*</span></label>
-                    <select id="genero" name="genero" required>
-                        <option value="">Selecciona género</option>
-                        <option value="male">HOMBRE</option>
-                        <option value="female">MUJER</option>
-                    </select>
-                </div>
-
+                <!-- CAMPO EMAIL SUBIDO AL PRINCIPIO -->
                 <div class="form-group">
                     <label for="email">Correo electrónico <span class="required">*</span></label>
                     <input type="email" id="email" name="email" required placeholder="juan@correo.com">
                 </div>
 
-                <div class="form-group">
-                    <label for="telefono">Teléfono <span class="required">*</span></label>
-                    <input type="tel" id="telefono" name="telefono" required placeholder="600 000 000">
+                <!-- CONTENEDOR DE DATOS PERSONALES (Se ocultará si el paciente ya existe) -->
+                <div id="personalDataSection">
+                    <div id="welcomePatientMessage" class="hidden" style="background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 12px; padding: 15px; margin-bottom: 20px; text-align: center;">
+                        <p style="margin-bottom: 0;">¡Hola de nuevo! Ya te hemos reconocido. Solo elige tu cita.</p>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="nombre">Nombre <span class="required">*</span></label>
+                        <input type="text" id="nombre" name="nombre" required placeholder="Ej. Juan">
+                    </div>
+
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                        <div class="form-group">
+                            <label for="primer_apellido">Primer Apellido <span class="required">*</span></label>
+                            <input type="text" id="primer_apellido" name="primer_apellido" required placeholder="Ej. Pérez">
+                        </div>
+                        <div class="form-group">
+                            <label for="segundo_apellido">Segundo Apellido</label>
+                            <input type="text" id="segundo_apellido" name="segundo_apellido" placeholder="Ej. García">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="fechaNacimiento">Fecha de Nacimiento <span class="required">*</span></label>
+                        <input type="date" id="fechaNacimiento" name="fechaNacimiento" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="genero">Género <span class="required">*</span></label>
+                        <select id="genero" name="genero" required>
+                            <option value="">Selecciona género</option>
+                            <option value="male">HOMBRE</option>
+                            <option value="female">MUJER</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="telefono">Teléfono <span class="required">*</span></label>
+                        <input type="tel" id="telefono" name="telefono" required placeholder="600 000 000">
+                    </div>
                 </div>
 
                 <div class="form-group">
@@ -721,7 +735,55 @@
             WEBHOOK_URL: 'https://mapaima-n8n.1zsf1t.easypanel.host/webhook/openemr-actions'
         };
 
-        let slotsDisponibles = {};
+        const inputEmail = document.getElementById('email');
+        const personalDataSection = document.getElementById('personalDataSection');
+        const welcomePatientMessage = document.getElementById('welcomePatientMessage');
+        let patientFound = false;
+        let existingPatientId = null;
+
+        inputEmail.addEventListener('blur', async () => {
+            const email = inputEmail.value.trim();
+            if (!email || !email.includes('@')) return;
+
+            try {
+                const response = await fetch(CONFIG.WEBHOOK_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body: new URLSearchParams({ 
+                        action: 'check_patient', 
+                        email: email 
+                    })
+                });
+                const data = await response.json();
+
+                if (data.exists) {
+                    patientFound = true;
+                    existingPatientId = data.patientId;
+                    
+                    // Ocultamos los campos que no hacen falta y avisamos
+                    document.getElementById('nombre').required = false;
+                    document.getElementById('primer_apellido').required = false;
+                    document.getElementById('fechaNacimiento').required = false;
+                    document.getElementById('genero').required = false;
+                    document.getElementById('telefono').required = false;
+                    
+                    personalDataSection.querySelectorAll('.form-group').forEach(group => group.classList.add('hidden'));
+                    welcomePatientMessage.classList.remove('hidden');
+                } else {
+                    // Si no existe, nos aseguramos de que todo sea visible
+                    patientFound = false;
+                    existingPatientId = null;
+                    document.getElementById('nombre').required = true;
+                    document.getElementById('primer_apellido').required = true;
+                    document.getElementById('fechaNacimiento').required = true;
+                    document.getElementById('genero').required = true;
+                    document.getElementById('telefono').required = true;
+                    
+                    personalDataSection.querySelectorAll('.form-group').forEach(group => group.classList.remove('hidden'));
+                    welcomePatientMessage.classList.add('hidden');
+                }
+            } catch (e) { console.error("Error comprobando paciente", e); }
+        });
 
         // Elementos del DOM
         const loadingState = document.getElementById('loadingState');
@@ -1057,12 +1119,14 @@
                         website_hp: hpFieldValue,
                         especialista: selectEspecialista.value,
                         id: remoteJid,
-                        nombre: document.getElementById('nombre').value.trim(),
-                        apellidos: document.getElementById('apellidos').value.trim(),
-                        fechaNacimiento: document.getElementById('fechaNacimiento').value,
-                        genero: document.getElementById('genero').value,
                         email: document.getElementById('email').value.trim(),
-                        telefono: document.getElementById('telefono').value.trim(),
+                        nombre: document.getElementById('nombre')?.value.trim() || '',
+                        primerApellido: document.getElementById('primer_apellido')?.value.trim() || '',
+                        segundoApellido: document.getElementById('segundo_apellido')?.value.trim() || '',
+                        fechaNacimiento: document.getElementById('fechaNacimiento')?.value || '',
+                        genero: document.getElementById('genero')?.value || '',
+                        telefono: document.getElementById('telefono')?.value.trim() || '',
+                        id_paciente_existente: existingPatientId,
                         tratamiento: selectTratamiento.value,
                         fecha: selectFecha.value,
                         hora: selectHora.value,
