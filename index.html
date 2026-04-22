@@ -792,23 +792,35 @@
                         email: email 
                     })
                 });
-                const data = await response.json();
+                let data = await response.json();
+
+                // Desempaquetar respuesta de n8n si viene en array o con propiedad .json
+                if (Array.isArray(data)) data = data[0];
+                if (data && data.json) data = data.json;
 
                 // Ajuste para n8n: comprobamos tanto 'exists' como si viene 'patientId' directamente
-                const isFound = data.exists || data.patientId;
+                const isFound = data && (data.exists || data.patientId);
 
                 if (isFound) {
                     patientFound = true;
                     existingPatientId = data.patientId;
                     
-                    // Mapeamos los campos según los nombres que vienen de tu SQL (fname, lname, mname)
+                    // 1. Rellenar campos del formulario principal (ocultos)
                     if (data.fname) document.getElementById('nombre').value = data.fname;
                     if (data.lname) document.getElementById('primer_apellido').value = data.lname;
                     if (data.mname) document.getElementById('segundo_apellido').value = data.mname;
-                    // El teléfono solo se rellenará si lo añades al SELECT de tu SQL en n8n
                     if (data.telefono || data.phone_cell) {
                         document.getElementById('telefono').value = data.telefono || data.phone_cell;
                     }
+
+                    // 2. Rellenar campos del MODAL directamente (Doble seguridad)
+                    if (data.fname) document.getElementById('wl_nombre').value = data.fname;
+                    const apeCompleto = ((data.lname || '') + ' ' + (data.mname || '')).trim();
+                    if (apeCompleto) document.getElementById('wl_apellidos').value = apeCompleto;
+                    if (data.telefono || data.phone_cell) {
+                        document.getElementById('wl_telefono').value = data.telefono || data.phone_cell;
+                    }
+                    document.getElementById('wl_email').value = email;
                     
                     // Ocultamos los campos que no hacen falta y avisamos
                     document.getElementById('nombre').required = false;
