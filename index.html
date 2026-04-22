@@ -1159,7 +1159,7 @@
                         website_hp: hpFieldValue,
                         especialista: selectEspecialista.value,
                         id: remoteJid,
-                        email: document.getElementById('email').value.trim(),
+                        email: inputEmail.value.trim(),
                         nombre: document.getElementById('nombre')?.value.trim() || '',
                         primerApellido: document.getElementById('primer_apellido')?.value.trim() || '',
                         segundoApellido: document.getElementById('segundo_apellido')?.value.trim() || '',
@@ -1177,9 +1177,9 @@
                         tratamiento: selectTratamiento.value,
                         fecha: selectFecha.value,
                         hora: selectHora.value,
-                        motivo: document.getElementById('motivo').value.trim(),
-                        also_waitlist: document.getElementById('also_waitlist').checked ? 'true' : 'false',
-                        waitlist_especialista: document.querySelector('input[name="waitlist_pref"]:checked')?.value === 'cualquiera' ? 'cualquiera' : selectEspecialista.value
+                        motivo: document.getElementById('motivo')?.value.trim() || '',
+                        also_waitlist: document.getElementById('also_waitlist')?.checked || false,
+                        waitlist_especialista: document.querySelector('input[name="waitlist_pref"]:checked')?.value || 'cualquiera'
                     })
                 });
 
@@ -1211,33 +1211,61 @@
         const waitlistModal = document.getElementById('waitlistModal');
         
         function openWaitlist() {
-            document.getElementById('wl_nombre').value = document.getElementById('nombre').value;
-            document.getElementById('wl_apellidos').value = document.getElementById('apellidos').value;
-            document.getElementById('wl_telefono').value = document.getElementById('telefono').value;
-            document.getElementById('wl_email').value = document.getElementById('email').value;
-            // Limpiar el checkbox por defecto por si habían entrado antes y lo habían modificado
-            document.getElementById('wl_cualquiera').checked = false;
-            
-            waitlistModal.classList.add('active');
+            try {
+                const modal = document.getElementById('waitlistModal');
+                if (!modal) return;
+
+                // Población segura de campos
+                const setVal = (tid, sid) => {
+                    const t = document.getElementById(tid);
+                    const s = document.getElementById(sid);
+                    if (t && s) t.value = s.value || '';
+                };
+
+                setVal('wl_nombre', 'nombre');
+                setVal('wl_telefono', 'telefono');
+                setVal('wl_email', 'email');
+
+                const wlApe = document.getElementById('wl_apellidos');
+                const pApe = document.getElementById('primer_apellido');
+                const sApe = document.getElementById('segundo_apellido');
+                if (wlApe) {
+                    const v1 = pApe ? pApe.value : '';
+                    const v2 = sApe ? sApe.value : '';
+                    wlApe.value = (v1 + ' ' + v2).trim();
+                }
+
+                const wlCualquiera = document.getElementById('wl_cualquiera');
+                if (wlCualquiera) wlCualquiera.checked = false;
+
+                modal.classList.add('active');
+            } catch (e) {
+                console.error("Error al abrir lista espera:", e);
+            }
         }
-        
-        document.getElementById('btnOpenWaitlist').addEventListener('click', openWaitlist);
+
+        // Asignación segura de eventos
+        const attachWaitlist = (id) => {
+            const btn = document.getElementById(id);
+            if (btn) btn.addEventListener('click', (e) => {
+                e.preventDefault();
+                openWaitlist();
+            });
+        };
+
+        attachWaitlist('btnOpenWaitlist');
+        attachWaitlist('btnSoloListaEspera');
 
         // Escenario 2: Checkbox "también lista de espera" → mostrar/ocultar preferencia
-        document.getElementById('also_waitlist').addEventListener('change', function() {
+        document.getElementById('also_waitlist')?.addEventListener('change', function() {
             const prefSection = document.getElementById('waitlistPrefSection');
             const card = document.getElementById('waitlistOptionalSection');
-            prefSection.classList.toggle('hidden', !this.checked);
-            card.classList.toggle('checked', this.checked);
+            if (prefSection) prefSection.classList.toggle('hidden', !this.checked);
+            if (card) card.classList.toggle('checked', this.checked);
         });
 
-        // Escenario 3: Solo lista de espera (hay huecos pero no le vienen bien)
-        document.getElementById('btnSoloListaEspera').addEventListener('click', function() {
-            openWaitlist();
-        });
-
-        document.getElementById('closeWaitlist').addEventListener('click', () => {
-            waitlistModal.classList.remove('active');
+        document.getElementById('closeWaitlist')?.addEventListener('click', () => {
+            document.getElementById('waitlistModal')?.classList.remove('active');
         });
 
         document.getElementById('waitlistForm').addEventListener('submit', async function (e) {
