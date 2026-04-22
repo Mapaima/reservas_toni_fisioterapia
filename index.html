@@ -798,6 +798,13 @@
                     patientFound = true;
                     existingPatientId = data.patientId;
                     
+                    // Rellenamos los campos con la info del servidor (aunque se oculten)
+                    // para que openWaitlist() pueda copiarlos al modal
+                    if (data.nombre) document.getElementById('nombre').value = data.nombre;
+                    if (data.primer_apellido) document.getElementById('primer_apellido').value = data.primer_apellido;
+                    if (data.segundo_apellido) document.getElementById('segundo_apellido').value = data.segundo_apellido;
+                    if (data.telefono) document.getElementById('telefono').value = data.telefono;
+                    
                     // Ocultamos los campos que no hacen falta y avisamos
                     document.getElementById('nombre').required = false;
                     document.getElementById('primer_apellido').required = false;
