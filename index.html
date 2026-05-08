@@ -12,17 +12,17 @@
     <script src="https://www.google.com/recaptcha/api.js?render=6LcOYLcsAAAAAJChTMzGai-FB2hI2IpbT6IxlBzZ"></script>
     <style>
         :root {
-            --primary-color: #ffffff;
-            --primary-dark: #e2e8f0;
-            --secondary-color: #1a1a1a;
+            --primary-color: #1b8a7b;
+            --primary-hover: #156d61;
+            --secondary-color: #8d735b;
             --accent-gray: #4a4a4a;
-            --background-dark: #121212;
-            --surface-color: #1e1e1e;
+            --background-dark: #0f1211;
+            --surface-color: #1a1e1d;
             --text-primary: #ffffff;
-            --text-secondary: #a0a0a0;
-            --glass-border: rgba(255, 255, 255, 0.1);
-            --glass-bg: rgba(30, 30, 30, 0.85);
-            --accent-glow: rgba(255, 255, 255, 0.15);
+            --text-secondary: #a0a8a7;
+            --glass-border: rgba(27, 138, 123, 0.2);
+            --glass-bg: rgba(26, 30, 29, 0.85);
+            --accent-glow: rgba(27, 138, 123, 0.15);
         }
 
         * {
@@ -35,8 +35,8 @@
             font-family: 'Outfit', sans-serif;
             background-color: var(--background-dark);
             background-image:
-                radial-gradient(circle at 15% 50%, rgba(255, 255, 255, 0.03) 0%, transparent 25%),
-                radial-gradient(circle at 85% 30%, rgba(255, 255, 255, 0.02) 0%, transparent 25%);
+                radial-gradient(circle at 15% 50%, rgba(27, 138, 123, 0.05) 0%, transparent 25%),
+                radial-gradient(circle at 85% 30%, rgba(141, 115, 91, 0.03) 0%, transparent 25%);
             min-height: 100vh;
             display: flex;
             align-items: center;
@@ -65,7 +65,7 @@
             left: 0;
             right: 0;
             height: 3px;
-            background: linear-gradient(90deg, #333, #fff, #333);
+            background: linear-gradient(90deg, transparent, var(--primary-color), transparent);
         }
 
         .header {
@@ -91,7 +91,8 @@
             font-size: 0.9rem;
             letter-spacing: 5px;
             margin-top: 5px;
-            opacity: 0.8;
+            color: var(--secondary-color);
+            opacity: 1;
         }
 
         .header h1 {
@@ -126,8 +127,8 @@
         }
 
         .required {
-            color: white;
-            opacity: 0.6;
+            color: var(--primary-color);
+            opacity: 1;
         }
 
         input,
@@ -135,8 +136,8 @@
         textarea {
             width: 100%;
             padding: 15px 18px;
-            background: rgba(255, 255, 255, 0.04);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
             border-radius: 14px;
             font-size: 15px;
             color: white;
@@ -148,17 +149,17 @@
         input:focus,
         select:focus,
         textarea:focus {
-            border-color: white;
-            background: rgba(255, 255, 255, 0.08);
-            box-shadow: 0 0 0 1px white;
+            border-color: var(--primary-color);
+            background: rgba(27, 138, 123, 0.05);
+            box-shadow: 0 0 0 1px var(--primary-color);
         }
 
         ::placeholder {
-            color: rgba(255, 255, 255, 0.25);
+            color: rgba(255, 255, 255, 0.2);
         }
 
         option {
-            background: #1a1a1a;
+            background: #1a1e1d;
             color: white;
         }
 
@@ -168,32 +169,32 @@
         }
 
         select:disabled {
-            background: rgba(255, 255, 255, 0.02);
-            opacity: 0.4;
+            background: rgba(255, 255, 255, 0.01);
+            opacity: 0.3;
             cursor: not-allowed;
         }
 
         button {
             width: 100%;
             padding: 18px;
-            background: white;
-            color: black;
+            background: var(--primary-color);
+            color: white;
             border: none;
             border-radius: 14px;
             font-size: 16px;
-            font-weight: 800;
+            font-weight: 700;
             text-transform: uppercase;
             letter-spacing: 1px;
             cursor: pointer;
             transition: all 0.4s ease;
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
             margin-top: 15px;
         }
 
         button:hover:not(:disabled) {
-            transform: translateY(-3px);
-            box-shadow: 0 15px 30px rgba(255, 255, 255, 0.15);
-            background: #f0f0f0;
+            transform: translateY(-2px);
+            box-shadow: 0 15px 30px rgba(27, 138, 123, 0.3);
+            background: var(--primary-hover);
         }
 
         button:active {
@@ -220,8 +221,8 @@
         }
 
         .spinner {
-            border: 2px solid rgba(255, 255, 255, 0.1);
-            border-top: 2px solid white;
+            border: 2px solid rgba(27, 138, 123, 0.1);
+            border-top: 2px solid var(--primary-color);
             border-radius: 50%;
             width: 45px;
             height: 45px;
@@ -252,7 +253,7 @@
             font-size: 70px;
             margin-bottom: 25px;
             display: block;
-            filter: drop-shadow(0 0 20px rgba(255, 255, 255, 0.2));
+            filter: drop-shadow(0 0 20px rgba(27, 138, 123, 0.3));
         }
 
         .hidden {
@@ -277,8 +278,8 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background: rgba(0, 0, 0, 0.8);
-            backdrop-filter: blur(5px);
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(8px);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -303,6 +304,7 @@
             box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
             transform: translateY(20px);
             transition: transform 0.3s ease;
+            position: relative;
         }
 
         .modal-overlay.active .modal-content {
@@ -335,31 +337,32 @@
             color: var(--text-secondary);
             font-size: 24px;
             cursor: pointer;
-            box-shadow: none;
-            padding: 0;
-            width: auto;
-            margin: 0;
+            box-shadow: none !important;
+            padding: 0 !important;
+            width: auto !important;
+            margin: 0 !important;
         }
 
         .modal-close:hover {
-            color: white;
-            transform: none;
-            background: none;
+            color: var(--primary-color);
+            transform: none !important;
+            background: none !important;
         }
 
-        /* --- Sección Lista de Espera Opcional (cuando hay huecos disponibles) --- */
+        /* --- Sección Lista de Espera Opcional --- */
         .waitlist-optional-card {
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid rgba(255, 255, 255, 0.08);
+            background: rgba(27, 138, 123, 0.03);
+            border: 1px solid rgba(27, 138, 123, 0.1);
             border-radius: 14px;
             padding: 18px 20px;
             margin-bottom: 24px;
-            transition: border-color 0.3s ease, background 0.3s ease;
+            transition: all 0.3s ease;
         }
 
         .waitlist-optional-card.checked {
-            border-color: rgba(59, 130, 246, 0.4);
-            background: rgba(59, 130, 246, 0.05);
+            border-color: var(--primary-color);
+            background: rgba(27, 138, 123, 0.08);
+            box-shadow: 0 0 20px rgba(27, 138, 123, 0.1);
         }
 
         .wl-check-label {
@@ -375,14 +378,13 @@
             margin-bottom: 0;
         }
 
-        /* Checkbox personalizado con tick azul */
         .wl-check-input {
             appearance: none;
             -webkit-appearance: none;
             width: 20px;
             height: 20px;
             min-width: 20px;
-            border: 2px solid rgba(255, 255, 255, 0.2);
+            border: 2px solid rgba(27, 138, 123, 0.3);
             border-radius: 6px;
             background: transparent;
             cursor: pointer;
@@ -392,9 +394,8 @@
         }
 
         .wl-check-input:checked {
-            background: #3b82f6;
-            border-color: #3b82f6;
-            box-shadow: 0 0 10px rgba(59, 130, 246, 0.35);
+            background: var(--primary-color);
+            border-color: var(--primary-color);
         }
 
         .wl-check-input:checked::after {
@@ -412,7 +413,7 @@
         .wl-pref-section {
             margin-top: 15px;
             padding-top: 15px;
-            border-top: 1px solid rgba(255, 255, 255, 0.08);
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
         }
 
         .wl-pref-section > p {
@@ -421,7 +422,6 @@
             margin-bottom: 10px;
         }
 
-        /* Radio personalizado: cuadradito con tick azul (más pequeño que el principal) */
         .wl-radio-input {
             appearance: none;
             -webkit-appearance: none;
@@ -437,9 +437,8 @@
         }
 
         .wl-radio-input:checked {
-            background: #3b82f6;
-            border-color: #3b82f6;
-            box-shadow: 0 0 8px rgba(59, 130, 246, 0.3);
+            background: var(--primary-color);
+            border-color: var(--primary-color);
         }
 
         .wl-radio-input:checked::after {
@@ -454,7 +453,6 @@
             line-height: 1;
         }
 
-        /* Labels del radio como mini-cards que se iluminan al seleccionar */
         .wl-pref-label {
             display: flex;
             align-items: center;
@@ -474,31 +472,66 @@
 
         .wl-pref-label:has(input:checked) {
             color: white;
-            background: rgba(59, 130, 246, 0.08);
-            border-color: rgba(59, 130, 246, 0.3);
+            background: rgba(27, 138, 123, 0.1);
+            border-color: rgba(27, 138, 123, 0.2);
         }
-
-        .wl-pref-label:last-child { margin-bottom: 0; }
 
         .btn-solo-espera {
             background: transparent !important;
-            border: 1px solid rgba(255, 255, 255, 0.15) !important;
-            color: rgba(255, 255, 255, 0.5) !important;
+            border: 1px solid var(--secondary-color) !important;
+            color: var(--secondary-color) !important;
             padding: 13px !important;
             font-size: 13px !important;
             font-weight: 500 !important;
-            letter-spacing: 0.5px !important;
             margin-top: 8px !important;
             box-shadow: none !important;
             text-transform: none !important;
         }
 
         .btn-solo-espera:hover:not(:disabled) {
-            border-color: rgba(255, 255, 255, 0.35) !important;
-            color: rgba(255, 255, 255, 0.85) !important;
+            background: rgba(141, 115, 91, 0.1) !important;
+            color: white !important;
+            border-color: white !important;
             transform: none !important;
-            box-shadow: none !important;
-            background: rgba(255, 255, 255, 0.04) !important;
+        }
+
+        #rescueBanner {
+            background: rgba(27, 138, 123, 0.15);
+            border: 1px solid var(--primary-color);
+            border-radius: 16px;
+            padding: 15px;
+            margin-bottom: 25px;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            justify-content: center;
+        }
+
+        #waitlistAlert {
+            background: rgba(141, 115, 91, 0.1);
+            border: 1px solid var(--secondary-color);
+            border-radius: 16px;
+            padding: 25px;
+            margin-bottom: 25px;
+            text-align: center;
+        }
+
+        #welcomePatientMessage {
+            background: rgba(27, 138, 123, 0.05);
+            border: 2px solid var(--primary-color);
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        #bomba-info {
+            background: rgba(141, 115, 91, 0.05);
+            padding: 15px;
+            border-radius: 14px;
+            margin-bottom: 24px;
+            border: 1px solid rgba(141, 115, 91, 0.2);
         }
     </style>
 </head>
@@ -513,12 +546,13 @@
 
         <div class="content">
             <!-- Rescue Mode Banner -->
-            <div id="rescueBanner" class="hidden" style="background: rgba(59, 130, 246, 0.15); border: 1px solid rgba(59, 130, 246, 0.4); border-radius: 16px; padding: 15px; margin-bottom: 25px; text-align: center; display: flex; align-items: center; gap: 12px; justify-content: center;">
+            <div id="rescueBanner" class="hidden">
                 <span style="font-size: 20px;">✨</span>
                 <p style="font-size: 14px; margin: 0; color: #fff; font-weight: 500;">
                     <strong>¡Hueco recuperado!</strong> Hemos bloqueado este horario para ti. Confirma tus datos abajo.
                 </p>
             </div>
+
             <!-- Loading State -->
             <div id="loadingState" class="hidden">
                 <div class="loading">
@@ -537,15 +571,13 @@
 
             <!-- Form -->
             <form id="citaForm">
-                <!-- 1. EMAIL (Detector) -->
                 <div class="form-group">
                     <label for="email">Correo electrónico <span class="required">*</span></label>
                     <input type="email" id="email" name="email" required placeholder="juan@correo.com">
                 </div>
 
-                <!-- BLOQUE DATOS PERSONALES (Se oculta si existe) -->
                 <div id="personalDataSection">
-                    <div id="welcomePatientMessage" class="hidden" style="background: rgba(255, 255, 255, 0.05); border: 2px solid var(--accent); border-radius: 12px; padding: 15px; margin-bottom: 20px; text-align: center;">
+                    <div id="welcomePatientMessage" class="hidden">
                         <p style="margin-bottom: 0; font-weight: 600;">✨ ¡Hola de nuevo! Te hemos reconocido. Solo elige tu tratamiento y cita.</p>
                     </div>
 
@@ -622,7 +654,6 @@
                     </div>
                 </div>
 
-                <!-- 10. TRATAMIENTO Y ESPECIALISTA -->
                 <div class="form-group">
                     <label for="tratamiento">Tratamiento <span class="required">*</span></label>
                     <select id="tratamiento" name="tratamiento" required>
@@ -633,12 +664,10 @@
                     </select>
                 </div>
 
-                <div id="bomba-info" class="hidden" style="background: rgba(255,255,255,0.05); padding: 15px; border-radius: 14px; margin-bottom: 24px; border: 1px solid rgba(255,255,255,0.1);">
-                    <p id="bomba-text" style="font-size: 14px; margin-bottom: 10px; line-height: 1.5; color: #ddd;">
-                        <strong>Aviso sobre la Bomba:</strong> La sesión de bomba habitualmente la asigna Toni después de una o varias sesiones previas de fisioterapia. Por favor, asegúrate de que es esto lo que necesitas reservar.
-                    </p>
+                <div id="bomba-info" class="hidden">
+                    <p id="bomba-text" style="font-size: 14px; margin-bottom: 10px; line-height: 1.5; color: #ddd;"></p>
                     <label style="display: flex; align-items: flex-start; cursor: pointer; text-transform: none; font-size: 14px; line-height: 1.4;">
-                        <input type="checkbox" id="acepta-bomba" name="acepta_bomba" style="width: auto; margin-top: 3px; margin-right: 12px; accent-color: white;">
+                        <input type="checkbox" id="acepta-bomba" name="acepta_bomba" style="width: auto; margin-top: 3px; margin-right: 12px; accent-color: var(--primary-color);">
                         Comprendo y acepto las condiciones. Confirmo que quiero reservar este tratamiento.
                     </label>
                 </div>
@@ -650,11 +679,8 @@
                     </select>
                 </div>
 
-                <!-- Waitlist Alert State (MUDADO AQUÍ DENTRO) -->
-                <div id="waitlistAlert" class="hidden" style="background: rgba(255, 165, 0, 0.05); border: 1px solid rgba(255, 165, 0, 0.3); border-radius: 16px; padding: 25px; margin-bottom: 25px; text-align: center;">
-                    <p id="waitlistMessage" style="font-size: 15px; line-height: 1.6; color: #f0f0f0; margin-bottom: 15px;">
-                        Lo sentimos, en este momento no hay sesiones disponibles con este especialista. Selecciona otro especialista o únete a la lista de espera y te avisaremos cuando quede un hueco libre.
-                    </p>
+                <div id="waitlistAlert" class="hidden">
+                    <p id="waitlistMessage" style="font-size: 15px; line-height: 1.6; color: #f0f0f0; margin-bottom: 15px;"></p>
                     <button type="button" id="btnOpenWaitlist" style="background: transparent; border: 2px solid white; color: white; padding: 12px; font-size: 14px; margin-top: 0;">Unirse a lista de espera</button>
                 </div>
 
@@ -677,7 +703,6 @@
                     <textarea id="motivo" name="motivo" required placeholder="¿En qué podemos ayudarte?"></textarea>
                 </div>
 
-                <!-- Opción: Apuntarse también a la lista de espera al reservar (Escenario 2) -->
                 <div id="waitlistOptionalSection" class="hidden waitlist-optional-card">
                     <label class="wl-check-label">
                         <input type="checkbox" id="also_waitlist" class="wl-check-input">
@@ -696,12 +721,10 @@
                     </div>
                 </div>
 
-                <!-- HONEYPOT (Filtro anti-bot) -->
                 <input type="text" name="website_hp" id="website_hp" style="display:none !important" tabindex="-1" autocomplete="off">
 
                 <button type="submit" id="submitBtn">Confirmar Cita</button>
 
-                <!-- Opción: Solo unirse a lista de espera sin reservar (Escenario 3) -->
                 <div id="soloListaEsperaSection" class="hidden" style="text-align: center;">
                     <p style="font-size: 13px; color: var(--text-secondary); margin-bottom: 0; margin-top: 5px;">¿Ninguna fecha te viene bien?</p>
                     <button type="button" id="btnSoloListaEspera" class="btn-solo-espera">Unirme solo a la lista de espera →</button>
@@ -718,7 +741,8 @@
                 </div>
             </div>
         </div>
-    <!-- Modal Alerta Seguridad -->
+
+    <!-- Modals -->
     <div class="modal-overlay" id="securityModal">
         <div class="modal-content" style="text-align: center;">
             <button class="modal-close" onclick="document.getElementById('securityModal').classList.remove('active')">×</button>
@@ -729,7 +753,6 @@
         </div>
     </div>
 
-    <!-- Modal Lista Espera -->
     <div class="modal-overlay" id="waitlistModal">
         <div class="modal-content">
             <button class="modal-close" id="closeWaitlist">×</button>
@@ -768,7 +791,6 @@
     </div>
 
     <script>
-        // 🔧 CONFIGURACIÓN - Tu URL de webhook de n8n
         const CONFIG = {
             WEBHOOK_URL: 'https://mapaima-n8n.1zsf1t.easypanel.host/webhook/openemr-actions'
         };
@@ -793,27 +815,20 @@
                     })
                 });
                 let data = await response.json();
-
-                // Desempaquetar respuesta de n8n si viene en array o con propiedad .json
                 if (Array.isArray(data)) data = data[0];
                 if (data && data.json) data = data.json;
 
-                // Ajuste para n8n: comprobamos tanto 'exists' como si viene 'patientId' directamente
                 const isFound = data && (data.exists || data.patientId);
 
                 if (isFound) {
                     patientFound = true;
                     existingPatientId = data.patientId;
-                    
-                    // 1. Rellenar campos del formulario principal (ocultos)
                     if (data.fname) document.getElementById('nombre').value = data.fname;
                     if (data.lname) document.getElementById('primer_apellido').value = data.lname;
                     if (data.mname) document.getElementById('segundo_apellido').value = data.mname;
                     if (data.telefono || data.phone_cell) {
                         document.getElementById('telefono').value = data.telefono || data.phone_cell;
                     }
-
-                    // 2. Rellenar campos del MODAL directamente (Doble seguridad)
                     if (data.fname) document.getElementById('wl_nombre').value = data.fname;
                     const apeCompleto = ((data.lname || '') + ' ' + (data.mname || '')).trim();
                     if (apeCompleto) document.getElementById('wl_apellidos').value = apeCompleto;
@@ -822,7 +837,6 @@
                     }
                     document.getElementById('wl_email').value = email;
                     
-                    // Ocultamos los campos que no hacen falta y avisamos
                     document.getElementById('nombre').required = false;
                     document.getElementById('primer_apellido').required = false;
                     document.getElementById('fechaNacimiento').required = false;
@@ -833,7 +847,6 @@
                     personalDataSection.querySelectorAll('.form-group').forEach(group => group.classList.add('hidden'));
                     welcomePatientMessage.classList.remove('hidden');
                 } else {
-                    // Si no existe, nos aseguramos de que todo sea visible
                     patientFound = false;
                     existingPatientId = null;
                     document.getElementById('nombre').required = true;
@@ -842,14 +855,12 @@
                     document.getElementById('genero').required = true;
                     document.getElementById('dni').required = true;
                     document.getElementById('telefono').required = true;
-                    
                     personalDataSection.querySelectorAll('.form-group').forEach(group => group.classList.remove('hidden'));
                     welcomePatientMessage.classList.add('hidden');
                 }
             } catch (e) { console.error("Error comprobando paciente", e); }
         });
 
-        // Elementos del DOM
         const loadingState = document.getElementById('loadingState');
         const errorState = document.getElementById('errorState');
         const errorMessage = document.getElementById('errorMessage');
@@ -866,148 +877,65 @@
         const waitlistOptionalSection = document.getElementById('waitlistOptionalSection');
         const soloListaEsperaSection = document.getElementById('soloListaEsperaSection');
 
-        // Mapa de especialistas vinculables
         const especialistasPorTratamiento = {
-            'sesion_fisioterapia': [
-                { value: 'toni', text: 'Toni Vercher' },
-                { value: 'patri', text: 'Patricia Jimenez' }
-            ],
-            'bomba': [
-                { value: 'oscar', text: 'Oscar Tormo' },
-                { value: 'laura', text: 'Laura Bas' }
-            ],
-            'combinado': [
-                { value: 'toni', text: 'Toni Vercher' },
-                { value: 'patri', text: 'Patricia Jimenez' }
-            ]
+            'sesion_fisioterapia': [{ value: 'toni', text: 'Toni Vercher' }, { value: 'patri', text: 'Patricia Jimenez' }],
+            'bomba': [{ value: 'oscar', text: 'Oscar Tormo' }, { value: 'laura', text: 'Laura Bas' }],
+            'combinado': [{ value: 'toni', text: 'Toni Vercher' }, { value: 'patri', text: 'Patricia Jimenez' }]
         };
 
-        // Obtener parámetros de la URL
         const urlParams = new URLSearchParams(window.location.search);
         const remoteJid = urlParams.get('id') || urlParams.get('remoteJid') || '';
-        
-        // Parámetros de Rescate
-        const rescueParams = {
-            esp: urlParams.get('esp'),
-            trat: urlParams.get('trat'),
-            fecha: urlParams.get('fecha'),
-            hora: urlParams.get('hora')
-        };
+        const rescueParams = { esp: urlParams.get('esp'), trat: urlParams.get('trat'), fecha: urlParams.get('fecha'), hora: urlParams.get('hora') };
         let isRescueMode = !!(rescueParams.esp && rescueParams.fecha && rescueParams.hora);
 
-        // ==========================================
-        // CARGAR SLOTS DISPONIBLES
-        // ==========================================
         async function cargarSlots(especialista) {
             loadingState.classList.remove('hidden');
             errorState.classList.add('hidden');
-            
-            // Restablecer vistas cada vez que cargamos
             document.getElementById('waitlistAlert').classList.add('hidden');
             document.getElementById('grupo-fecha').classList.remove('hidden');
             document.getElementById('grupo-hora').classList.remove('hidden');
             document.getElementById('grupo-motivo').classList.remove('hidden');
             waitlistOptionalSection.classList.add('hidden');
             soloListaEsperaSection.classList.add('hidden');
-            document.getElementById('also_waitlist').checked = false;
-            document.getElementById('waitlistPrefSection').classList.add('hidden');
-            waitlistOptionalSection.classList.remove('checked');
-            submitBtn.classList.remove('hidden');
-            
             selectFecha.disabled = true;
             selectFecha.innerHTML = '<option value="">Cargando disponibilidad...</option>';
-            selectHora.innerHTML = '<option value="">Selecciona primero especialista y día</option>';
             selectHora.disabled = true;
 
             try {
-                // POST con form-urlencoded (NO genera preflight CORS como application/json)
                 const response = await fetch(CONFIG.WEBHOOK_URL, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                    body: new URLSearchParams({
-                        action: 'get_slots',
-                        especialista: especialista,
-                        tratamiento: selectTratamiento.value
-                    })
+                    body: new URLSearchParams({ action: 'get_slots', especialista, tratamiento: selectTratamiento.value })
                 });
-
-                console.log('Response status:', response.status);
-
-                if (!response.ok) {
-                    const errorText = await response.text();
-                    console.error('Server error:', errorText);
-                    throw new Error('Error del servidor: ' + response.status);
-                }
-
-                const rawText = await response.text();
-                console.log('Raw response:', rawText);
-
-                let data;
-                try {
-                    data = JSON.parse(rawText);
-                } catch (e) {
-                    throw new Error('Respuesta no válida: ' + rawText.substring(0, 100));
-                }
-
-                // Desempaquetar respuesta de n8n (puede venir anidada)
-                if (Array.isArray(data)) data = data[0];
-                if (data && data.json) data = data.json;
+                let data = await response.json();
                 if (Array.isArray(data)) data = data[0];
                 if (data && data.json) data = data.json;
 
-                console.log('Parsed data:', data);
-
-                if (!data || !data.success || !data.slots) {
-                    throw new Error('Sin horarios disponibles. Respuesta: ' + JSON.stringify(data).substring(0, 80));
-                }
+                if (!data || !data.success || !data.slots) throw new Error('Sin horarios disponibles.');
 
                 slotsDisponibles = data.slots;
-                
                 const arrayFechas = Object.keys(slotsDisponibles).sort();
 
                 if (arrayFechas.length === 0) {
-                    // MODO LISTA DE ESPERA - No hay huecos
                     const espName = selectEspecialista.options[selectEspecialista.selectedIndex].text.split(' ')[0];
-                    document.getElementById('waitlistMessage').innerHTML = `Lo sentimos, en este momento no hay sesiones disponibles con <strong>${espName}</strong>. Selecciona otro especialista o únete a la lista de espera y te avisaremos cuando quede un hueco libre.`;
-                    
-                    // Ocultamos las partes de abajo del formulario sin ocultar los campos de arriba
+                    document.getElementById('waitlistMessage').innerHTML = `Lo sentimos, en este momento no hay sesiones disponibles con <strong>${espName}</strong>. Selecciona otro especialista o únete a la lista de espera.`;
                     document.getElementById('grupo-fecha').classList.add('hidden');
                     document.getElementById('grupo-hora').classList.add('hidden');
                     document.getElementById('grupo-motivo').classList.add('hidden');
-                    waitlistOptionalSection.classList.add('hidden');
-                    soloListaEsperaSection.classList.add('hidden');
                     submitBtn.classList.add('hidden');
-                    
                     document.getElementById('waitlistAlert').classList.remove('hidden');
                 } else {
-                    // MODO NORMAL - Hay huecos
-                    document.getElementById('waitlistAlert').classList.add('hidden');
-                    document.getElementById('grupo-fecha').classList.remove('hidden');
-                    document.getElementById('grupo-hora').classList.remove('hidden');
-                    document.getElementById('grupo-motivo').classList.remove('hidden');
-                    
                     if (isRescueMode) {
-                        waitlistOptionalSection.classList.add('hidden'); // No tiene sentido si ya tiene hueco
-                        soloListaEsperaSection.classList.add('hidden');
                         document.getElementById('rescueBanner').classList.remove('hidden');
-                        
-                        // Forzar solo la fecha y hora del rescate
                         selectFecha.innerHTML = `<option value="${rescueParams.fecha}">${formatearFecha(rescueParams.fecha)}</option>`;
                         selectFecha.value = rescueParams.fecha;
-                        selectFecha.disabled = true;
-                        
                         selectHora.innerHTML = `<option value="${rescueParams.hora}">${rescueParams.hora}</option>`;
                         selectHora.value = rescueParams.hora;
-                        selectHora.disabled = true;
                     } else {
                         waitlistOptionalSection.classList.remove('hidden');
                         soloListaEsperaSection.classList.remove('hidden');
-                        document.getElementById('rescueBanner').classList.add('hidden');
-                        
-                        // Actualizar el nombre del especialista en el radio de preferencia
                         const espNameLabel = selectEspecialista.options[selectEspecialista.selectedIndex].text.split(' ')[0];
                         document.getElementById('waitlistPrefEspName').textContent = espNameLabel;
-                        
                         selectFecha.innerHTML = '<option value="">Selecciona una fecha</option>';
                         arrayFechas.forEach(fecha => {
                             const option = document.createElement('option');
@@ -1019,31 +947,20 @@
                     }
                     submitBtn.classList.remove('hidden');
                 }
-                
                 loadingState.classList.add('hidden');
-
             } catch (error) {
-                console.error('Error completo:', error);
                 loadingState.classList.add('hidden');
                 errorMessage.textContent = error.message;
                 errorState.classList.remove('hidden');
-                selectFecha.innerHTML = '<option value="">Selecciona primero especialista</option>';
             }
         }
 
-        // ==========================================
-        // EVENTOS
-        // ==========================================
         function actualizarEspecialistas() {
             const tratamiento = selectTratamiento.value;
-            const requiereAceptacion = tratamiento === 'bomba' || tratamiento === 'combinado';
             const haAceptado = aceptaBomba.checked;
-
-            const anteriorSeleccion = selectEspecialista.value;
             selectEspecialista.innerHTML = '<option value="">Selecciona un profesional</option>';
-            
             if (tratamiento && especialistasPorTratamiento[tratamiento]) {
-                if (requiereAceptacion && !haAceptado) {
+                if ((tratamiento === 'bomba' || tratamiento === 'combinado') && !haAceptado) {
                     selectEspecialista.disabled = true;
                     selectEspecialista.innerHTML = '<option value="">Acepta la condición primero</option>';
                 } else {
@@ -1057,78 +974,28 @@
                 }
             } else {
                 selectEspecialista.disabled = true;
-                selectEspecialista.innerHTML = '<option value="">Selecciona primero un tratamiento</option>';
             }
-
-            // Al cambiar los especialistas o tratamientos, bloqueamos la fecha
-            selectFecha.disabled = true;
-            selectFecha.innerHTML = '<option value="">Selecciona primero especialista</option>';
-            selectHora.disabled = true;
-            selectHora.innerHTML = '<option value="">Selecciona primero especialista y día</option>';
-            
-            document.getElementById('waitlistAlert').classList.add('hidden');
-            document.getElementById('grupo-fecha').classList.remove('hidden');
-            document.getElementById('grupo-hora').classList.remove('hidden');
-            document.getElementById('grupo-motivo').classList.remove('hidden');
-            waitlistOptionalSection.classList.add('hidden');
-            soloListaEsperaSection.classList.add('hidden');
-            document.getElementById('also_waitlist').checked = false;
-            document.getElementById('waitlistPrefSection').classList.add('hidden');
-            waitlistOptionalSection.classList.remove('checked');
-            submitBtn.classList.remove('hidden');
         }
 
         selectTratamiento.addEventListener('change', function () {
-            const tratamiento = this.value;
-            
-            if (tratamiento === 'bomba') {
+            if (this.value === 'bomba') {
                 bombaInfo.classList.remove('hidden');
-                bombaText.innerHTML = '<strong>Aviso sobre la Bomba:</strong> La sesión de bomba habitualmente la asigna Toni después de una o varias sesiones previas de fisioterapia. Por favor, asegúrate de que es esto lo que necesitas reservar.';
-                aceptaBomba.required = true;
-                aceptaBomba.checked = false; // Forzar a volver a aceptar
-            } else if (tratamiento === 'combinado') {
+                bombaText.innerHTML = '<strong>Aviso sobre la Bomba:</strong> La sesión de bomba habitualmente la asigna Toni después de una o varias sesiones previas.';
+            } else if (this.value === 'combinado') {
                 bombaInfo.classList.remove('hidden');
-                bombaText.innerHTML = '<strong>Aviso Tratamiento Combinado:</strong> El tratamiento combinado consiste en fisioterapia + bomba. La sesión de bomba habitualmente la asigna Toni después de una o varias sesiones previas de fisioterapia. Por favor, asegúrate de que es esto lo que necesitas reservar.';
-                aceptaBomba.required = true;
-                aceptaBomba.checked = false; // Forzar a volver a aceptar
+                bombaText.innerHTML = '<strong>Aviso Tratamiento Combinado:</strong> Fisioterapia + bomba.';
             } else {
                 bombaInfo.classList.add('hidden');
-                aceptaBomba.required = false;
-                aceptaBomba.checked = false;
             }
-
             actualizarEspecialistas();
         });
 
         aceptaBomba.addEventListener('change', actualizarEspecialistas);
-
-        selectEspecialista.addEventListener('change', function () {
-            const especialista = this.value;
-            if (especialista) {
-                cargarSlots(especialista);
-            } else {
-                selectFecha.disabled = true;
-                selectFecha.innerHTML = '<option value="">Selecciona primero especialista</option>';
-                selectHora.disabled = true;
-                selectHora.innerHTML = '<option value="">Selecciona primero especialista y día</option>';
-                document.getElementById('waitlistAlert').classList.add('hidden');
-                document.getElementById('grupo-fecha').classList.remove('hidden');
-                document.getElementById('grupo-hora').classList.remove('hidden');
-                document.getElementById('grupo-motivo').classList.remove('hidden');
-                waitlistOptionalSection.classList.add('hidden');
-                soloListaEsperaSection.classList.add('hidden');
-                document.getElementById('also_waitlist').checked = false;
-                document.getElementById('waitlistPrefSection').classList.add('hidden');
-                waitlistOptionalSection.classList.remove('checked');
-                submitBtn.classList.remove('hidden');
-            }
-        });
-
+        selectEspecialista.addEventListener('change', function () { if (this.value) cargarSlots(this.value); });
         selectFecha.addEventListener('change', function () {
             const fecha = this.value;
             selectHora.innerHTML = '<option value="">Selecciona una hora</option>';
             selectHora.disabled = !fecha;
-
             if (fecha && slotsDisponibles[fecha]) {
                 slotsDisponibles[fecha].forEach(hora => {
                     const option = document.createElement('option');
@@ -1141,232 +1008,90 @@
 
         form.addEventListener('submit', async function (e) {
             e.preventDefault();
-
-            // 1. Verificación Honeypot (Filtro Anti-bot pasivo)
-            const hpFieldValue = document.getElementById('website_hp').value;
-            if (hpFieldValue !== '') {
-                console.warn('Bot detectado interceptado.');
-                return; // Fallo silencioso para no dar pistas al bot
-            }
-
+            if (document.getElementById('website_hp').value !== '') return;
             submitBtn.disabled = true;
-            submitBtn.textContent = 'Verificando seguridad...';
-
+            submitBtn.textContent = 'Enviando...';
             try {
-                // 2. Verificación reCAPTCHA v3 (A prueba de bloqueos)
                 const recaptchaToken = await new Promise((resolve) => {
-                    if (typeof grecaptcha === 'undefined') {
-                        resolve('sin_recaptcha_cargado'); 
-                    } else {
-                        grecaptcha.ready(function() {
-                            try {
-                                grecaptcha.execute('6LcOYLcsAAAAAJChTMzGai-FB2hI2IpbT6IxlBzZ', {action: 'submit'})
-                                    .then(function(token) { resolve(token); })
-                                    .catch(function(err) { resolve('error_generando_token'); });
-                            } catch (error) {
-                                console.error("Error de configuración de reCAPTCHA:", error);
-                                resolve('error_sintaxis_recaptcha');
-                            }
-                        });
-                    }
+                    grecaptcha.ready(() => {
+                        grecaptcha.execute('6LcOYLcsAAAAAJChTMzGai-FB2hI2IpbT6IxlBzZ', {action: 'submit'}).then(resolve);
+                    });
                 });
-
-                submitBtn.textContent = 'Enviando...';
-
-
                 const response = await fetch(CONFIG.WEBHOOK_URL, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
                     body: new URLSearchParams({
-                        action: 'create_appointment',
-                        recaptcha_token: recaptchaToken,
-                        website_hp: hpFieldValue,
-                        especialista: selectEspecialista.value,
-                        id: remoteJid,
-                        email: inputEmail.value.trim(),
-                        nombre: document.getElementById('nombre')?.value.trim() || '',
-                        primerApellido: document.getElementById('primer_apellido')?.value.trim() || '',
-                        segundoApellido: document.getElementById('segundo_apellido')?.value.trim() || '',
-                        fechaNacimiento: document.getElementById('fechaNacimiento')?.value || '',
-                        genero: document.getElementById('genero')?.value || '',
-                        dni: document.getElementById('dni')?.value.trim() || '',
-                        telefono: document.getElementById('telefono')?.value.trim() || '',
-                        ocupacion: document.getElementById('ocupacion')?.value.trim() || '',
-                        direccion: document.getElementById('direccion')?.value.trim() || '',
-                        cp: document.getElementById('codigo_postal')?.value.trim() || '',
-                        localidad: document.getElementById('localidad')?.value.trim() || '',
-                        provincia: document.getElementById('provincia')?.value.trim() || '',
-                        pais: document.getElementById('pais')?.value.trim() || '',
-                        id_paciente_existente: existingPatientId,
-                        tratamiento: selectTratamiento.value,
-                        fecha: selectFecha.value,
-                        hora: selectHora.value,
-                        motivo: document.getElementById('motivo')?.value.trim() || '',
-                        also_waitlist: document.getElementById('also_waitlist')?.checked || false,
-                        waitlist_especialista: document.querySelector('input[name="waitlist_pref"]:checked')?.value || 'cualquiera'
+                        action: 'create_appointment', recaptcha_token: recaptchaToken,
+                        especialista: selectEspecialista.value, email: inputEmail.value.trim(),
+                        nombre: document.getElementById('nombre')?.value || '',
+                        primerApellido: document.getElementById('primer_apellido')?.value || '',
+                        id_paciente_existente: existingPatientId, tratamiento: selectTratamiento.value,
+                        fecha: selectFecha.value, hora: selectHora.value, motivo: document.getElementById('motivo')?.value || ''
                     })
                 });
-
-                if (!response.ok) throw new Error('Error de conexión.');
-
                 const data = await response.json();
-                
-                // Si el servidor rechaza (ej: +2 citas, o bot)
                 if (data.success === false) {
-                    document.getElementById('securityMessage').textContent = data.message || 'No se pudo reservar la cita.';
+                    document.getElementById('securityMessage').textContent = data.message;
                     document.getElementById('securityModal').classList.add('active');
                     submitBtn.disabled = false;
-                    submitBtn.textContent = 'Confirmar Cita';
                     return;
                 }
-
                 form.classList.add('hidden');
                 successState.classList.remove('hidden');
-            } catch (error) {
-                alert('Hubo un error al procesar tu cita. Por favor, inténtalo de nuevo.');
-                submitBtn.disabled = false;
-                submitBtn.textContent = 'Confirmar Cita';
-            }
+            } catch (error) { alert('Error al procesar tu cita.'); submitBtn.disabled = false; }
         });
 
-        // ==========================================
-        // LISTA DE ESPERA EVENTOS
-        // ==========================================
-        const waitlistModal = document.getElementById('waitlistModal');
-        
         function openWaitlist() {
-            try {
-                const modal = document.getElementById('waitlistModal');
-                if (!modal) return;
-
-                // Población segura de campos
-                const setVal = (tid, sid) => {
-                    const t = document.getElementById(tid);
-                    const s = document.getElementById(sid);
-                    if (t && s) t.value = s.value || '';
-                };
-
-                setVal('wl_nombre', 'nombre');
-                setVal('wl_telefono', 'telefono');
-                setVal('wl_email', 'email');
-
-                const wlApe = document.getElementById('wl_apellidos');
-                const pApe = document.getElementById('primer_apellido');
-                const sApe = document.getElementById('segundo_apellido');
-                if (wlApe) {
-                    const v1 = pApe ? pApe.value : '';
-                    const v2 = sApe ? sApe.value : '';
-                    wlApe.value = (v1 + ' ' + v2).trim();
-                }
-
-                const wlCualquiera = document.getElementById('wl_cualquiera');
-                if (wlCualquiera) wlCualquiera.checked = false;
-
-                modal.classList.add('active');
-            } catch (e) {
-                console.error("Error al abrir lista espera:", e);
-            }
+            document.getElementById('wl_nombre').value = document.getElementById('nombre').value;
+            document.getElementById('wl_email').value = document.getElementById('email').value;
+            document.getElementById('waitlistModal').classList.add('active');
         }
 
-        // Asignación segura de eventos
-        const attachWaitlist = (id) => {
-            const btn = document.getElementById(id);
-            if (btn) btn.addEventListener('click', (e) => {
-                e.preventDefault();
-                openWaitlist();
-            });
-        };
-
-        attachWaitlist('btnOpenWaitlist');
-        attachWaitlist('btnSoloListaEspera');
-
-        // Escenario 2: Checkbox "también lista de espera" → mostrar/ocultar preferencia
-        document.getElementById('also_waitlist')?.addEventListener('change', function() {
-            const prefSection = document.getElementById('waitlistPrefSection');
-            const card = document.getElementById('waitlistOptionalSection');
-            if (prefSection) prefSection.classList.toggle('hidden', !this.checked);
-            if (card) card.classList.toggle('checked', this.checked);
-        });
-
-        document.getElementById('closeWaitlist')?.addEventListener('click', () => {
-            document.getElementById('waitlistModal')?.classList.remove('active');
-        });
+        document.getElementById('btnOpenWaitlist')?.addEventListener('click', openWaitlist);
+        document.getElementById('btnSoloListaEspera')?.addEventListener('click', openWaitlist);
+        document.getElementById('closeWaitlist')?.addEventListener('click', () => document.getElementById('waitlistModal').classList.remove('active'));
 
         document.getElementById('waitlistForm').addEventListener('submit', async function (e) {
             e.preventDefault();
             const btn = document.getElementById('btnSubmitWaitlist');
             btn.disabled = true;
-            btn.textContent = 'Apuntando...';
-
             try {
-                const response = await fetch(CONFIG.WEBHOOK_URL, {
+                await fetch(CONFIG.WEBHOOK_URL, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
                     body: new URLSearchParams({
                         action: 'join_waitlist',
                         especialista: document.getElementById('wl_cualquiera').checked ? 'cualquiera' : selectEspecialista.value,
-                        tratamiento: selectTratamiento.value,
-                        nombre: document.getElementById('wl_nombre').value.trim(),
-                        apellidos: document.getElementById('wl_apellidos').value.trim(),
-                        telefono: document.getElementById('wl_telefono').value.trim(),
-                        email: document.getElementById('wl_email').value.trim()
+                        nombre: document.getElementById('wl_nombre').value,
+                        email: document.getElementById('wl_email').value
                     })
                 });
-
-                // NO COMPROBAMOS response.ok AHORA PORQUE ES DE MENTIRA EN EL NODO
-                // Si quisieramos comprobarlo: if (!response.ok) throw new Error();
-
-                waitlistModal.classList.remove('active');
-                document.getElementById('waitlistAlert').classList.add('hidden');
-                form.classList.add('hidden'); // Ocultar form si tiene éxito apuntarse
-                
-                successState.innerHTML = `
-                    <div class="success">
-                        <div class="success-icon">📝</div>
-                        <h2 style="margin-bottom: 15px;">¡Apuntado a la lista!</h2>
-                        <p style="color: var(--text-secondary); line-height: 1.6;">Te avisaremos al instante en cuanto se libere un hueco para ti.</p>
-                    </div>
-                `;
+                document.getElementById('waitlistModal').classList.remove('active');
+                form.classList.add('hidden');
                 successState.classList.remove('hidden');
-            } catch (error) {
-                alert('Hubo un error al apuntarte. Por favor, inténtalo de nuevo.');
-                btn.disabled = false;
-                btn.textContent = 'Apuntarme a la lista';
-            }
+            } catch (e) { alert('Error al apuntarte.'); btn.disabled = false; }
         });
 
-        // ==========================================
-        // UTILIDADES
-        // ==========================================
         function formatearFecha(fecha) {
             const [year, month, day] = fecha.split('-');
             const fechaObj = new Date(year, month - 1, day);
-            const dias = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
-            const meses = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
-            return `${dias[fechaObj.getDay()]}, ${parseInt(day)} de ${meses[fechaObj.getMonth()]}`;
+            const dias = ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb'];
+            const meses = ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'];
+            return `${dias[fechaObj.getDay()]}, ${parseInt(day)} ${meses[fechaObj.getMonth()]}`;
         }
 
-        // ==========================================
-        // INICIALIZACIÓN
-        // ==========================================
         window.addEventListener('load', () => {
             if (rescueParams.trat) {
                 selectTratamiento.value = rescueParams.trat;
-                // Disparar el evento change manualmente
                 selectTratamiento.dispatchEvent(new Event('change'));
-                
-                if (rescueParams.esp) {
-                    // Esperar un poco a que actualizarEspecialistas termine
-                    setTimeout(() => {
-                        selectEspecialista.value = rescueParams.esp;
-                        if (isRescueMode) {
-                            selectEspecialista.disabled = true;
-                            selectTratamiento.disabled = true;
-                            aceptaBomba.disabled = true;
-                        }
-                        cargarSlots(rescueParams.esp);
-                    }, 100);
-                }
+                setTimeout(() => {
+                    selectEspecialista.value = rescueParams.esp;
+                    if (isRescueMode) {
+                        selectEspecialista.disabled = true;
+                        selectTratamiento.disabled = true;
+                    }
+                    cargarSlots(rescueParams.esp);
+                }, 100);
             }
         });
     </script>
