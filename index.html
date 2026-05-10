@@ -5,7 +5,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Agendar Cita | Toni Vercher Fisioterapia</title>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Google Fonts: Outfit -->
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <!-- reCAPTCHA v3 -->
     <script src="https://www.google.com/recaptcha/api.js?render=6LcOYLcsAAAAAJChTMzGai-FB2hI2IpbT6IxlBzZ"></script>
     <style>
         :root {
@@ -22,7 +25,11 @@
             --accent-glow: rgba(27, 138, 123, 0.15);
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
         body {
             font-family: 'Outfit', sans-serif;
@@ -54,12 +61,17 @@
         .container::before {
             content: '';
             position: absolute;
-            top: 0; left: 0; right: 0;
+            top: 0;
+            left: 0;
+            right: 0;
             height: 3px;
             background: linear-gradient(90deg, transparent, var(--primary-color), transparent);
         }
 
-        .header { padding: 45px 35px 25px; text-align: center; }
+        .header {
+            padding: 45px 35px 25px;
+            text-align: center;
+        }
 
         .brand-logo {
             font-size: 1.4rem;
@@ -80,12 +92,29 @@
             letter-spacing: 5px;
             margin-top: 5px;
             color: var(--secondary-color);
+            opacity: 1;
         }
 
-        .header h1 { font-size: 26px; margin-bottom: 10px; color: white; font-weight: 600; }
-        .header p { color: var(--text-secondary); font-size: 15px; line-height: 1.6; }
-        .content { padding: 0 35px 40px; }
-        .form-group { margin-bottom: 24px; }
+        .header h1 {
+            font-size: 26px;
+            margin-bottom: 10px;
+            color: white;
+            font-weight: 600;
+        }
+
+        .header p {
+            color: var(--text-secondary);
+            font-size: 15px;
+            line-height: 1.6;
+        }
+
+        .content {
+            padding: 0 35px 40px;
+        }
+
+        .form-group {
+            margin-bottom: 24px;
+        }
 
         label {
             display: block;
@@ -97,9 +126,14 @@
             letter-spacing: 1px;
         }
 
-        .required { color: var(--primary-color); }
+        .required {
+            color: var(--primary-color);
+            opacity: 1;
+        }
 
-        input, select, textarea {
+        input,
+        select,
+        textarea {
             width: 100%;
             padding: 15px 18px;
             background: rgba(255, 255, 255, 0.03);
@@ -112,15 +146,33 @@
             outline: none;
         }
 
-        input:focus, select:focus, textarea:focus {
+        input:focus,
+        select:focus,
+        textarea:focus {
             border-color: var(--primary-color);
             background: rgba(27, 138, 123, 0.05);
             box-shadow: 0 0 0 1px var(--primary-color);
         }
 
-        ::placeholder { color: rgba(255, 255, 255, 0.2); }
-        option { background: #1a1e1d; color: white; }
-        textarea { min-height: 110px; resize: vertical; }
+        ::placeholder {
+            color: rgba(255, 255, 255, 0.2);
+        }
+
+        option {
+            background: #1a1e1d;
+            color: white;
+        }
+
+        textarea {
+            min-height: 110px;
+            resize: vertical;
+        }
+
+        select:disabled {
+            background: rgba(255, 255, 255, 0.01);
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
 
         button {
             width: 100%;
@@ -145,29 +197,87 @@
             background: var(--primary-hover);
         }
 
-        button:disabled {
-            opacity: 0.5;
-            background: var(--accent-gray);
-            color: var(--text-secondary);
-            cursor: wait;
+        button:active {
+            transform: translateY(-1px);
         }
 
-        .loading, .error, .success { text-align: center; padding: 30px; }
+        button:disabled {
+            opacity: 0.5;
+            cursor: wait;
+            background: var(--accent-gray);
+            color: var(--text-secondary);
+            box-shadow: none;
+        }
+
+        .loading,
+        .error,
+        .success {
+            text-align: center;
+            padding: 30px;
+        }
+
+        .loading {
+            color: white;
+        }
+
         .spinner {
             border: 2px solid rgba(27, 138, 123, 0.1);
             border-top: 2px solid var(--primary-color);
             border-radius: 50%;
             width: 45px;
             height: 45px;
-            animation: spin 0.8s linear infinite;
+            animation: spin 0.8s cubic-bezier(0.5, 0.1, 0.4, 0.9) infinite;
             margin: 0 auto 20px;
         }
 
-        @keyframes spin { to { transform: rotate(360deg); } }
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
 
+        .error {
+            color: #ff5252;
+            background: rgba(255, 82, 82, 0.05);
+            border: 1px solid rgba(255, 82, 82, 0.2);
+            border-radius: 16px;
+            padding: 20px;
+            margin: 10px 0;
+        }
+
+        .success {
+            color: white;
+        }
+
+        .success-icon {
+            font-size: 70px;
+            margin-bottom: 25px;
+            display: block;
+            filter: drop-shadow(0 0 20px rgba(27, 138, 123, 0.3));
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                border-radius: 0;
+                min-height: 100vh;
+            }
+
+            body {
+                padding: 0;
+            }
+        }
+
+        /* --- Modal Lista de Espera --- */
         .modal-overlay {
             position: fixed;
-            top: 0; left: 0; right: 0; bottom: 0;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
             background: rgba(0, 0, 0, 0.85);
             backdrop-filter: blur(8px);
             display: flex;
@@ -179,7 +289,10 @@
             transition: opacity 0.3s ease;
         }
 
-        .modal-overlay.active { opacity: 1; pointer-events: all; }
+        .modal-overlay.active {
+            opacity: 1;
+            pointer-events: all;
+        }
 
         .modal-content {
             background: var(--surface-color);
@@ -188,29 +301,179 @@
             width: 90%;
             max-width: 450px;
             padding: 30px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
             transform: translateY(20px);
             transition: transform 0.3s ease;
             position: relative;
         }
 
-        .modal-overlay.active .modal-content { transform: translateY(0); }
+        .modal-overlay.active .modal-content {
+            transform: translateY(0);
+        }
+
+        .modal-header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .modal-header h3 {
+            font-size: 22px;
+            color: white;
+            margin-bottom: 10px;
+        }
+
+        .modal-header p {
+            color: var(--text-secondary);
+            font-size: 14px;
+            line-height: 1.5;
+        }
 
         .modal-close {
             position: absolute;
-            top: 15px; right: 15px;
-            background: none; border: none;
+            top: 15px;
+            right: 15px;
+            background: none;
+            border: none;
             color: var(--text-secondary);
-            font-size: 24px; cursor: pointer;
+            font-size: 24px;
+            cursor: pointer;
+            box-shadow: none !important;
+            padding: 0 !important;
+            width: auto !important;
+            margin: 0 !important;
         }
 
-        .hidden { display: none !important; }
+        .modal-close:hover {
+            color: var(--primary-color);
+            transform: none !important;
+            background: none !important;
+        }
 
-        #rescueBanner {
-            background: rgba(27, 138, 123, 0.15);
-            border: 1px solid var(--primary-color);
-            border-radius: 16px;
-            padding: 15px; margin-bottom: 25px;
-            text-align: center; display: flex; align-items: center; gap: 12px; justify-content: center;
+        /* --- Sección Lista de Espera Opcional --- */
+        .waitlist-optional-card {
+            background: rgba(27, 138, 123, 0.03);
+            border: 1px solid rgba(27, 138, 123, 0.1);
+            border-radius: 14px;
+            padding: 18px 20px;
+            margin-bottom: 24px;
+            transition: all 0.3s ease;
+        }
+
+        .waitlist-optional-card.checked {
+            border-color: var(--primary-color);
+            background: rgba(27, 138, 123, 0.08);
+            box-shadow: 0 0 20px rgba(27, 138, 123, 0.1);
+        }
+
+        .wl-check-label {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            cursor: pointer;
+            text-transform: none;
+            font-size: 14px;
+            line-height: 1.5;
+            color: #d0d0d0;
+            letter-spacing: 0;
+            margin-bottom: 0;
+        }
+
+        .wl-check-input {
+            appearance: none;
+            -webkit-appearance: none;
+            width: 20px;
+            height: 20px;
+            min-width: 20px;
+            border: 2px solid rgba(27, 138, 123, 0.3);
+            border-radius: 6px;
+            background: transparent;
+            cursor: pointer;
+            position: relative;
+            transition: all 0.2s ease;
+            margin-top: 2px;
+        }
+
+        .wl-check-input:checked {
+            background: var(--primary-color);
+            border-color: var(--primary-color);
+        }
+
+        .wl-check-input:checked::after {
+            content: '✓';
+            position: absolute;
+            color: white;
+            font-size: 12px;
+            font-weight: 800;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            line-height: 1;
+        }
+
+        .wl-pref-section {
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .wl-pref-section > p {
+            font-size: 13px;
+            color: var(--text-secondary);
+            margin-bottom: 10px;
+        }
+
+        .wl-radio-input {
+            appearance: none;
+            -webkit-appearance: none;
+            width: 16px;
+            height: 16px;
+            min-width: 16px;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            border-radius: 5px;
+            background: transparent;
+            cursor: pointer;
+            position: relative;
+            transition: all 0.2s ease;
+        }
+
+        .wl-radio-input:checked {
+            background: var(--primary-color);
+            border-color: var(--primary-color);
+        }
+
+        .wl-radio-input:checked::after {
+            content: '✓';
+            position: absolute;
+            color: white;
+            font-size: 10px;
+            font-weight: 800;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            line-height: 1;
+        }
+
+        .wl-pref-label {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            text-transform: none;
+            font-size: 14px;
+            line-height: 1.5;
+            letter-spacing: 0;
+            color: rgba(255, 255, 255, 0.4);
+            margin-bottom: 6px;
+            padding: 8px 10px;
+            border-radius: 8px;
+            border: 1px solid transparent;
+            transition: all 0.2s ease;
+        }
+
+        .wl-pref-label:has(input:checked) {
+            color: white;
+            background: rgba(27, 138, 123, 0.1);
+            border-color: rgba(27, 138, 123, 0.2);
         }
 
         .btn-solo-espera {
@@ -219,11 +482,57 @@
             color: var(--secondary-color) !important;
             padding: 13px !important;
             font-size: 13px !important;
+            font-weight: 500 !important;
             margin-top: 8px !important;
+            box-shadow: none !important;
             text-transform: none !important;
         }
-        
-        .btn-solo-espera:hover { color: white !important; border-color: white !important; }
+
+        .btn-solo-espera:hover:not(:disabled) {
+            background: rgba(141, 115, 91, 0.1) !important;
+            color: white !important;
+            border-color: white !important;
+            transform: none !important;
+        }
+
+        #rescueBanner {
+            background: rgba(27, 138, 123, 0.15);
+            border: 1px solid var(--primary-color);
+            border-radius: 16px;
+            padding: 15px;
+            margin-bottom: 25px;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            justify-content: center;
+        }
+
+        #waitlistAlert {
+            background: rgba(141, 115, 91, 0.1);
+            border: 1px solid var(--secondary-color);
+            border-radius: 16px;
+            padding: 25px;
+            margin-bottom: 25px;
+            text-align: center;
+        }
+
+        #welcomePatientMessage {
+            background: rgba(27, 138, 123, 0.05);
+            border: 2px solid var(--primary-color);
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        #bomba-info {
+            background: rgba(141, 115, 91, 0.05);
+            padding: 15px;
+            border-radius: 14px;
+            margin-bottom: 24px;
+            border: 1px solid rgba(141, 115, 91, 0.2);
+        }
     </style>
 </head>
 
@@ -236,21 +545,31 @@
         </div>
 
         <div class="content">
+            <!-- Rescue Mode Banner -->
             <div id="rescueBanner" class="hidden">
-                <span>✨</span>
+                <span style="font-size: 20px;">✨</span>
                 <p style="font-size: 14px; margin: 0; color: #fff; font-weight: 500;">
-                    <strong>¡Hueco recuperado!</strong> Hemos bloqueado este horario para ti.
+                    <strong>¡Hueco recuperado!</strong> Hemos bloqueado este horario para ti. Confirma tus datos abajo.
                 </p>
             </div>
 
+            <!-- Loading State -->
             <div id="loadingState" class="hidden">
-                <div class="loading"><div class="spinner"></div><p>Consultando disponibilidad...</p></div>
+                <div class="loading">
+                    <div class="spinner"></div>
+                    <p style="opacity: 0.7;">Consultando disponibilidad...</p>
+                </div>
             </div>
 
+            <!-- Error State -->
             <div id="errorState" class="hidden">
-                <div class="error"><p id="errorMessage"></p></div>
+                <div class="error">
+                    <p style="margin-bottom: 5px;"><strong>⚠️ Vaya, algo ha fallado</strong></p>
+                    <p id="errorMessage" style="opacity: 0.8; font-size: 0.9em;"></p>
+                </div>
             </div>
 
+            <!-- Form -->
             <form id="citaForm">
                 <div class="form-group">
                     <label for="email">Correo electrónico <span class="required">*</span></label>
@@ -258,8 +577,8 @@
                 </div>
 
                 <div id="personalDataSection">
-                    <div id="welcomePatientMessage" class="hidden" style="background: rgba(27, 138, 123, 0.05); border: 2px solid var(--primary-color); border-radius: 12px; padding: 15px; margin-bottom: 20px; text-align: center;">
-                        <p style="font-weight: 600;">✨ ¡Hola de nuevo! Te hemos reconocido.</p>
+                    <div id="welcomePatientMessage" class="hidden">
+                        <p style="margin-bottom: 0; font-weight: 600;">✨ ¡Hola de nuevo! Te hemos reconocido. Solo elige tu tratamiento y cita.</p>
                     </div>
 
                     <div class="form-group">
@@ -279,8 +598,59 @@
                     </div>
 
                     <div class="form-group">
+                        <label for="fechaNacimiento">Fecha de Nacimiento <span class="required">*</span></label>
+                        <input type="date" id="fechaNacimiento" name="fechaNacimiento" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="genero">Género <span class="required">*</span></label>
+                        <select id="genero" name="genero" required>
+                            <option value="">Selecciona género</option>
+                            <option value="male">HOMBRE</option>
+                            <option value="female">MUJER</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="dni">DNI / NIE / NIF <span class="required">*</span></label>
+                        <input type="text" id="dni" name="dni" required placeholder="Ej. 12345678X">
+                    </div>
+
+                    <div class="form-group">
                         <label for="telefono">Teléfono <span class="required">*</span></label>
                         <input type="tel" id="telefono" name="telefono" required placeholder="600 000 000">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="ocupacion">Ocupación</label>
+                        <input type="text" id="ocupacion" name="ocupacion" placeholder="Tu profesión">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="direccion">Calle y número</label>
+                        <input type="text" id="direccion" name="direccion" placeholder="Ej. Calle Mayor 15, 2B">
+                    </div>
+
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                        <div class="form-group">
+                            <label for="codigo_postal">Código Postal</label>
+                            <input type="text" id="codigo_postal" name="codigo_postal" placeholder="46000">
+                        </div>
+                        <div class="form-group">
+                            <label for="localidad">Localidad</label>
+                            <input type="text" id="localidad" name="localidad" placeholder="Ej. Valencia">
+                        </div>
+                    </div>
+
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                        <div class="form-group">
+                            <label for="provincia">Provincia</label>
+                            <input type="text" id="provincia" name="provincia" placeholder="Ej. Valencia">
+                        </div>
+                        <div class="form-group">
+                            <label for="pais">País</label>
+                            <input type="text" id="pais" name="pais" value="España">
+                        </div>
                     </div>
                 </div>
 
@@ -294,11 +664,24 @@
                     </select>
                 </div>
 
+                <div id="bomba-info" class="hidden">
+                    <p id="bomba-text" style="font-size: 14px; margin-bottom: 10px; line-height: 1.5; color: #ddd;"></p>
+                    <label style="display: flex; align-items: flex-start; cursor: pointer; text-transform: none; font-size: 14px; line-height: 1.4;">
+                        <input type="checkbox" id="acepta-bomba" name="acepta_bomba" style="width: auto; margin-top: 3px; margin-right: 12px; accent-color: var(--primary-color);">
+                        Comprendo y acepto las condiciones. Confirmo que quiero reservar este tratamiento.
+                    </label>
+                </div>
+
                 <div class="form-group">
                     <label for="especialista">Especialista <span class="required">*</span></label>
                     <select id="especialista" name="especialista" required disabled>
                         <option value="">Selecciona primero un tratamiento</option>
                     </select>
+                </div>
+
+                <div id="waitlistAlert" class="hidden">
+                    <p id="waitlistMessage" style="font-size: 15px; line-height: 1.6; color: #f0f0f0; margin-bottom: 15px;"></p>
+                    <button type="button" id="btnOpenWaitlist" style="background: transparent; border: 2px solid white; color: white; padding: 12px; font-size: 14px; margin-top: 0;">Unirse a lista de espera</button>
                 </div>
 
                 <div class="form-group" id="grupo-fecha">
@@ -315,26 +698,94 @@
                     </select>
                 </div>
 
+                <div class="form-group" id="grupo-motivo">
+                    <label for="motivo">Motivo consulta <span class="required">*</span></label>
+                    <textarea id="motivo" name="motivo" required placeholder="¿En qué podemos ayudarte?"></textarea>
+                </div>
+
+                <div id="waitlistOptionalSection" class="hidden waitlist-optional-card">
+                    <label class="wl-check-label">
+                        <input type="checkbox" id="also_waitlist" class="wl-check-input">
+                        <span>⏰ <strong>¿Las fechas disponibles son lejanas?</strong> Apúntame también a la lista de espera por si se libera un hueco antes.</span>
+                    </label>
+                    <div id="waitlistPrefSection" class="wl-pref-section hidden">
+                        <p>Si se libera un hueco, ¿con quién quieres que sea?</p>
+                        <label class="wl-pref-label">
+                            <input type="radio" name="waitlist_pref" value="especialista" class="wl-radio-input" checked>
+                            Solo con <strong id="waitlistPrefEspName">el especialista seleccionado</strong>
+                        </label>
+                        <label class="wl-pref-label">
+                            <input type="radio" name="waitlist_pref" value="cualquiera" class="wl-radio-input">
+                            Con cualquier profesional disponible
+                        </label>
+                    </div>
+                </div>
+
+                <input type="text" name="website_hp" id="website_hp" style="display:none !important" tabindex="-1" autocomplete="off">
+
                 <button type="submit" id="submitBtn">Confirmar Cita</button>
+
+                <div id="soloListaEsperaSection" class="hidden" style="text-align: center;">
+                    <p style="font-size: 13px; color: var(--text-secondary); margin-bottom: 0; margin-top: 5px;">¿Ninguna fecha te viene bien?</p>
+                    <button type="button" id="btnSoloListaEspera" class="btn-solo-espera">Unirme solo a la lista de espera →</button>
+                </div>
             </form>
 
             <div id="successState" class="hidden">
                 <div class="success">
                     <div class="success-icon">✅</div>
-                    <h2>¡Cita Reservada!</h2>
-                    <p>Recibirás un mensaje de confirmación próximamente.</p>
+                    <h2 style="margin-bottom: 15px;">¡Cita Reservada!</h2>
+                    <p style="color: var(--text-secondary); line-height: 1.6;">Hemos registrado tu solicitud
+                        correctamente.<br>Recibirás un mensaje de confirmación próximamente.</p>
                 </div>
             </div>
         </div>
-    </div>
 
+    <!-- Modals -->
     <div class="modal-overlay" id="securityModal">
         <div class="modal-content" style="text-align: center;">
-            <button class="modal-close" onclick="this.closest('.modal-overlay').classList.remove('active')">×</button>
-            <div style="font-size: 50px;">🛑</div>
-            <h3 style="color: white; margin: 15px 0;">Reserva Bloqueada</h3>
-            <p id="securityMessage" style="color: var(--text-secondary); margin-bottom: 25px;"></p>
-            <button onclick="this.closest('.modal-overlay').classList.remove('active')">Entendido</button>
+            <button class="modal-close" onclick="document.getElementById('securityModal').classList.remove('active')">×</button>
+            <div style="font-size: 50px; margin-bottom: 15px;">🛑</div>
+            <h3 style="color: white; margin-bottom: 15px; font-size: 22px;">Reserva Bloqueada</h3>
+            <p id="securityMessage" style="color: var(--text-secondary); line-height: 1.6; margin-bottom: 25px;"></p>
+            <button onclick="document.getElementById('securityModal').classList.remove('active')" style="margin-top: 0;">Entendido</button>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="waitlistModal">
+        <div class="modal-content">
+            <button class="modal-close" id="closeWaitlist">×</button>
+            <div class="modal-header">
+                <h3>📝 Lista de Espera</h3>
+                <p>Déjanos tus datos y te avisaremos en cuanto se libere un hueco para ti.</p>
+            </div>
+            <form id="waitlistForm">
+                <div class="form-group" style="margin-bottom: 15px;">
+                    <label>Nombre</label>
+                    <input type="text" id="wl_nombre" required placeholder="Tu nombre">
+                </div>
+                <div class="form-group" style="margin-bottom: 15px;">
+                    <label>Apellidos</label>
+                    <input type="text" id="wl_apellidos" required placeholder="Tus apellidos">
+                </div>
+                <div class="form-group" style="margin-bottom: 15px;">
+                    <label>Teléfono</label>
+                    <input type="tel" id="wl_telefono" required placeholder="Tú móvil para WhatsApp">
+                </div>
+                <div class="form-group" style="margin-bottom: 20px;">
+                    <label>Email</label>
+                    <input type="email" id="wl_email" required placeholder="Tu correo electrónico">
+                </div>
+                
+                <div class="form-group" style="margin-bottom: 20px;">
+                    <label style="display: flex; align-items: flex-start; cursor: pointer; text-transform: none; font-size: 14px; line-height: 1.4;">
+                        <input type="checkbox" id="wl_cualquiera" class="wl-check-input" style="margin-right: 10px;">
+                        Me da igual el especialista, apuntadme para el primer hueco que quede libre (con cualquier profesional).
+                    </label>
+                </div>
+
+                <button type="submit" id="btnSubmitWaitlist" style="margin-top: 0;">Apuntarme a la lista</button>
+            </form>
         </div>
     </div>
 
@@ -343,97 +794,244 @@
             WEBHOOK_URL: 'https://mapaima-n8n.1zsf1t.easypanel.host/webhook/openemr-actions'
         };
 
-        const form = document.getElementById('citaForm');
         const inputEmail = document.getElementById('email');
-        const selectTratamiento = document.getElementById('tratamiento');
-        const selectEspecialista = document.getElementById('especialista');
-        const selectFecha = document.getElementById('fecha');
-        const selectHora = document.getElementById('hora');
-        const submitBtn = document.getElementById('submitBtn');
-
-        const especialistas = {
-            'sesion_fisioterapia': [{v:'toni', t:'Toni Vercher'}, {v:'patri', t:'Patricia Jimenez'}],
-            'bomba': [{v:'oscar', t:'Oscar Tormo'}, {v:'laura', t:'Laura Bas'}],
-            'combinado': [{v:'toni', t:'Toni Vercher'}, {v:'patri', t:'Patricia Jimenez'}]
-        };
+        const personalDataSection = document.getElementById('personalDataSection');
+        const welcomePatientMessage = document.getElementById('welcomePatientMessage');
+        let patientFound = false;
+        let existingPatientId = null;
 
         inputEmail.addEventListener('blur', async () => {
             const email = inputEmail.value.trim();
-            if (!email.includes('@')) return;
-            try {
-                const r = await fetch(CONFIG.WEBHOOK_URL, { method: 'POST', body: new URLSearchParams({ action: 'check_patient', email }) });
-                const d = await r.json();
-                const patient = Array.isArray(d) ? d[0] : (d.json || d);
-                if (patient.exists || patient.patientId) {
-                    document.getElementById('welcomePatientMessage').classList.remove('hidden');
-                    if (patient.fname) document.getElementById('nombre').value = patient.fname;
-                    if (patient.lname) document.getElementById('primer_apellido').value = patient.lname;
-                    if (patient.telefono) document.getElementById('telefono').value = patient.telefono;
+            if (!email || !email.includes('@')) return;
 
-                    // Ocultar campos personales
-                    const personalDataSection = document.getElementById('personalDataSection');
-                    personalDataSection.querySelectorAll('.form-group').forEach(group => {
-                        group.classList.add('hidden');
-                        const input = group.querySelector('input');
-                        if (input) input.required = false;
+            try {
+                const response = await fetch(CONFIG.WEBHOOK_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body: new URLSearchParams({ 
+                        action: 'check_patient', 
+                        email: email 
+                    })
+                });
+                let data = await response.json();
+                if (Array.isArray(data)) data = data[0];
+                if (data && data.json) data = data.json;
+
+                const isFound = data && (data.exists || data.patientId);
+
+                if (isFound) {
+                    patientFound = true;
+                    existingPatientId = data.patientId;
+                    if (data.fname) document.getElementById('nombre').value = data.fname;
+                    if (data.lname) document.getElementById('primer_apellido').value = data.lname;
+                    if (data.mname) document.getElementById('segundo_apellido').value = data.mname;
+                    if (data.telefono || data.phone_cell) {
+                        document.getElementById('telefono').value = data.telefono || data.phone_cell;
+                    }
+                    if (data.fname) document.getElementById('wl_nombre').value = data.fname;
+                    const apeCompleto = ((data.lname || '') + ' ' + (data.mname || '')).trim();
+                    if (apeCompleto) document.getElementById('wl_apellidos').value = apeCompleto;
+                    if (data.telefono || data.phone_cell) {
+                        document.getElementById('wl_telefono').value = data.telefono || data.phone_cell;
+                    }
+                    document.getElementById('wl_email').value = email;
+                    
+                    document.getElementById('nombre').required = false;
+                    document.getElementById('primer_apellido').required = false;
+                    document.getElementById('fechaNacimiento').required = false;
+                    document.getElementById('genero').required = false;
+                    document.getElementById('dni').required = false;
+                    document.getElementById('telefono').required = false;
+                    
+                    personalDataSection.querySelectorAll('.form-group').forEach(group => group.classList.add('hidden'));
+                    welcomePatientMessage.classList.remove('hidden');
+                } else {
+                    patientFound = false;
+                    existingPatientId = null;
+                    document.getElementById('nombre').required = true;
+                    document.getElementById('primer_apellido').required = true;
+                    document.getElementById('fechaNacimiento').required = true;
+                    document.getElementById('genero').required = true;
+                    document.getElementById('dni').required = true;
+                    document.getElementById('telefono').required = true;
+                    personalDataSection.querySelectorAll('.form-group').forEach(group => group.classList.remove('hidden'));
+                    welcomePatientMessage.classList.add('hidden');
+                }
+            } catch (e) { console.error("Error comprobando paciente", e); }
+        });
+
+        const loadingState = document.getElementById('loadingState');
+        const errorState = document.getElementById('errorState');
+        const errorMessage = document.getElementById('errorMessage');
+        const form = document.getElementById('citaForm');
+        const successState = document.getElementById('successState');
+        const selectTratamiento = document.getElementById('tratamiento');
+        const selectEspecialista = document.getElementById('especialista');
+        const bombaInfo = document.getElementById('bomba-info');
+        const bombaText = document.getElementById('bomba-text');
+        const aceptaBomba = document.getElementById('acepta-bomba');
+        const selectFecha = document.getElementById('fecha');
+        const selectHora = document.getElementById('hora');
+        const submitBtn = document.getElementById('submitBtn');
+        const waitlistOptionalSection = document.getElementById('waitlistOptionalSection');
+        const soloListaEsperaSection = document.getElementById('soloListaEsperaSection');
+
+        const especialistasPorTratamiento = {
+            'sesion_fisioterapia': [{ value: 'toni', text: 'Toni Vercher' }, { value: 'patri', text: 'Patricia Jimenez' }],
+            'bomba': [{ value: 'oscar', text: 'Oscar Tormo' }, { value: 'laura', text: 'Laura Bas' }],
+            'combinado': [{ value: 'toni', text: 'Toni Vercher' }, { value: 'patri', text: 'Patricia Jimenez' }]
+        };
+
+        const urlParams = new URLSearchParams(window.location.search);
+        const remoteJid = urlParams.get('id') || urlParams.get('remoteJid') || '';
+        const rescueParams = { esp: urlParams.get('esp'), trat: urlParams.get('trat'), fecha: urlParams.get('fecha'), hora: urlParams.get('hora') };
+        let isRescueMode = !!(rescueParams.esp && rescueParams.fecha && rescueParams.hora);
+
+        async function cargarSlots(especialista) {
+            loadingState.classList.remove('hidden');
+            errorState.classList.add('hidden');
+            document.getElementById('waitlistAlert').classList.add('hidden');
+            document.getElementById('grupo-fecha').classList.remove('hidden');
+            document.getElementById('grupo-hora').classList.remove('hidden');
+            document.getElementById('grupo-motivo').classList.remove('hidden');
+            waitlistOptionalSection.classList.add('hidden');
+            soloListaEsperaSection.classList.add('hidden');
+            selectFecha.disabled = true;
+            selectFecha.innerHTML = '<option value="">Cargando disponibilidad...</option>';
+            selectHora.disabled = true;
+
+            try {
+                const response = await fetch(CONFIG.WEBHOOK_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body: new URLSearchParams({ action: 'get_slots', especialista, tratamiento: selectTratamiento.value })
+                });
+                let data = await response.json();
+                if (Array.isArray(data)) data = data[0];
+                if (data && data.json) data = data.json;
+
+                if (!data || !data.success || !data.slots) throw new Error('Sin horarios disponibles.');
+
+                slotsDisponibles = data.slots;
+                const arrayFechas = Object.keys(slotsDisponibles).sort();
+
+                if (arrayFechas.length === 0) {
+                    const espName = selectEspecialista.options[selectEspecialista.selectedIndex].text.split(' ')[0];
+                    document.getElementById('waitlistMessage').innerHTML = `Lo sentimos, en este momento no hay sesiones disponibles con <strong>${espName}</strong>. Selecciona otro especialista o únete a la lista de espera.`;
+                    document.getElementById('grupo-fecha').classList.add('hidden');
+                    document.getElementById('grupo-hora').classList.add('hidden');
+                    document.getElementById('grupo-motivo').classList.add('hidden');
+                    submitBtn.classList.add('hidden');
+                    document.getElementById('waitlistAlert').classList.remove('hidden');
+                } else {
+                    if (isRescueMode) {
+                        document.getElementById('rescueBanner').classList.remove('hidden');
+                        selectFecha.innerHTML = `<option value="${rescueParams.fecha}">${formatearFecha(rescueParams.fecha)}</option>`;
+                        selectFecha.value = rescueParams.fecha;
+                        selectHora.innerHTML = `<option value="${rescueParams.hora}">${rescueParams.hora}</option>`;
+                        selectHora.value = rescueParams.hora;
+                    } else {
+                        waitlistOptionalSection.classList.remove('hidden');
+                        soloListaEsperaSection.classList.remove('hidden');
+                        const espNameLabel = selectEspecialista.options[selectEspecialista.selectedIndex].text.split(' ')[0];
+                        document.getElementById('waitlistPrefEspName').textContent = espNameLabel;
+                        selectFecha.innerHTML = '<option value="">Selecciona una fecha</option>';
+                        arrayFechas.forEach(fecha => {
+                            const option = document.createElement('option');
+                            option.value = fecha;
+                            option.textContent = formatearFecha(fecha);
+                            selectFecha.appendChild(option);
+                        });
+                        selectFecha.disabled = false;
+                    }
+                    submitBtn.classList.remove('hidden');
+                }
+                loadingState.classList.add('hidden');
+            } catch (error) {
+                loadingState.classList.add('hidden');
+                errorMessage.textContent = error.message;
+                errorState.classList.remove('hidden');
+            }
+        }
+
+        function actualizarEspecialistas() {
+            const tratamiento = selectTratamiento.value;
+            const haAceptado = aceptaBomba.checked;
+            selectEspecialista.innerHTML = '<option value="">Selecciona un profesional</option>';
+            if (tratamiento && especialistasPorTratamiento[tratamiento]) {
+                if ((tratamiento === 'bomba' || tratamiento === 'combinado') && !haAceptado) {
+                    selectEspecialista.disabled = true;
+                    selectEspecialista.innerHTML = '<option value="">Acepta la condición primero</option>';
+                } else {
+                    selectEspecialista.disabled = false;
+                    especialistasPorTratamiento[tratamiento].forEach(esp => {
+                        const option = document.createElement('option');
+                        option.value = esp.value;
+                        option.textContent = esp.text;
+                        selectEspecialista.appendChild(option);
                     });
                 }
-            } catch(e) {}
+            } else {
+                selectEspecialista.disabled = true;
+            }
+        }
+
+        selectTratamiento.addEventListener('change', function () {
+            if (this.value === 'bomba') {
+                bombaInfo.classList.remove('hidden');
+                bombaText.innerHTML = '<strong>Aviso sobre la Bomba:</strong> La sesión de bomba habitualmente la asigna Toni después de una o varias sesiones previas.';
+            } else if (this.value === 'combinado') {
+                bombaInfo.classList.remove('hidden');
+                bombaText.innerHTML = '<strong>Aviso Tratamiento Combinado:</strong> Fisioterapia + bomba.';
+            } else {
+                bombaInfo.classList.add('hidden');
+            }
+            actualizarEspecialistas();
         });
 
-        selectTratamiento.addEventListener('change', () => {
-            const t = selectTratamiento.value;
-            selectEspecialista.innerHTML = '<option value="">Selecciona profesional</option>';
-            if (t && especialistas[t]) {
-                especialistas[t].forEach(e => selectEspecialista.add(new Option(e.t, e.v)));
-                selectEspecialista.disabled = false;
-            } else { selectEspecialista.disabled = true; }
+        aceptaBomba.addEventListener('change', actualizarEspecialistas);
+        selectEspecialista.addEventListener('change', function () { if (this.value) cargarSlots(this.value); });
+        selectFecha.addEventListener('change', function () {
+            const fecha = this.value;
+            selectHora.innerHTML = '<option value="">Selecciona una hora</option>';
+            selectHora.disabled = !fecha;
+            if (fecha && slotsDisponibles[fecha]) {
+                slotsDisponibles[fecha].forEach(hora => {
+                    const option = document.createElement('option');
+                    option.value = hora;
+                    option.textContent = hora;
+                    selectHora.appendChild(option);
+                });
+            }
         });
 
-        selectEspecialista.addEventListener('change', async () => {
-            const esp = selectEspecialista.value;
-            if (!esp) return;
-            document.getElementById('loadingState').classList.remove('hidden');
-            try {
-                const r = await fetch(CONFIG.WEBHOOK_URL, { method: 'POST', body: new URLSearchParams({ action: 'get_slots', especialista: esp, tratamiento: selectTratamiento.value }) });
-                let d = await r.json();
-                if (Array.isArray(d)) d = d[0]; if (d.json) d = d.json;
-                selectFecha.innerHTML = '<option value="">Selecciona fecha</option>';
-                Object.keys(d.slots).sort().forEach(f => selectFecha.add(new Option(f, f)));
-                selectFecha.disabled = false;
-                window.slots = d.slots;
-            } catch(e) {}
-            document.getElementById('loadingState').classList.add('hidden');
-        });
-
-        selectFecha.addEventListener('change', () => {
-            const f = selectFecha.value;
-            selectHora.innerHTML = '<option value="">Selecciona hora</option>';
-            if (f && window.slots[f]) {
-                window.slots[f].forEach(h => selectHora.add(new Option(h, h)));
-                selectHora.disabled = false;
-            } else { selectHora.disabled = true; }
-        });
-
-        form.addEventListener('submit', async (e) => {
+        form.addEventListener('submit', async function (e) {
             e.preventDefault();
+            if (document.getElementById('website_hp').value !== '') return;
             submitBtn.disabled = true;
-            submitBtn.textContent = 'Procesando...';
+            submitBtn.textContent = 'Enviando...';
             try {
-                const token = await grecaptcha.execute('6LcOYLcsAAAAAJChTMzGai-FB2hI2IpbT6IxlBzZ', {action: 'submit'});
-                const r = await fetch(CONFIG.WEBHOOK_URL, { method: 'POST', body: new URLSearchParams({
-                    action: 'create_appointment',
-                    recaptcha_token: token,
-                    email: inputEmail.value,
-                    nombre: document.getElementById('nombre').value,
-                    primerApellido: document.getElementById('primer_apellido').value,
-                    especialista: selectEspecialista.value,
-                    tratamiento: selectTratamiento.value,
-                    fecha: selectFecha.value,
-                    hora: selectHora.value
-                })});
-                const data = await r.json();
+                const recaptchaToken = await new Promise((resolve) => {
+                    grecaptcha.ready(() => {
+                        grecaptcha.execute('6LcOYLcsAAAAAJChTMzGai-FB2hI2IpbT6IxlBzZ', {action: 'submit'}).then(resolve);
+                    });
+                });
+                const response = await fetch(CONFIG.WEBHOOK_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body: new URLSearchParams({
+                        action: 'create_appointment', recaptcha_token: recaptchaToken,
+                        especialista: selectEspecialista.value, email: inputEmail.value.trim(),
+                        nombre: document.getElementById('nombre')?.value || '',
+                        primerApellido: document.getElementById('primer_apellido')?.value || '',
+                        id_paciente_existente: existingPatientId, tratamiento: selectTratamiento.value,
+                        fecha: selectFecha.value, hora: selectHora.value, motivo: document.getElementById('motivo')?.value || '',
+                        remoteJid: remoteJid
+                    })
+                });
+                const data = await response.json();
 
+                // REDIRECCIÓN A STRIPE SI EXISTE URL
                 if (data.paymentUrl) {
                     window.top.location.href = data.paymentUrl;
                     return;
@@ -442,13 +1040,66 @@
                 if (data.success === false) {
                     document.getElementById('securityMessage').textContent = data.message;
                     document.getElementById('securityModal').classList.add('active');
-                } else {
-                    form.classList.add('hidden');
-                    document.getElementById('successState').classList.remove('hidden');
+                    submitBtn.disabled = false;
+                    return;
                 }
-            } catch(e) { alert('Error al procesar la cita'); }
-            submitBtn.disabled = false;
-            submitBtn.textContent = 'Confirmar Cita';
+                form.classList.add('hidden');
+                successState.classList.remove('hidden');
+            } catch (error) { alert('Error al procesar tu cita.'); submitBtn.disabled = false; }
+        });
+
+        function openWaitlist() {
+            document.getElementById('wl_nombre').value = document.getElementById('nombre').value;
+            document.getElementById('wl_email').value = document.getElementById('email').value;
+            document.getElementById('waitlistModal').classList.add('active');
+        }
+
+        document.getElementById('btnOpenWaitlist')?.addEventListener('click', openWaitlist);
+        document.getElementById('btnSoloListaEspera')?.addEventListener('click', openWaitlist);
+        document.getElementById('closeWaitlist')?.addEventListener('click', () => document.getElementById('waitlistModal').classList.remove('active'));
+
+        document.getElementById('waitlistForm').addEventListener('submit', async function (e) {
+            e.preventDefault();
+            const btn = document.getElementById('btnSubmitWaitlist');
+            btn.disabled = true;
+            try {
+                await fetch(CONFIG.WEBHOOK_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body: new URLSearchParams({
+                        action: 'join_waitlist',
+                        especialista: document.getElementById('wl_cualquiera').checked ? 'cualquiera' : selectEspecialista.value,
+                        nombre: document.getElementById('wl_nombre').value,
+                        email: document.getElementById('wl_email').value
+                    })
+                });
+                document.getElementById('waitlistModal').classList.remove('active');
+                form.classList.add('hidden');
+                successState.classList.remove('hidden');
+            } catch (e) { alert('Error al apuntarte.'); btn.disabled = false; }
+        });
+
+        function formatearFecha(fecha) {
+            const [year, month, day] = fecha.split('-');
+            const fechaObj = new Date(year, month - 1, day);
+            const dias = ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb'];
+            const meses = ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'];
+            return `${dias[fechaObj.getDay()]}, ${parseInt(day)} ${meses[fechaObj.getMonth()]}`;
+        }
+
+        window.addEventListener('load', () => {
+            if (rescueParams.trat) {
+                selectTratamiento.value = rescueParams.trat;
+                selectTratamiento.dispatchEvent(new Event('change'));
+                setTimeout(() => {
+                    selectEspecialista.value = rescueParams.esp;
+                    if (isRescueMode) {
+                        selectEspecialista.disabled = true;
+                        selectTratamiento.disabled = true;
+                    }
+                    cargarSlots(rescueParams.esp);
+                }, 100);
+            }
         });
     </script>
 </body>
