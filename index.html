@@ -428,7 +428,7 @@
 
                 // REDIRECCIÓN A STRIPE SI EXISTE URL
                 if (data.paymentUrl) {
-                    window.location.href = data.paymentUrl;
+                    window.top.location.href = data.paymentUrl;
                     return;
                 }
 
