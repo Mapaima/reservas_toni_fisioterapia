@@ -369,6 +369,14 @@
                     if (patient.fname) document.getElementById('nombre').value = patient.fname;
                     if (patient.lname) document.getElementById('primer_apellido').value = patient.lname;
                     if (patient.telefono) document.getElementById('telefono').value = patient.telefono;
+
+                    // Ocultar campos personales
+                    const personalDataSection = document.getElementById('personalDataSection');
+                    personalDataSection.querySelectorAll('.form-group').forEach(group => {
+                        group.classList.add('hidden');
+                        const input = group.querySelector('input');
+                        if (input) input.required = false;
+                    });
                 }
             } catch(e) {}
         });
@@ -426,7 +434,6 @@
                 })});
                 const data = await r.json();
 
-                // REDIRECCIÓN A STRIPE SI EXISTE URL
                 if (data.paymentUrl) {
                     window.top.location.href = data.paymentUrl;
                     return;
