@@ -822,20 +822,25 @@
                 if (isFound) {
                     patientFound = true;
                     existingPatientId = data.patientId;
-                    if (data.fname) document.getElementById('nombre').value = data.fname;
-                    if (data.lname) document.getElementById('primer_apellido').value = data.lname;
-                    if (data.mname) document.getElementById('segundo_apellido').value = data.mname;
-                    if (data.telefono || data.phone_cell) {
-                        document.getElementById('telefono').value = data.telefono || data.phone_cell;
-                    }
-                    if (data.fname) document.getElementById('wl_nombre').value = data.fname;
-                    const apeCompleto = ((data.lname || '') + ' ' + (data.mname || '')).trim();
-                    if (apeCompleto) document.getElementById('wl_apellidos').value = apeCompleto;
-                    if (data.telefono || data.phone_cell) {
-                        document.getElementById('wl_telefono').value = data.telefono || data.phone_cell;
-                    }
+                    
+                    // Flexibilidad en nombres de campos de OpenEMR
+                    const fname = data.fname || data.first_name || data.nombre || data.name || '';
+                    const lname = data.lname || data.last_name || data.primer_apellido || '';
+                    const mname = data.mname || data.segundo_apellido || '';
+                    const phone = data.telefono || data.phone_cell || data.phone || '';
+
+                    if (fname) document.getElementById('nombre').value = fname;
+                    if (lname) document.getElementById('primer_apellido').value = lname;
+                    if (mname) document.getElementById('segundo_apellido').value = mname;
+                    if (phone) document.getElementById('telefono').value = phone;
+
+                    // Datos para el modal de lista de espera
+                    document.getElementById('wl_nombre').value = fname;
+                    document.getElementById('wl_apellidos').value = (lname + ' ' + mname).trim();
+                    document.getElementById('wl_telefono').value = phone;
                     document.getElementById('wl_email').value = email;
                     
+                    // Desactivar validación de campos ocultos
                     document.getElementById('nombre').required = false;
                     document.getElementById('primer_apellido').required = false;
                     document.getElementById('fechaNacimiento').required = false;
@@ -1020,12 +1025,17 @@
                     method: 'POST',
                     headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
                     body: new URLSearchParams({
-                        action: 'create_appointment', recaptcha_token: recaptchaToken,
-                        especialista: selectEspecialista.value, email: inputEmail.value.trim(),
+                        action: 'create_appointment', 
+                        recaptcha_token: recaptchaToken,
+                        especialista: selectEspecialista.value, 
+                        email: inputEmail.value.trim(),
                         nombre: document.getElementById('nombre')?.value || '',
                         primerApellido: document.getElementById('primer_apellido')?.value || '',
-                        id_paciente_existente: existingPatientId, tratamiento: selectTratamiento.value,
-                        fecha: selectFecha.value, hora: selectHora.value, motivo: document.getElementById('motivo')?.value || '',
+                        id_paciente_existente: existingPatientId, 
+                        tratamiento: selectTratamiento.value,
+                        fecha: selectFecha.value, 
+                        hora: selectHora.value, 
+                        motivo: document.getElementById('motivo')?.value || '',
                         remoteJid: remoteJid
                     })
                 });
