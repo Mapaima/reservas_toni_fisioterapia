@@ -1024,7 +1024,10 @@
                     });
                 });
 
-                const waitlistPref = document.querySelector('input[name="waitlist_pref"]:checked')?.value || 'especialista';
+                let waitlistPref = document.querySelector('input[name="waitlist_pref"]:checked')?.value || 'cualquiera';
+                if (waitlistPref === 'especialista') {
+                    waitlistPref = selectEspecialista.value;
+                }
 
                 const response = await fetch(CONFIG.WEBHOOK_URL, {
                     method: 'POST',
