@@ -1039,6 +1039,7 @@
                         email: inputEmail.value.trim(),
                         nombre: document.getElementById('nombre')?.value || '',
                         primerApellido: document.getElementById('primer_apellido')?.value || '',
+                        segundoApellido: document.getElementById('segundo_apellido')?.value || '',
                         id_paciente_existente: existingPatientId, 
                         tratamiento: selectTratamiento.value,
                         fecha: selectFecha.value, 
@@ -1046,7 +1047,18 @@
                         motivo: document.getElementById('motivo')?.value || '',
                         remoteJid: remoteJid,
                         also_waitlist: checkAlsoWaitlist.checked,
-                        waitlist_pref: waitlistPref
+                        waitlist_pref: waitlistPref,
+                        // Campos personales adicionales
+                        dni: document.getElementById('dni')?.value || '',
+                        fechaNacimiento: document.getElementById('fechaNacimiento')?.value || '',
+                        genero: document.getElementById('genero')?.value || '',
+                        ocupacion: document.getElementById('ocupacion')?.value || '',
+                        direccion: document.getElementById('direccion')?.value || '',
+                        codigo_postal: document.getElementById('codigo_postal')?.value || '',
+                        localidad: document.getElementById('localidad')?.value || '',
+                        provincia: document.getElementById('provincia')?.value || '',
+                        pais: document.getElementById('pais')?.value || 'España',
+                        telefono: document.getElementById('telefono')?.value || ''
                     })
                 });
                 const data = await response.json();
