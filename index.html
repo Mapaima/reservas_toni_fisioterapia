@@ -823,7 +823,6 @@
                     patientFound = true;
                     existingPatientId = data.patientId;
                     
-                    // Flexibilidad en nombres de campos de OpenEMR
                     const fname = data.fname || data.first_name || data.nombre || data.name || '';
                     const lname = data.lname || data.last_name || data.primer_apellido || '';
                     const mname = data.mname || data.segundo_apellido || '';
@@ -834,13 +833,11 @@
                     if (mname) document.getElementById('segundo_apellido').value = mname;
                     if (phone) document.getElementById('telefono').value = phone;
 
-                    // Datos para el modal de lista de espera
                     document.getElementById('wl_nombre').value = fname;
                     document.getElementById('wl_apellidos').value = (lname + ' ' + mname).trim();
                     document.getElementById('wl_telefono').value = phone;
                     document.getElementById('wl_email').value = email;
                     
-                    // Desactivar validación de campos ocultos
                     document.getElementById('nombre').required = false;
                     document.getElementById('primer_apellido').required = false;
                     document.getElementById('fechaNacimiento').required = false;
@@ -880,6 +877,7 @@
         const submitBtn = document.getElementById('submitBtn');
         const waitlistOptionalSection = document.getElementById('waitlistOptionalSection');
         const soloListaEsperaSection = document.getElementById('soloListaEsperaSection');
+        const checkAlsoWaitlist = document.getElementById('also_waitlist');
 
         const especialistasPorTratamiento = {
             'sesion_fisioterapia': [{ value: 'toni', text: 'Toni Vercher' }, { value: 'patri', text: 'Patricia Jimenez' }],
@@ -1010,6 +1008,10 @@
             }
         });
 
+        checkAlsoWaitlist.addEventListener('change', function() {
+            document.getElementById('waitlistPrefSection').classList.toggle('hidden', !this.checked);
+        });
+
         form.addEventListener('submit', async function (e) {
             e.preventDefault();
             if (document.getElementById('website_hp').value !== '') return;
@@ -1021,6 +1023,9 @@
                         grecaptcha.execute('6LcOYLcsAAAAAJChTMzGai-FB2hI2IpbT6IxlBzZ', {action: 'submit'}).then(resolve);
                     });
                 });
+
+                const waitlistPref = document.querySelector('input[name="waitlist_pref"]:checked')?.value || 'especialista';
+
                 const response = await fetch(CONFIG.WEBHOOK_URL, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
@@ -1036,12 +1041,13 @@
                         fecha: selectFecha.value, 
                         hora: selectHora.value, 
                         motivo: document.getElementById('motivo')?.value || '',
-                        remoteJid: remoteJid
+                        remoteJid: remoteJid,
+                        also_waitlist: checkAlsoWaitlist.checked,
+                        waitlist_pref: waitlistPref
                     })
                 });
                 const data = await response.json();
 
-                // REDIRECCIÓN A STRIPE SI EXISTE URL
                 if (data.paymentUrl) {
                     window.top.location.href = data.paymentUrl;
                     return;
