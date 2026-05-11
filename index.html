@@ -1048,17 +1048,17 @@
                         remoteJid: remoteJid,
                         also_waitlist: checkAlsoWaitlist.checked,
                         waitlist_pref: waitlistPref,
-                        // Campos personales adicionales
+                        // --- DATOS PERSONALES COMPLETOS ---
                         dni: document.getElementById('dni')?.value || '',
                         fechaNacimiento: document.getElementById('fechaNacimiento')?.value || '',
                         genero: document.getElementById('genero')?.value || '',
+                        telefono: document.getElementById('telefono')?.value || '',
                         ocupacion: document.getElementById('ocupacion')?.value || '',
                         direccion: document.getElementById('direccion')?.value || '',
                         codigo_postal: document.getElementById('codigo_postal')?.value || '',
                         localidad: document.getElementById('localidad')?.value || '',
                         provincia: document.getElementById('provincia')?.value || '',
-                        pais: document.getElementById('pais')?.value || 'España',
-                        telefono: document.getElementById('telefono')?.value || ''
+                        pais: document.getElementById('pais')?.value || 'España'
                     })
                 });
                 const data = await response.json();
