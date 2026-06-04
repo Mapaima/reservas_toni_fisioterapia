@@ -724,6 +724,31 @@
             border-color: rgba(255, 255, 255, 0.3);
             transform: none !important;
         }
+
+        /* --- Badge de 0 Euros --- */
+        .policy-amount-badge {
+            background: rgba(27, 138, 123, 0.08);
+            border: 1px dashed var(--primary-color);
+            border-radius: 14px;
+            padding: 16px 20px;
+            margin-bottom: 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .policy-amount-label {
+            font-size: 14px;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        .policy-amount-value {
+            font-size: 20px;
+            color: var(--primary-color);
+            font-weight: 800;
+            letter-spacing: 0.5px;
+        }
     </style>
 </head>
 
@@ -938,6 +963,11 @@
                     Para completar tu reserva, necesitamos guardar un método de pago. <strong>No se realizará ningún cargo en este momento.</strong> Tu tarjeta solo se utilizará si se aplica la política de cancelación descrita a continuación.
                 </p>
 
+                <div class="policy-amount-badge">
+                    <span class="policy-amount-label">Tu pago ahora será de:</span>
+                    <span class="policy-amount-value">0€</span>
+                </div>
+
                 <div class="policy-card">
                     <div class="policy-card-title">Condiciones de cancelación</div>
                     
@@ -979,7 +1009,7 @@
 
                 <label class="policy-check-label">
                     <input type="checkbox" id="policy_accept" class="wl-check-input" style="margin-top: 3px;">
-                    <span>Acepto la política de cancelación descrita anteriormente y autorizo a la clínica a realizar el cargo de una penalización de hasta <strong id="policy-price">50</strong>€ en mi método de pago en caso de cancelación tardía o no asistencia.</span>
+                    <span>Acepto la política de cancelación descrita anteriormente y autorizo a la clínica a realizar el cargo de la penalización correspondiente en mi método de pago en caso de cancelación tardía o no asistencia.</span>
                 </label>
 
                 <button type="button" id="btnPolicySecure" class="btn-policy-secure" disabled>
@@ -1329,13 +1359,6 @@
                     const appointmentId = data.appointmentId || data.appointment_id || data.eid || '';
                     const customerId = data.customerId || data.customer_id || data.pid || existingPatientId || '';
                     
-                    const tratamiento = selectTratamiento.value;
-                    let price = 50;
-                    if (tratamiento === 'bomba') price = 60;
-                    else if (tratamiento === 'combinado') price = 70;
-                    
-                    document.getElementById('policy-price').textContent = price;
-                    
                     form.classList.add('hidden');
                     const policyScreen = document.getElementById('cancellationPolicyScreen');
                     policyScreen.classList.remove('hidden');
@@ -1365,7 +1388,7 @@
                         newBtnSecure.disabled = true;
                         newBtnSecure.textContent = 'Procesando...';
                         
-                        const exactText = `Acepto la política de cancelación descrita anteriormente y autorizo a la clínica a realizar el cargo de una penalización de hasta ${price}€ en mi método de pago en caso de cancelación tardía o no asistencia.`;
+                        const exactText = `Acepto la política de cancelación descrita anteriormente y autorizo a la clínica a realizar el cargo de la penalización correspondiente en mi método de pago en caso de cancelación tardía o no asistencia.`;
                         
                         try {
                             await fetch(CONFIG.WEBHOOK_URL, {
