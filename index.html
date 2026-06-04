@@ -1081,6 +1081,12 @@
     </div>
 
     <script>
+    let userIp = 'unknown';
+    fetch('https://api.ipify.org?format=json')
+        .then(r => r.json())
+        .then(d => { userIp = d.ip; })
+        .catch(() => {});
+
         const CONFIG = {
             WEBHOOK_URL: 'https://mapaima-n8n.1zsf1t.easypanel.host/webhook/openemr-actions'
         };
@@ -1349,7 +1355,10 @@
                         codigo_postal: document.getElementById('codigo_postal')?.value || '',
                         localidad: document.getElementById('localidad')?.value || '',
                         provincia: document.getElementById('provincia')?.value || '',
-                        pais: document.getElementById('pais')?.value || 'España'
+                        pais: document.getElementById('pais')?.value || 'España',
+                        ip_address: userIp,
+                        user_agent: navigator.userAgent
+
                     })
                 });
                 const data = await response.json();
