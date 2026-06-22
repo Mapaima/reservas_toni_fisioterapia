@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Confirmar Cita | Toni Vercher Fisioterapia</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #1b8a7b;
+            --primary-hover: #156d61;
+            --secondary-color: #8d735b;
+            --accent-gray: #4a4a4a;
+            --background-dark: #0f1211;
+            --surface-color: #1a1e1d;
+            --text-primary: #ffffff;
+            --text-secondary: #a0a8a7;
+            --glass-border: rgba(27, 138, 123, 0.2);
+            --glass-bg: rgba(26, 30, 29, 0.85);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            background-color: var(--background-dark);
+            background-image:
+                radial-gradient(circle at 15% 50%, rgba(27, 138, 123, 0.05) 0%, transparent 25%),
+                radial-gradient(circle at 85% 30%, rgba(141, 115, 91, 0.03) 0%, transparent 25%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            color: var(--text-primary);
+        }
+
+        .container {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            max-width: 500px;
+            width: 100%;
+            border-radius: 28px;
+            border: 1px solid var(--glass-border);
+            box-shadow: 0 40px 100px -20px rgba(0, 0, 0, 0.8);
+            overflow: hidden;
+            position: relative;
+        }
+
+        .container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, var(--primary-color), transparent);
+        }
+
+        .header {
+            padding: 45px 35px 25px;
+            text-align: center;
+        }
+
+        .brand-logo {
+            font-size: 1.4rem;
+            font-weight: 700;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            margin-bottom: 20px;
+            color: white;
+            display: inline-block;
+            border-bottom: 1px solid var(--glass-border);
+            padding-bottom: 5px;
+        }
+
+        .brand-logo span {
+            font-weight: 300;
+            display: block;
+            font-size: 0.9rem;
+            letter-spacing: 5px;
+            margin-top: 5px;
+            color: var(--secondary-color);
+        }
+
+        .content {
+            padding: 0 35px 40px;
+        }
+
+        /* --- Pantalla de Política --- */
+        .policy-screen {
+            padding: 10px 5px;
+        }
+
+        .policy-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .policy-header-icon {
+            background: rgba(27, 138, 123, 0.1);
+            border: 1px solid var(--glass-border);
+            border-radius: 50%;
+            width: 45px;
+            height: 45px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary-color);
+        }
+
+        .policy-header-title h4 {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: var(--text-secondary);
+            margin-bottom: 3px;
+        }
+
+        .policy-header-title h2 {
+            font-size: 18px;
+            font-weight: 700;
+            color: white;
+            line-height: 1.3;
+        }
+
+        .policy-intro {
+            font-size: 14px;
+            color: var(--text-secondary);
+            line-height: 1.6;
+            margin-bottom: 24px;
+        }
+
+        .policy-intro strong {
+            color: white;
+        }
+
+        .policy-card {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 18px;
+            padding: 22px;
+            margin-bottom: 24px;
+        }
+
+        .policy-card-title {
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            color: var(--secondary-color);
+            margin-bottom: 18px;
+            text-transform: uppercase;
+        }
+
+        .policy-item {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .policy-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .policy-item-icon {
+            width: 24px;
+            height: 24px;
+            min-width: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+        }
+
+        .policy-item-icon.check {
+            background: rgba(46, 204, 113, 0.1);
+            color: #2ecc71;
+            border: 1px solid rgba(46, 204, 113, 0.2);
+        }
+
+        .policy-item-icon.clock {
+            background: rgba(241, 196, 15, 0.1);
+            color: #f1c40f;
+            border: 1px solid rgba(241, 196, 15, 0.2);
+        }
+
+        .policy-item-icon.alert {
+            background: rgba(231, 76, 60, 0.1);
+            color: #e74c3c;
+            border: 1px solid rgba(231, 76, 60, 0.2);
+        }
+
+        .policy-item-text h3 {
+            font-size: 14px;
+            font-weight: 600;
+            color: white;
+            margin-bottom: 4px;
+        }
+
+        .policy-item-text p {
+            font-size: 13px;
+            color: var(--text-secondary);
+            line-height: 1.5;
+        }
+
+        .policy-stripe-box {
+            background: rgba(41, 128, 185, 0.08);
+            border: 1px solid rgba(41, 128, 185, 0.2);
+            border-radius: 14px;
+            padding: 15px 18px;
+            display: flex;
+            gap: 12px;
+            align-items: flex-start;
+            margin-bottom: 24px;
+        }
+
+        .policy-stripe-box-icon {
+            color: #3498db;
+            font-size: 16px;
+            margin-top: 2px;
+        }
+
+        .policy-stripe-box-text {
+            font-size: 13px;
+            color: #a9cce3;
+            line-height: 1.5;
+        }
+
+        .policy-check-label {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            cursor: pointer;
+            font-size: 13.5px;
+            line-height: 1.5;
+            color: #d0d0d0;
+            margin-bottom: 24px;
+        }
+
+        .wl-check-input {
+            appearance: none;
+            -webkit-appearance: none;
+            width: 20px;
+            height: 20px;
+            min-width: 20px;
+            border: 2px solid rgba(27, 138, 123, 0.3);
+            border-radius: 6px;
+            background: transparent;
+            cursor: pointer;
+            position: relative;
+            margin-top: 3px;
+        }
+
+        .wl-check-input:checked {
+            background: var(--primary-color);
+            border-color: var(--primary-color);
+        }
+
+        .wl-check-input:checked::after {
+            content: '✓';
+            position: absolute;
+            color: white;
+            font-size: 12px;
+            font-weight: 800;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        button {
+            width: 100%;
+            padding: 18px;
+            border: none;
+            border-radius: 14px;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.4s ease;
+        }
+
+        .btn-policy-secure {
+            background: var(--primary-color);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .btn-policy-secure:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 30px rgba(27, 138, 123, 0.3);
+            background: var(--primary-hover);
+        }
+
+        .btn-policy-secure:disabled {
+            background: #2c3534;
+            color: #66706f;
+            cursor: not-allowed;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .policy-amount-badge {
+            background: rgba(27, 138, 123, 0.08);
+            border: 1px dashed var(--primary-color);
+            border-radius: 14px;
+            padding: 16px 20px;
+            margin-bottom: 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .policy-amount-label {
+            font-size: 14px;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        .policy-amount-value {
+            font-size: 20px;
+            color: var(--primary-color);
+            font-weight: 800;
+        }
+
+        .hidden { display: none !important; }
+        .error { color: #ff5252; text-align: center; margin-top: 15px; font-size: 14px; }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="brand-logo">Toni Vercher <span>Fisioterapia</span></div>
+            <h1 style="font-size: 22px; color: white; margin-bottom: 10px;">Confirmación de Reserva</h1>
+        </div>
+
+        <div class="content">
+            <div id="cancellationPolicyScreen" class="policy-screen">
+                <div class="policy-header">
+                    <div class="policy-header-icon">
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+                    </div>
+                    <div class="policy-header-title">
+                        <h4>Antes de continuar</h4>
+                        <h2>Política de cancelación y garantía de pago</h2>
+                    </div>
+                </div>
+
+                <p class="policy-intro">
+                    Para confirmar tu reserva, necesitamos guardar un método de pago. <strong>No se realizará ningún cargo en este momento.</strong> Tu tarjeta solo se utilizará si se aplica la política de cancelación descrita a continuación.
+                </p>
+
+                <div class="policy-amount-badge">
+                    <span class="policy-amount-label">Tu pago ahora será de:</span>
+                    <span class="policy-amount-value">0€</span>
+                </div>
+
+                <div class="policy-card">
+                    <div class="policy-card-title">Condiciones de cancelación</div>
+                    
+                    <div class="policy-item">
+                        <div class="policy-item-icon check">✓</div>
+                        <div class="policy-item-text">
+                            <h3>Cancelación con más de 24 horas de antelación</h3>
+                            <p>Sin cargo. Puedes cancelar libremente desde tu área de paciente o contactando con la clínica.</p>
+                        </div>
+                    </div>
+
+                    <div class="policy-item">
+                        <div class="policy-item-icon clock">
+                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                        </div>
+                        <div class="policy-item-text">
+                            <h3>Cancelación con menos de 24 horas de antelación</h3>
+                            <p>Se cargará el <strong>50% del importe de la sesión</strong> como penalización por cancelación tardía.</p>
+                        </div>
+                    </div>
+
+                    <div class="policy-item">
+                        <div class="policy-item-icon alert">!</div>
+                        <div class="policy-item-text">
+                            <h3>No presentación sin aviso previo</h3>
+                            <p>Se cargará el <strong>100% del importe de la sesión</strong> por ausencia no comunicada.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="policy-stripe-box">
+                    <div class="policy-stripe-box-icon">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+                    </div>
+                    <div class="policy-stripe-box-text">
+                        Tus datos de pago se almacenan de forma segura mediante Stripe, procesador de pagos certificado PCI DSS. La clínica no tiene acceso a los datos de tu tarjeta en ningún momento.
+                    </div>
+                </div>
+
+                <label class="policy-check-label">
+                    <input type="checkbox" id="policy_accept" class="wl-check-input">
+                    <span>Acepto la política de cancelación descrita anteriormente y autorizo a la clínica a realizar el cargo de la penalización correspondiente en mi método de pago en caso de cancelación tardía o no asistencia.</span>
+                </label>
+
+                <button type="button" id="btnPolicySecure" class="btn-policy-secure" disabled>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-bottom: 2px;"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+                    Añadir tarjeta de garantía
+                </button>
+                <div id="errorMessage" class="error hidden"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const CONFIG = {
+            // Reemplaza esto con el Webhook que procesará las tarjetas manuales
+            WEBHOOK_URL: 'https://app-toni-fisioterapia-n8n.ahgpie.easypanel.host/webhook/cobro-manual'
+        };
+
+        const checkbox = document.getElementById('policy_accept');
+        const btnSecure = document.getElementById('btnPolicySecure');
+        const errorMessage = document.getElementById('errorMessage');
+
+        // Parsear parámetros de la URL enviados en el email
+        const urlParams = new URLSearchParams(window.location.search);
+        const eid = urlParams.get('eid');
+        const token = urlParams.get('token');
+        const email = urlParams.get('email');
+
+        checkbox.addEventListener('change', function() {
+            btnSecure.disabled = !this.checked;
+        });
+
+        btnSecure.addEventListener('click', async function() {
+            if (!eid || !token) {
+                errorMessage.textContent = 'Enlace inválido o caducado. Faltan parámetros en la URL.';
+                errorMessage.classList.remove('hidden');
+                return;
+            }
+
+            btnSecure.disabled = true;
+            btnSecure.textContent = 'Conectando con pasarela segura...';
+            errorMessage.classList.add('hidden');
+
+            const exactText = `Acepto la política de cancelación descrita anteriormente y autorizo a la clínica a realizar el cargo de la penalización correspondiente en mi método de pago en caso de cancelación tardía o no asistencia.`;
+
+            try {
+                // Enviar petición al webhook de n8n para generar el link de Stripe
+                const response = await fetch(CONFIG.WEBHOOK_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body: new URLSearchParams({
+                        action: 'setup_manual_payment',
+                        eid: eid,
+                        token: token,
+                        email: email,
+                        texto_exacto: exactText
+                    })
+                });
+
+                const data = await response.json();
+
+                if (data.paymentUrl) {
+                    // Redirigir a la pantalla de pago seguro de Stripe
+                    window.location.href = data.paymentUrl;
+                } else if (data.success === false) {
+                    throw new Error(data.message || 'Error de validación. Es posible que el token haya expirado.');
+                } else {
+                    throw new Error('Respuesta inesperada del servidor.');
+                }
+
+            } catch (err) {
+                console.error('Error:', err);
+                errorMessage.textContent = err.message || 'Ha ocurrido un error al conectar con el servidor.';
+                errorMessage.classList.remove('hidden');
+                btnSecure.disabled = false;
+                btnSecure.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-bottom: 2px;"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg> Añadir tarjeta de garantía';
+            }
+        });
+    </script>
+</body>
+</html>
