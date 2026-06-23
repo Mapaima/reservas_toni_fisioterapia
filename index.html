@@ -792,6 +792,7 @@
                     <input type="email" id="email" name="email" required placeholder="juan@correo.com">
                 </div>
 
+                <!-- SECCIÓN DNI (Punto 3) -->
                 <div id="dniVerificationSection" class="hidden" style="background: rgba(141, 115, 91, 0.05); padding: 15px; border-radius: 14px; margin-bottom: 24px; border: 1px solid rgba(141, 115, 91, 0.2);">
                     <p style="font-size: 14px; margin-bottom: 10px; line-height: 1.5; color: #ddd;">No hemos encontrado este email en nuestra base de datos. Si ya eres paciente, introduce tu DNI para buscarte.</p>
                     <div class="form-group" style="margin-bottom: 0;">
@@ -1164,6 +1165,7 @@
             } catch (e) { console.error("Error comprobando paciente", e); }
         });
 
+        // NUEVO: Verificación por DNI si falla el correo
         const inputDniVerify = document.getElementById('dni_verify');
         inputDniVerify.addEventListener('blur', async () => {
             const dni = inputDniVerify.value.trim();
