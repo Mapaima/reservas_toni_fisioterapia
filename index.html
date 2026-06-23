@@ -792,6 +792,14 @@
                     <input type="email" id="email" name="email" required placeholder="juan@correo.com">
                 </div>
 
+                <div id="dniVerificationSection" class="hidden" style="background: rgba(141, 115, 91, 0.05); padding: 15px; border-radius: 14px; margin-bottom: 24px; border: 1px solid rgba(141, 115, 91, 0.2);">
+                    <p style="font-size: 14px; margin-bottom: 10px; line-height: 1.5; color: #ddd;">No hemos encontrado este email en nuestra base de datos. Si ya eres paciente, introduce tu DNI para buscarte.</p>
+                    <div class="form-group" style="margin-bottom: 0;">
+                        <label for="dni_verify">DNI / NIE / NIF</label>
+                        <input type="text" id="dni_verify" placeholder="Ej. 12345678X">
+                    </div>
+                </div>
+
                 <div id="personalDataSection">
                     <div id="welcomePatientMessage" class="hidden">
                         <p style="margin-bottom: 0; font-weight: 600;">✨ ¡Hola de nuevo! Te hemos reconocido. Solo elige tu tratamiento y cita.</p>
@@ -1142,21 +1150,85 @@
                     document.getElementById('dni').required = false;
                     document.getElementById('telefono').required = false;
                     
+                    document.getElementById('dniVerificationSection').classList.add('hidden');
                     personalDataSection.querySelectorAll('.form-group').forEach(group => group.classList.add('hidden'));
+                    welcomePatientMessage.innerHTML = '<p style="margin-bottom: 0; font-weight: 600;">✨ ¡Hola de nuevo! Te hemos reconocido por tu email. Solo elige tu tratamiento y cita.</p>';
                     welcomePatientMessage.classList.remove('hidden');
                 } else {
                     patientFound = false;
                     existingPatientId = null;
+                    document.getElementById('dniVerificationSection').classList.remove('hidden');
+                    personalDataSection.querySelectorAll('.form-group').forEach(group => group.classList.add('hidden'));
+                    welcomePatientMessage.classList.add('hidden');
+                }
+            } catch (e) { console.error("Error comprobando paciente", e); }
+        });
+
+        const inputDniVerify = document.getElementById('dni_verify');
+        inputDniVerify.addEventListener('blur', async () => {
+            const dni = inputDniVerify.value.trim();
+            if (!dni) return;
+
+            try {
+                const response = await fetch(CONFIG.WEBHOOK_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body: new URLSearchParams({ 
+                        action: 'check_patient_dni', 
+                        dni: dni 
+                    })
+                });
+                let data = await response.json();
+                if (Array.isArray(data)) data = data[0];
+                if (data && data.json) data = data.json;
+
+                const isFound = data && (data.exists || data.patientId);
+
+                if (isFound) {
+                    patientFound = true;
+                    existingPatientId = data.patientId;
+                    
+                    const fname = data.fname || data.first_name || data.nombre || data.name || '';
+                    const lname = data.lname || data.last_name || data.primer_apellido || '';
+                    const mname = data.mname || data.segundo_apellido || '';
+                    const phone = data.telefono || data.phone_cell || data.phone || '';
+
+                    if (fname) document.getElementById('nombre').value = fname;
+                    if (lname) document.getElementById('primer_apellido').value = lname;
+                    if (mname) document.getElementById('segundo_apellido').value = mname;
+                    if (phone) document.getElementById('telefono').value = phone;
+                    document.getElementById('dni').value = dni;
+
+                    document.getElementById('wl_nombre').value = fname;
+                    document.getElementById('wl_apellidos').value = (lname + ' ' + mname).trim();
+                    document.getElementById('wl_telefono').value = phone;
+                    document.getElementById('wl_email').value = document.getElementById('email').value;
+                    
+                    document.getElementById('nombre').required = false;
+                    document.getElementById('primer_apellido').required = false;
+                    document.getElementById('fechaNacimiento').required = false;
+                    document.getElementById('genero').required = false;
+                    document.getElementById('dni').required = false;
+                    document.getElementById('telefono').required = false;
+                    
+                    personalDataSection.querySelectorAll('.form-group').forEach(group => group.classList.add('hidden'));
+                    welcomePatientMessage.innerHTML = '<p style="margin-bottom: 0; font-weight: 600;">✨ ¡Te hemos encontrado por tu DNI! Actualizaremos tu ficha con tu nuevo email.</p>';
+                    welcomePatientMessage.classList.remove('hidden');
+                } else {
+                    patientFound = false;
+                    existingPatientId = null;
+                    document.getElementById('dni').value = dni;
                     document.getElementById('nombre').required = true;
                     document.getElementById('primer_apellido').required = true;
                     document.getElementById('fechaNacimiento').required = true;
                     document.getElementById('genero').required = true;
                     document.getElementById('dni').required = true;
                     document.getElementById('telefono').required = true;
+                    
                     personalDataSection.querySelectorAll('.form-group').forEach(group => group.classList.remove('hidden'));
                     welcomePatientMessage.classList.add('hidden');
                 }
-            } catch (e) { console.error("Error comprobando paciente", e); }
+            } catch (e) { console.error("Error comprobando paciente por DNI", e); }
         });
 
         const loadingState = document.getElementById('loadingState');
