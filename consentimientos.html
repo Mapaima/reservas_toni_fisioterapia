@@ -1,11 +1,11 @@
 <!DOCTYPE html>
-<html lang="ca">
+<html lang="es">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Consentiments Informats | Toni Vercher Fisioteràpia</title>
-    <meta name="description" content="Firma els consentiments informats de Toni Vercher Fisioteràpia de forma segura i digital.">
+    <title>Consentimientos Informados | Toni Vercher Fisioterapia</title>
+    <meta name="description" content="Firma los consentimientos informados de Toni Vercher Fisioterapia de forma segura y digital.">
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/signature_pad@4.1.7/dist/signature_pad.umd.min.js"></script>
     <style>
@@ -21,7 +21,6 @@
             --glass-border: rgba(27, 138, 123, 0.2);
             --glass-bg: rgba(26, 30, 29, 0.85);
             --success-color: #2ecc71;
-            --warning-color: #f39c12;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -88,18 +87,8 @@
             color: var(--secondary-color);
         }
 
-        .header h1 {
-            font-size: 24px;
-            margin-bottom: 10px;
-            color: white;
-            font-weight: 600;
-        }
-
-        .header p {
-            color: var(--text-secondary);
-            font-size: 14px;
-            line-height: 1.6;
-        }
+        .header h1 { font-size: 24px; margin-bottom: 10px; color: white; font-weight: 600; }
+        .header p { color: var(--text-secondary); font-size: 14px; line-height: 1.6; }
 
         .content { padding: 0 35px 40px; }
 
@@ -214,9 +203,7 @@
         .welcome-text strong { color: white; font-size: 15px; display: block; margin-bottom: 2px; }
 
         /* --- PROGRESS BAR --- */
-        .progress-section {
-            margin-bottom: 24px;
-        }
+        .progress-section { margin-bottom: 24px; }
 
         .progress-header {
             display: flex; justify-content: space-between; align-items: center;
@@ -286,7 +273,7 @@
         }
 
         .consent-title { flex: 1; font-size: 14px; font-weight: 600; color: white; line-height: 1.3; }
-        .consent-item.signed .consent-title { color: rgba(255,255,255,0.7); }
+        .consent-item.signed .consent-title { color: rgba(255,255,255,0.6); }
 
         .consent-chevron {
             color: var(--text-secondary);
@@ -367,18 +354,13 @@
             line-height: 1;
         }
 
-        /* --- SIGNATURE PAD SECTION --- */
-        .signature-section {
-            margin-top: 8px;
-        }
+        /* --- SIGNATURE PAD --- */
+        .signature-section { margin-top: 8px; }
 
         .signature-section-title {
-            font-size: 13px;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            color: var(--secondary-color);
-            margin-bottom: 14px;
+            font-size: 13px; font-weight: 600;
+            text-transform: uppercase; letter-spacing: 1px;
+            color: var(--secondary-color); margin-bottom: 14px;
         }
 
         .signature-wrapper {
@@ -402,69 +384,47 @@
         }
 
         .signature-hint.hidden-hint { opacity: 0; }
-
         .signature-hint .hint-icon { font-size: 28px; display: block; margin-bottom: 8px; opacity: 0.3; }
         .signature-hint p { font-size: 13px; color: var(--text-secondary); opacity: 0.6; }
 
         #signatureCanvas {
-            width: 100%;
-            height: 160px;
-            display: block;
-            cursor: crosshair;
-            touch-action: none;
+            width: 100%; height: 160px;
+            display: block; cursor: crosshair; touch-action: none;
         }
 
         .signature-actions {
-            display: flex;
-            justify-content: flex-end;
+            display: flex; justify-content: flex-end;
             padding: 8px 12px;
             border-top: 1px solid rgba(255,255,255,0.04);
         }
 
         .btn-clear-sig {
-            background: transparent !important;
-            border: none !important;
-            color: var(--text-secondary) !important;
-            font-size: 12px !important;
-            padding: 6px 10px !important;
-            margin: 0 !important;
-            width: auto !important;
-            text-transform: none !important;
-            letter-spacing: 0 !important;
-            font-weight: 500 !important;
-            box-shadow: none !important;
-            cursor: pointer !important;
+            background: transparent !important; border: none !important;
+            color: var(--text-secondary) !important; font-size: 12px !important;
+            padding: 6px 10px !important; margin: 0 !important; width: auto !important;
+            text-transform: none !important; letter-spacing: 0 !important;
+            font-weight: 500 !important; box-shadow: none !important; cursor: pointer !important;
         }
 
         .btn-clear-sig:hover:not(:disabled) {
-            color: white !important;
-            transform: none !important;
-            box-shadow: none !important;
+            color: white !important; transform: none !important; box-shadow: none !important;
         }
 
-        /* --- DATE/DNI CONFIRMATION --- */
+        /* --- CONFIRM META --- */
         .confirm-meta {
             background: rgba(255, 255, 255, 0.02);
             border: 1px solid rgba(255,255,255,0.06);
             border-radius: 14px;
             padding: 16px 18px;
             margin: 16px 0;
-            display: flex;
-            gap: 20px;
+            display: flex; gap: 20px;
         }
 
         .confirm-meta-item { flex: 1; }
         .confirm-meta-item .label { font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: var(--text-secondary); margin-bottom: 4px; }
         .confirm-meta-item .value { font-size: 14px; font-weight: 600; color: white; }
 
-        /* --- SUBMIT BUTTON --- */
-        .btn-submit-consents {
-            background: var(--primary-color);
-            display: flex; align-items: center; justify-content: center; gap: 10px;
-            margin-top: 20px;
-        }
-
-        /* --- LOADING / SUCCESS / ERROR --- */
+        /* --- STATES --- */
         .state-screen { text-align: center; padding: 40px 20px; }
         .state-screen .big-icon { font-size: 64px; display: block; margin-bottom: 20px; }
         .state-screen h2 { font-size: 22px; font-weight: 600; margin-bottom: 12px; }
@@ -492,7 +452,7 @@
             text-align: center;
         }
 
-        .all-signed-info {
+        .info-box {
             background: rgba(46, 204, 113, 0.06);
             border: 1px solid rgba(46, 204, 113, 0.2);
             border-radius: 14px;
@@ -508,6 +468,7 @@
             body { padding: 0; }
             .content { padding: 0 22px 30px; }
             .header { padding: 30px 22px 20px; }
+            .confirm-meta { flex-direction: column; gap: 10px; }
         }
     </style>
 </head>
@@ -515,65 +476,63 @@
 <body>
     <div class="container">
         <div class="header">
-            <div class="brand-logo">Toni Vercher <span>Fisioteràpia</span></div>
-            <h1>📋 Consentiments Informats</h1>
-            <p>Llegeix i firma tots els documents una única vegada per poder rebre els nostres tractaments.</p>
+            <div class="brand-logo">Toni Vercher <span>Fisioterapia</span></div>
+            <h1>📋 Consentimientos Informados</h1>
+            <p>Lee y firma todos los documentos una única vez para poder recibir nuestros tratamientos.</p>
         </div>
 
         <div class="content">
 
-            <!-- ==================== SCREEN 1: IDENTIFICATION ==================== -->
+            <!-- SCREEN 1: IDENTIFICATION -->
             <div id="screenIdentify">
                 <div class="identify-card">
                     <div class="identify-icon">🪪</div>
-                    <h2>Identifica't</h2>
-                    <p>Introdueix el teu DNI per verificar la teva identitat i accedir als documents que has de firmar.</p>
-                    <div style="margin-bottom: 0;">
+                    <h2>Identifícate</h2>
+                    <p>Introduce tu DNI para verificar tu identidad y acceder a los documentos que debes firmar.</p>
+                    <div>
                         <label for="inputDni">DNI / NIE</label>
                         <input type="text" id="inputDni" placeholder="Ej. 12345678X" maxlength="12" autocomplete="off">
                     </div>
                     <div id="identifyError" class="error-box hidden"></div>
-                    <button id="btnVerify" onclick="verificarPacient()">
-                        Verificar identitat →
-                    </button>
+                    <button id="btnVerify" onclick="verificarPaciente()">Verificar identidad →</button>
                 </div>
             </div>
 
-            <!-- ==================== SCREEN: LOADING ==================== -->
+            <!-- SCREEN: LOADING -->
             <div id="screenLoading" class="hidden">
                 <div class="state-screen">
                     <div class="spinner"></div>
-                    <p id="loadingMsg" style="color: var(--text-secondary);">Verificant identitat...</p>
+                    <p id="loadingMsg" style="color: var(--text-secondary);">Verificando identidad...</p>
                 </div>
             </div>
 
-            <!-- ==================== SCREEN: ALREADY SIGNED ==================== -->
+            <!-- SCREEN: ALREADY SIGNED -->
             <div id="screenAlreadySigned" class="hidden">
                 <div class="state-screen">
                     <span class="big-icon">✅</span>
-                    <h2>Ja has firmat!</h2>
-                    <p>Ja tenim tots els teus consentiments firmats correctament. No necessites tornar a fer-ho.</p>
-                    <div class="all-signed-info">
-                        📅 Data de firma: <strong id="signedDate">–</strong>
+                    <h2>¡Ya has firmado!</h2>
+                    <p>Ya tenemos todos tus consentimientos firmados correctamente. No es necesario que lo vuelvas a hacer.</p>
+                    <div class="info-box">
+                        📅 Fecha de firma: <strong id="signedDate">–</strong>
                     </div>
                 </div>
             </div>
 
-            <!-- ==================== SCREEN 2: DOCUMENTS + SIGNATURE ==================== -->
+            <!-- SCREEN 2: DOCUMENTS + SIGNATURE -->
             <div id="screenDocuments" class="hidden">
-                <!-- Patient welcome banner -->
+                <!-- Patient banner -->
                 <div class="welcome-banner">
                     <div class="welcome-avatar" id="patientInitials">?</div>
                     <div class="welcome-text">
                         <strong id="patientName">–</strong>
-                        <p>Llegeix i accepta cadascun dels documents per poder firmar.</p>
+                        <p>Lee y acepta cada uno de los documentos para poder firmar.</p>
                     </div>
                 </div>
 
                 <!-- Progress -->
                 <div class="progress-section">
                     <div class="progress-header">
-                        <span>Documents acceptats</span>
+                        <span>Documentos aceptados</span>
                         <strong id="progressLabel">0 / 7</strong>
                     </div>
                     <div class="progress-bar-bg">
@@ -581,14 +540,14 @@
                     </div>
                 </div>
 
-                <!-- Consent accordion list -->
+                <!-- Consent list -->
                 <div class="consent-list" id="consentList"></div>
 
-                <!-- Signature section (hidden until all accepted) -->
+                <!-- Signature section -->
                 <div class="signature-section" id="signatureSection" style="display:none;">
                     <div class="signature-section-title">✍️ Firma aquí</div>
                     <p style="font-size:13px; color: var(--text-secondary); margin-bottom: 14px; line-height: 1.5;">
-                        Dibuixa la teva firma al requadre. Pots usar el dit (mòbil / tablet) o el ratolí.
+                        Dibuja tu firma en el recuadro. Puedes usar el dedo (móvil / tablet) o el ratón.
                     </p>
                     <div class="signature-wrapper" id="signatureWrapper">
                         <div class="signature-hint" id="signatureHint">
@@ -597,14 +556,13 @@
                         </div>
                         <canvas id="signatureCanvas"></canvas>
                         <div class="signature-actions">
-                            <button class="btn-clear-sig" onclick="clearSignature()">🗑️ Esborrar i tornar a firmar</button>
+                            <button class="btn-clear-sig" onclick="clearSignature()">🗑️ Borrar y volver a firmar</button>
                         </div>
                     </div>
 
-                    <!-- Confirm metadata -->
                     <div class="confirm-meta">
                         <div class="confirm-meta-item">
-                            <div class="label">Pacient</div>
+                            <div class="label">Paciente</div>
                             <div class="value" id="confirmName">–</div>
                         </div>
                         <div class="confirm-meta-item">
@@ -612,215 +570,213 @@
                             <div class="value" id="confirmDni">–</div>
                         </div>
                         <div class="confirm-meta-item">
-                            <div class="label">Data</div>
+                            <div class="label">Fecha</div>
                             <div class="value" id="confirmDate">–</div>
                         </div>
                     </div>
 
                     <div id="submitError" class="error-box hidden"></div>
 
-                    <button id="btnSubmit" class="btn-submit-consents" onclick="enviarConsentiments()" disabled>
+                    <button id="btnSubmit" onclick="enviarConsentimientos()" disabled style="display:flex; align-items:center; justify-content:center; gap:10px; margin-top:20px;">
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
-                        Firmar i enviar tots els documents
+                        Firmar y enviar todos los documentos
                     </button>
                 </div>
             </div>
 
-            <!-- ==================== SCREEN: SUCCESS ==================== -->
+            <!-- SCREEN: SUCCESS -->
             <div id="screenSuccess" class="hidden">
                 <div class="state-screen">
                     <span class="big-icon">🎉</span>
-                    <h2>Consentiments firmats!</h2>
-                    <p>Hem registrat la teva firma correctament. Rebràs una còpia en el teu historial clínic.<br><br>Ja pots acudir a la teva cita sense preocupació. Fins aviat!</p>
-                    <div class="all-signed-info" style="margin-top: 24px;">
+                    <h2>¡Consentimientos firmados!</h2>
+                    <p>Hemos registrado tu firma correctamente. Recibirás una copia en tu historial clínico.<br><br>Ya puedes acudir a tu cita sin preocupación. ¡Hasta pronto!</p>
+                    <div class="info-box" style="margin-top: 24px;">
                         ✅ Firma registrada el <strong id="successDate">–</strong>
                     </div>
                 </div>
             </div>
 
-        </div><!-- /content -->
-    </div><!-- /container -->
+        </div>
+    </div>
 
     <script>
-    // ===========================
-    // CONFIGURATION
-    // ===========================
     const WEBHOOK_URL = 'https://app-toni-fisioterapia-n8n.ahgpie.easypanel.host/webhook/consentimientos';
 
     // ===========================
-    // CONSENT DOCUMENTS DATA
+    // DOCUMENTS DATA (ES)
     // ===========================
     const DOCUMENTS = [
         {
             id: 'acupuntura',
-            title: 'Consentiment Informat · Acupuntura',
+            title: 'Consentimiento Informado · Acupuntura',
             body: `
-                <p>El present document serveix perquè vosté, o qui ho represente, atorgue el seu consentiment per a aplicar la teràpia d'<strong>ACUPUNTURA</strong>. Pot vosté retirar este consentiment quan ho desitge. Firmar-ho no li obliga a rebre la teràpia.</p>
+                <p>El presente documento sirve para que usted, o quien le represente, otorgue su consentimiento para aplicar la terapia de <strong>ACUPUNTURA</strong>. Puede retirar este consentimiento cuando lo desee. Firmarlo no le obliga a recibir la terapia. De su rechazo no se derivará ninguna consecuencia adversa respecto a la calidad del resto de la atención recibida.</p>
 
-                <p>L'acupuntura és una tècnica invasiva que consisteix a situar agulles en punts precisos del cos amb l'objectiu de millorar i/o recuperar l'estat de salut òptim del pacient. Busca restablir l'equilibri energètic dels meridians per mitjà de l'estimulació amb agulles i així, prevenir i tractar les diferents afeccions i malalties.</p>
+                <p>La acupuntura es una técnica invasiva que consiste en situar agujas en puntos precisos del cuerpo con el objetivo de mejorar y/o recuperar el estado de salud óptimo del paciente. Busca restablecer el equilibrio energético de los meridianos mediante la estimulación con agujas y así prevenir y tratar las diferentes afecciones y enfermedades.</p>
 
-                <h3>Contraindicacions</h3>
+                <h3>Contraindicaciones</h3>
                 <ul>
-                    <li>Pacients amb prèvies reaccions adverses a les agulles.</li>
-                    <li>Tractament amb anticoagulants o antiagregants.</li>
-                    <li>Alteracions al sistema inmunitari.</li>
-                    <li>Malalties infeccioses (VIH, hepatitis…).</li>
-                    <li>Problemes epilèptics.</li>
-                    <li>Processos neoplàsics (càncer).</li>
-                    <li>Punció sota zones amb linfedema, malalties dèrmiques, ferides, erosions o cicatrius.</li>
-                    <li>Possibles al·lèrgies als metalls (especialment al niquel) i als guants de làtex.</li>
-                    <li>Evitar la punció durant els 3 primers mesos d'embaràs.</li>
+                    <li>Pacientes con previas reacciones adversas a las agujas.</li>
+                    <li>Tratamiento con anticoagulantes o antiagregantes.</li>
+                    <li>Alteraciones en el sistema inmunitario.</li>
+                    <li>Enfermedades infecciosas (VIH, hepatitis…).</li>
+                    <li>Problemas epilépticos.</li>
+                    <li>Procesos neoplásicos (cáncer).</li>
+                    <li>Punción sobre zonas con linfedema, enfermedades dérmicas, heridas, erosiones o cicatrices.</li>
+                    <li>Posibles alergias a los metales (especialmente al níquel) y a los guantes de látex.</li>
+                    <li>Evitar la punción durante los 3 primeros meses de embarazo y posteriormente zonas que puedan afectar al feto.</li>
                 </ul>
 
-                <h3>Reaccions adverses possibles</h3>
-                <p>Dolor a la punció i pospunció (normalment no supera les 48h), sagnat, hematoma, mioedema, trencament de l'agulla, pneumotòrax, cremades, sensació elèctrica, lesió en òrgans o nervis, xoc anafilàctic, infecció i reaccions vegetatives lleus (pal·lidesa, sudoració) i excepcionals (síncope vasovagal).</p>
+                <h3>Reacciones adversas posibles</h3>
+                <p>Dolor en la punción y pospunción (normalmente no supera las 48 horas), sangrado, hematoma, mioedema, rotura de la aguja, neumotórax, quemaduras, sensación eléctrica por contacto con un nervio, lesión en órganos o nervios, choque anafiláctico, infección y reacciones vegetativas leves (palidez, sudoración, piloerección) y excepcionales (síncope vasovagal).</p>
 
-                <p>Les dades obtingudes seran tractades amb la màxima confidencialitat, acatant-se al Reglament (EU) 2016/679 i a la Llei Orgànica 3/2018 de Protecció de Dades Personals.</p>
+                <p>Los datos obtenidos serán tratados con la máxima confidencialidad, acatándose al Reglamento (UE) 2016/679 y a la Ley Orgánica 3/2018 de Protección de Datos Personales.</p>
 
-                <p>Declare que he estat informat dels riscos del tractament i que en qualsevol moment puc revocar el meu consentiment. Estic satisfet amb la informació rebuda i done el meu consentiment.</p>
+                <p>Declaro que he sido informado de los riesgos del tratamiento y que en cualquier momento puedo revocar mi consentimiento. Estoy satisfecho con la información recibida y doy mi consentimiento.</p>
             `
         },
         {
             id: 'antropometria',
-            title: 'Consentiment Informat · Antropometria',
+            title: 'Consentimiento Informado · Antropometría',
             body: `
-                <p>El present document serveix perquè vosté, o qui ho represente, atorgue el seu consentiment per a aplicar la teràpia d'<strong>ANTROPOMETRIA</strong>. Pot vosté retirar este consentiment quan ho desitge.</p>
+                <p>El presente documento sirve para que usted otorgue su consentimiento para aplicar la terapia de <strong>ANTROPOMETRÍA</strong>. Puede retirar este consentimiento cuando lo desee. Firmarlo no le obliga a recibir la terapia.</p>
 
-                <p>La antropometria és un dels mètodes utilitzats per a l'avaluació de la composició corporal, en el qual es realitza un mesurament de la grandària corporal, pes i proporcions. També permet avaluar l'estat de nutrició.</p>
+                <p>La antropometría es uno de los métodos utilizados para la evaluación de la composición corporal, en el que se realiza una medición del tamaño corporal, peso y proporciones. También permite evaluar el estado de nutrición del individuo.</p>
 
-                <h3>Mesuraments que es duen a terme</h3>
+                <h3>Mediciones que se llevan a cabo</h3>
                 <ul>
-                    <li>Avaluació de la massa corporal total (pes, alçada i complexió).</li>
-                    <li>Massa grassa (plecs cutanis i circumferències).</li>
-                    <li>Massa lliure de greix (massa muscular).</li>
+                    <li>Evaluación de la masa corporal total (peso, talla y complexión).</li>
+                    <li>Masa grasa (pliegues cutáneos y circunferencias).</li>
+                    <li>Masa libre de grasa (masa muscular).</li>
                 </ul>
 
-                <p>Vostè ha de saber que aquests mesuraments <strong>són indolors</strong> i que per a ser precisos han de realitzar-se tantes vegades com faça falta i amb la menor roba possible (homes amb calçotets i dones amb roba de bany). Generalment, no existeix cap tipus de risc amb l'instrumental utilitzat.</p>
+                <p>Debe saber que estas mediciones <strong>son indoloras</strong> y que para ser precisas deben realizarse con la menor ropa posible (hombres con ropa interior y mujeres con ropa de baño). Generalmente no existe ningún tipo de riesgo con el instrumental utilizado.</p>
 
-                <p>Les dades obtingudes seran tractades amb la màxima confidencialitat, acatant-se al Reglament (EU) 2016/679 i a la Llei Orgànica 3/2018 de Protecció de Dades Personals.</p>
+                <p>Los datos obtenidos serán tratados con la máxima confidencialidad, acatándose al Reglamento (UE) 2016/679 y a la Ley Orgánica 3/2018 de Protección de Datos Personales.</p>
 
-                <p>Declare que he estat informat i que en qualsevol moment puc revocar el meu consentiment. En conseqüència, done el meu consentiment.</p>
+                <p>Declaro que he sido informado y que en cualquier momento puedo revocar mi consentimiento. En consecuencia, doy mi consentimiento.</p>
             `
         },
         {
-            id: 'manipulacio',
-            title: 'Consentiment Informat · Manipulació Articular',
+            id: 'manipulacion',
+            title: 'Consentimiento Informado · Manipulación Articular',
             body: `
-                <p>El present document serveix perquè vosté atorgue el seu consentiment per a aplicar la <strong>TERÀPIA MANUAL / MANIPULACIÓ ARTICULAR</strong>. Pot vosté retirar este consentiment quan ho desitge.</p>
+                <p>El presente documento sirve para que usted otorgue su consentimiento para aplicar la <strong>TERAPIA MANUAL / MANIPULACIÓN ARTICULAR</strong>. Puede retirar este consentimiento cuando lo desee. Firmarlo no le obliga a recibir la terapia.</p>
 
-                <p>La manipulació articular consisteix en un moviment passiu realitzat de manera sobtada a alta velocitat i petita amplitud. Té com a objectiu recuperar el moviment en disfunció i actuar sobre mecanismes de modulació del dolor.</p>
+                <p>La manipulación articular consiste en un movimiento pasivo realizado de manera brusca a alta velocidad y pequeña amplitud. Tiene como objetivo recuperar el movimiento en disfunción, mejorando su funcionalidad y actuando sobre mecanismos de modulación del dolor.</p>
 
-                <h3>Contraindicacions</h3>
+                <h3>Contraindicaciones</h3>
                 <ul>
-                    <li>Processos neoplàsics (càncer) i inflamatoris aguts.</li>
-                    <li>Fractures recents, lesió cutànea oberta o processos de cicatrització.</li>
-                    <li>Processos infecciosos articulars o ossis.</li>
-                    <li>Osteopenia, osteoporosi i osteomalàcia.</li>
-                    <li>Degeneracions articulars (artritis, artrosi, inestabilitat vertebral…).</li>
-                    <li>Malformacions congènites articulars i òssies.</li>
-                    <li>Alteracions cardiocirculatòries i hematològiques.</li>
-                    <li>Alteracions neurològiques (hèrnia discal, mielopaties agudes…).</li>
-                    <li>Reemplaçaments articulars, pèrdua d'estabilitat esquelètica o embaràs.</li>
+                    <li>Procesos neoplásicos (cáncer) y procesos inflamatorios agudos.</li>
+                    <li>Antecedentes de fractura reciente, lesión cutánea abierta o procesos de cicatrización.</li>
+                    <li>Procesos infecciosos articulares u óseos (osteomielitis infecciosa).</li>
+                    <li>Osteopenia (osteoporosis y osteomalacia).</li>
+                    <li>Degeneraciones articulares (artritis, artrosis, inestabilidad vertebral…).</li>
+                    <li>Malformaciones congénitas articulares y óseas.</li>
+                    <li>Alteraciones cardiocirculatorias y hematológicas.</li>
+                    <li>Alteraciones neurológicas (hernia o prolapso discal, mielopatías agudas…).</li>
+                    <li>Reemplazos articulares, pérdida de estabilidad esquelética o embarazo.</li>
                 </ul>
 
-                <h3>Reaccions possibles</h3>
-                <p>Freqüents: molèsties locals en teixits adjacents i sensació de fatiga que desapareixen en poc temps. Infreqüents: mareig, síncope, accident vascular cerebral (manipulació cervical), agreujament de lesió, fractura en osteoporosi greu, ciatàlgia, cervicobraquialgia, tetraplegia o paraplegia.</p>
+                <h3>Reacciones posibles</h3>
+                <p><strong>Frecuentes:</strong> molestias locales en tejidos adyacentes a la articulación tratada y sensación de fatiga o somnolencia que desaparecen en poco tiempo.</p>
+                <p><strong>Infrecuentes:</strong> mareo, síncope, accidente cerebrovascular (manipulación cervical), agravamiento de la lesión, fractura en osteoporosis grave, ciatalgia, cervicobraquialgia, tetraplejia o paraplejia.</p>
 
-                <p>Les dades obtingudes seran tractades amb la màxima confidencialitat, acatant-se al Reglament (EU) 2016/679 i a la Llei Orgànica 3/2018.</p>
+                <p>Los datos obtenidos serán tratados con la máxima confidencialidad, acatándose al Reglamento (UE) 2016/679 y a la Ley Orgánica 3/2018.</p>
 
-                <p>Declare que he estat informat dels riscos del tractament i que en qualsevol moment puc revocar el meu consentiment. En conseqüència, done el meu consentiment.</p>
+                <p>Declaro que he sido informado de los riesgos del tratamiento y que en cualquier momento puedo revocar mi consentimiento. En consecuencia, doy mi consentimiento.</p>
             `
         },
         {
             id: 'puncio_seca',
-            title: 'Consentiment Informat · Punció Seca',
+            title: 'Consentimiento Informado · Punción Seca',
             body: `
-                <p>El present document serveix perquè vosté atorgue el seu consentiment per a aplicar la teràpia de <strong>"Punció Seca"</strong>. Pot vosté retirar aquest consentiment quan ho desitge.</p>
+                <p>El presente documento sirve para que usted otorgue su consentimiento para aplicar la terapia de <strong>"Punción Seca"</strong>. Puede retirar este consentimiento cuando lo desee. Firmarlo no le obliga a recibir la terapia.</p>
 
-                <p>La Punció Seca és una tècnica invasiva que té com a objectiu principal disminuir o fer desaparèixer el dolor i disfunció dels Punts Gallet Miofascials (PGM), comunament coneguts com contractures. La tècnica consisteix en la introducció d'una fina agulla estèril per arribar directament al PGM i eliminar el dolor muscular del pacient.</p>
+                <p>La Punción Seca es una técnica invasiva que tiene como objetivo principal disminuir o hacer desaparecer el dolor y disfunción de los Puntos Gatillo Miofasciales (PGM), comúnmente conocidos como contracturas. La técnica consiste en la introducción de una fina aguja estéril con el objetivo de llegar directamente al PGM y eliminar el dolor muscular del paciente, ya sea local o referido.</p>
 
-                <h3>Contraindicacions</h3>
+                <h3>Contraindicaciones</h3>
                 <ul>
-                    <li>Pacients amb prèvies reaccions adverses a les agulles.</li>
-                    <li>Tractament amb anticoagulants o antiagregants.</li>
-                    <li>Alteracions del sistema immunitari.</li>
-                    <li>Malalties infeccioses (VIH, hepatitis…).</li>
-                    <li>Problemes epilèptics i processos neoplàsics (càncer).</li>
-                    <li>Punció sobre zones amb linfedema, malalties dèrmiques, ferides o cicatrius.</li>
-                    <li>Al·lèrgia als metalls (especialment al níquel) o als guants de làtex.</li>
-                    <li>Evitar la punció durant els 3 primers mesos d'embaràs.</li>
+                    <li>Pacientes con previas reacciones adversas a las agujas.</li>
+                    <li>Tratamiento con anticoagulantes o antiagregantes.</li>
+                    <li>Alteraciones del sistema inmunitario.</li>
+                    <li>Enfermedades infecciosas (VIH, hepatitis…).</li>
+                    <li>Problemas epilépticos y procesos neoplásicos (cáncer).</li>
+                    <li>Punción sobre zonas con linfedema, enfermedades dérmicas, heridas, erosiones o cicatrices.</li>
+                    <li>Posibles alergias a los metales (especialmente al níquel) o a los guantes de látex.</li>
+                    <li>Evitar la punción durante los 3 primeros meses de embarazo.</li>
                 </ul>
 
-                <h3>Reaccions adverses possibles</h3>
-                <p>Dolor a la punció i pospunció (normalment no supera les 48h), sagnat, hematoma, mioedema, trencament de l'agulla, pneumotòrax, cremades, sensació elèctrica, lesió en òrgans o nervis, xoc anafilàctic, infecció i reaccions vegetatives lleus (pal·lidesa, sudoració, piloerecció) i excepcionals (síncope vasovagal).</p>
+                <h3>Reacciones adversas posibles</h3>
+                <p>Dolor en la punción y pospunción (normalmente no supera las 48 horas), sangrado, hematoma, mioedema, rotura de la aguja, neumotórax, quemaduras, sensación eléctrica, lesión en órganos o nervios, choque anafiláctico, infección y reacciones vegetativas leves (palidez, sudoración, piloerección) y excepcionales (síncope vasovagal).</p>
 
-                <p>Les dades obtingudes seran tractades amb la màxima confidencialitat, acatant-se al Reglament (EU) 2016/679 i a la Llei Orgànica 3/2018.</p>
+                <p>Los datos obtenidos serán tratados con la máxima confidencialidad, acatándose al Reglamento (UE) 2016/679 y a la Ley Orgánica 3/2018.</p>
 
-                <p>Declare que he estat informat dels riscos del tractament i que en qualsevol moment puc revocar el meu consentiment. En conseqüència, done el meu consentiment.</p>
+                <p>Declaro que he sido informado de los riesgos del tratamiento y que en cualquier momento puedo revocar mi consentimiento. En consecuencia, doy mi consentimiento.</p>
             `
         },
         {
             id: 'electroterapia',
-            title: 'Consentiment Informat · Electroteràpia',
+            title: 'Consentimiento Informado · Electroterapia',
             body: `
-                <p>El present document serveix perquè vosté atorgue el seu consentiment per a aplicar la teràpia d'<strong>"ELECTROTERÀPIA"</strong>. Pot vosté retirar aquest consentiment quan ho desitge.</p>
+                <p>El presente documento sirve para que usted otorgue su consentimiento para aplicar la terapia de <strong>"ELECTROTERAPIA"</strong>. Puede retirar este consentimiento cuando lo desee. Firmarlo no le obliga a recibir la terapia.</p>
 
-                <p>L'electroteràpia consisteix en el tractament de malalties o alteracions metabòliques dels teixits mitjançant l'aplicació d'energia electromagnètica en l'organisme, amb l'objectiu de produir reaccions biològiques i fisiològiques en aquests teixits.</p>
+                <p>La electroterapia consiste en el tratamiento de enfermedades o alteraciones metabólicas de los tejidos mediante la aplicación de energía electromagnética en el organismo, con el objetivo de producir reacciones biológicas y fisiológicas en dichos tejidos.</p>
 
-                <h3>Contraindicacions</h3>
+                <h3>Contraindicaciones</h3>
                 <ul>
-                    <li>Aplicació sobre zones de parestèsies, mucoses, isquèmiques, hemorràgies recents i infeccions cutànies.</li>
-                    <li>Pacients amb processos aguts, febre o problemes circulatoris.</li>
-                    <li>Malalties cardíaques o portadors de marcapassos.</li>
-                    <li>Portadors d'osteosíntesi.</li>
-                    <li>Processos neoplàsics (càncer).</li>
-                    <li>Afeccions del sistema nerviós central (espasticitat, miopaties, esclerosi múltiple…).</li>
-                    <li>Dones embarassades, especialment durant els 3 primers mesos.</li>
+                    <li>Aplicación sobre zonas de parestesias, mucosas, isquémicas, hemorragias recientes e infecciones cutáneas.</li>
+                    <li>Pacientes con procesos agudos, fiebre o problemas circulatorios.</li>
+                    <li>Enfermedades cardíacas o portadores de marcapasos.</li>
+                    <li>Portadores de osteosíntesis.</li>
+                    <li>Procesos neoplásicos (cáncer).</li>
+                    <li>Afecciones del sistema nervioso central (espasticidad, miopatías, esclerosis múltiple…).</li>
+                    <li>Mujeres embarazadas, especialmente durante los 3 primeros meses.</li>
                 </ul>
 
-                <h3>Reaccions adverses possibles</h3>
-                <p>Dolor durant i després de l'aplicació, contractures, cremades internes o externes, irritació de la pell, hipersensibilitat i agreujament del procés patològic si no s'han tingut en compte les contraindicacions.</p>
+                <h3>Reacciones adversas posibles</h3>
+                <p>Dolor durante y después de la aplicación, contracturas, quemaduras internas o externas, irritación de la piel, hipersensibilidad y agravamiento del proceso patológico si no se han tenido en cuenta las contraindicaciones.</p>
 
-                <p>Les dades obtingudes seran tractades amb la màxima confidencialitat, acatant-se al Reglament (EU) 2016/679 i a la Llei Orgànica 3/2018.</p>
+                <p>Los datos obtenidos serán tratados con la máxima confidencialidad, acatándose al Reglamento (UE) 2016/679 y a la Ley Orgánica 3/2018.</p>
 
-                <p>Declare que he estat informat dels riscos del tractament i que en qualsevol moment puc revocar el meu consentiment. En conseqüència, done el meu consentiment.</p>
+                <p>Declaro que he sido informado de los riesgos del tratamiento y que en cualquier momento puedo revocar mi consentimiento. En consecuencia, doy mi consentimiento.</p>
             `
         },
         {
             id: 'osteopatia',
-            title: 'Consentiment Informat · Osteopatia',
+            title: 'Consentimiento Informado · Osteopatía',
             body: `
-                <p><strong>ANTONIO VERCHER VERCHER</strong> amb DNI 20444546-F, nº de col·legiat 4636 i responsable de l'empresa <strong>"TONI VERCHER FISIOTERAPIA"</strong>, amb domicili en CARRER JAUME I Nº 34 BAIX, 46815 – LA LLOSA DE RANES.</p>
+                <p><strong>ANTONIO VERCHER VERCHER</strong> con DNI 20444546-F, nº de colegiado 4636 y responsable de la empresa <strong>"TONI VERCHER FISIOTERAPIA"</strong>, con domicilio en CALLE JAUME I Nº 34 BAJO, 46815 – LA LLOSA DE RANES.</p>
 
-                <p>He estat informat/a pel professional sobre els detalls, riscos i beneficis del tractament osteopàtic. Comprenc i estic satisfet/a amb la informació rebuda, contestant-me a totes les preguntes que he considerat convenient que em foren aclarides.</p>
+                <p>He sido informado/a por el profesional sobre los detalles, riesgos y beneficios del tratamiento osteopático. Comprendo y estoy satisfecho/a con la información recibida, contestándome a todas las preguntas que he considerado conveniente que me fueran aclaradas.</p>
 
-                <p>En conseqüència, done el meu consentiment per a la realització del <strong>tractament osteopàtic</strong> corresponent.</p>
+                <p>En consecuencia, doy mi consentimiento para la realización del <strong>tratamiento osteopático</strong> correspondiente.</p>
 
-                <p>Sé que puc revocar aquest consentiment en qualsevol moment sense que açò repercutisca en la qualitat de l'atenció rebuda.</p>
+                <p>Sé que puedo revocar este consentimiento en cualquier momento sin que ello repercuta en la calidad de la atención recibida.</p>
             `
         },
         {
-            id: 'proteccio_dades',
-            title: 'Consentiment · Protecció de Dades (RGPD)',
+            id: 'proteccion_datos',
+            title: 'Consentimiento · Protección de Datos (RGPD)',
             body: `
-                <p>En compliment del Reglament General de Protecció de Dades (UE) 2016/679 i la Llei Orgànica 3/2018 de 5 de desembre, l'informem que les dades per vostè proporcionades seran objecte de tractament per part de:</p>
+                <p>En cumplimiento del Reglamento General de Protección de Datos (UE) 2016/679 del Parlamento Europeo y del Consejo de 27 de abril de 2016 y la Ley Orgánica 3/2018 de 5 de diciembre, le informamos que los datos por usted proporcionados serán objeto de tratamiento por parte de:</p>
 
-                <p><strong>ANTONIO VERCHER VERCHER</strong> amb DNI 20444546F i domicili en CARRER JAUME I Nº 34 BAIX, LLOSA DE RANES, 46815 (VALÈNCIA).</p>
+                <p><strong>ANTONIO VERCHER VERCHER</strong> con DNI 20444546F y domicilio en CALLE JAUME I Nº 34 BAJO, LLOSA DE RANES, 46815 (VALENCIA).</p>
 
-                <h3>Finalitat del tractament</h3>
-                <p>Prestar-li el servei fisioterapèutic sol·licitat i/o contractat, realitzar la facturació del mateix i incorporar-los al seu historial clínic.</p>
+                <h3>Finalidad del tratamiento</h3>
+                <p>Prestarle el servicio fisioterapéutico solicitado y/o contratado, realizar la facturación del mismo e incorporarlos a su historial clínico.</p>
 
                 <h3>Base legal</h3>
-                <p>L'execució del servei per vostè contractat i/o sol·licitat.</p>
+                <p>La ejecución del servicio por usted contratado y/o solicitado.</p>
 
-                <h3>Conservació de les dades</h3>
-                <p>Les dades proporcionades es conservaran mentre es mantinga la relació comercial o durant els anys necessaris per a complir amb les obligacions legals.</p>
+                <h3>Conservación de los datos</h3>
+                <p>Los datos proporcionados se conservarán mientras se mantenga la relación comercial o durante los años necesarios para cumplir con las obligaciones legales.</p>
 
-                <h3>Cessió de dades</h3>
-                <p>Les dades no es cediran a tercers excepte en els casos en que existisca una obligació legal.</p>
+                <h3>Cesión de datos</h3>
+                <p>Los datos no se cederán a terceros salvo en los casos en que exista una obligación legal.</p>
 
-                <h3>Els seus drets</h3>
-                <p>Vostè pot exercir els seus drets d'accés, rectificació, limitació del tractament, portabilitat, oposició al tractament i supressió de les seves dades, així com el dret a presentar una reclamació davant l'Autoritat de Control, mitjançant escrit dirigit a la direcció postal de l'empresa o a <strong>tonivercherfisioterapia@gmail.com</strong> adjuntant còpia del DNI en ambdós casos.</p>
+                <h3>Sus derechos</h3>
+                <p>Usted puede ejercer sus derechos de acceso, rectificación, limitación del tratamiento, portabilidad, oposición al tratamiento y supresión de sus datos, así como el derecho a presentar una reclamación ante la Autoridad de Control, mediante escrito dirigido a la dirección postal de la empresa o a <strong>tonivercherfisioterapia@gmail.com</strong>, adjuntando copia del DNI en ambos casos.</p>
             `
         }
     ];
@@ -834,20 +790,26 @@
     const TOTAL_DOCS = DOCUMENTS.length;
 
     // ===========================
-    // STEP 1: VERIFY PATIENT
+    // STEP 1: VERIFY
     // ===========================
-    async function verificarPacient() {
+    async function verificarPaciente() {
         const dni = document.getElementById('inputDni').value.trim().toUpperCase();
-        if (!dni) {
-            showIdentifyError('Si us plau, introdueix el teu DNI.');
-            return;
-        }
-        if (dni.length < 7) {
-            showIdentifyError('El DNI introduït no sembla vàlid.');
-            return;
-        }
+        if (!dni) { showIdentifyError('Por favor, introduce tu DNI.'); return; }
+        if (dni.length < 7) { showIdentifyError('El DNI introducido no parece válido.'); return; }
 
         showScreen('screenLoading');
+
+        // ── DEMO MODE: si se abre localmente (file://) salta el webhook ──
+        const isLocal = window.location.protocol === 'file:';
+        if (isLocal) {
+            await new Promise(r => setTimeout(r, 800));
+            patientData = { dni, fname: 'Paciente', lname: 'Demo', patientId: 'DEMO', already_signed: false };
+            renderPatientInfo();
+            renderDocuments();
+            showScreen('screenDocuments');
+            return;
+        }
+        // ─────────────────────────────────────────────────────────────────
 
         try {
             const resp = await fetch(WEBHOOK_URL, {
@@ -861,32 +823,31 @@
 
             if (!data || !data.exists) {
                 showScreen('screenIdentify');
-                showIdentifyError('No hem trobat cap pacient amb aquest DNI. Si és la teva primera visita, parla amb la recepció.');
+                showIdentifyError('No hemos encontrado ningún paciente con este DNI. Si es tu primera visita, habla con recepción.');
                 return;
             }
 
             patientData = { ...data, dni };
 
             if (data.already_signed) {
-                document.getElementById('signedDate').textContent = formatDate(data.signed_date) || 'anteriorment';
+                document.getElementById('signedDate').textContent = formatDate(data.signed_date) || 'anteriormente';
                 showScreen('screenAlreadySigned');
                 return;
             }
 
-            // Show documents screen
             renderPatientInfo();
             renderDocuments();
             showScreen('screenDocuments');
 
         } catch (err) {
             showScreen('screenIdentify');
-            showIdentifyError('Hi ha hagut un problema de connexió. Torna-ho a intentar.');
+            showIdentifyError('Ha habido un problema de conexión. Vuelve a intentarlo.');
             console.error(err);
         }
     }
 
     document.getElementById('inputDni').addEventListener('keydown', (e) => {
-        if (e.key === 'Enter') verificarPacient();
+        if (e.key === 'Enter') verificarPaciente();
     });
 
     function showIdentifyError(msg) {
@@ -900,7 +861,7 @@
     // ===========================
     function renderPatientInfo() {
         const name = patientData.fname || patientData.nombre || '';
-        const fullName = [name, patientData.lname || patientData.apellidos || ''].join(' ').trim() || 'Pacient';
+        const fullName = [name, patientData.lname || patientData.apellidos || ''].join(' ').trim() || 'Paciente';
         const initials = fullName.split(' ').map(w => w[0]).slice(0, 2).join('').toUpperCase();
 
         document.getElementById('patientInitials').textContent = initials;
@@ -909,8 +870,8 @@
         document.getElementById('confirmDni').textContent = patientData.dni;
 
         const today = new Date();
-        const dateStr = today.toLocaleDateString('ca-ES', { day: '2-digit', month: '2-digit', year: 'numeric' });
-        document.getElementById('confirmDate').textContent = dateStr;
+        document.getElementById('confirmDate').textContent =
+            today.toLocaleDateString('es-ES', { day: '2-digit', month: '2-digit', year: 'numeric' });
     }
 
     function renderDocuments() {
@@ -922,7 +883,6 @@
             const item = document.createElement('div');
             item.className = 'consent-item';
             item.id = `doc-${doc.id}`;
-
             item.innerHTML = `
                 <div class="consent-header" onclick="toggleDoc('${doc.id}')">
                     <div class="consent-num" id="num-${doc.id}">${idx + 1}</div>
@@ -935,7 +895,7 @@
                         <label class="consent-check-label">
                             <input type="checkbox" class="consent-checkbox" id="chk-${doc.id}"
                                 onchange="onCheckDoc('${doc.id}', this)">
-                            <span>He llegit i <strong>accepte</strong> aquest consentiment informat.</span>
+                            <span>He leído y <strong>acepto</strong> este consentimiento informado.</span>
                         </label>
                     </div>
                 </div>
@@ -943,16 +903,13 @@
             list.appendChild(item);
         });
 
-        // Auto-open first document
         toggleDoc(DOCUMENTS[0].id);
     }
 
     function toggleDoc(id) {
         const item = document.getElementById(`doc-${id}`);
         const isOpen = item.classList.contains('open');
-        // Close all
         document.querySelectorAll('.consent-item').forEach(el => el.classList.remove('open'));
-        // Open this one (if it wasn't open)
         if (!isOpen) item.classList.add('open');
     }
 
@@ -964,7 +921,6 @@
             item.classList.add('signed');
             numEl.textContent = '✓';
             acceptedCount++;
-            // Close this doc and open next
             item.classList.remove('open');
             const currentIdx = DOCUMENTS.findIndex(d => d.id === id);
             const nextDoc = DOCUMENTS[currentIdx + 1];
@@ -1002,11 +958,9 @@
     // SIGNATURE PAD
     // ===========================
     function initSignaturePad() {
-        if (signaturePad) return; // already initialized
+        if (signaturePad) return;
         const canvas = document.getElementById('signatureCanvas');
         const wrapper = document.getElementById('signatureWrapper');
-
-        // Set canvas size to match display size
         canvas.width = wrapper.clientWidth;
         canvas.height = 160;
 
@@ -1022,9 +976,7 @@
             wrapper.classList.add('has-sig');
         });
 
-        signaturePad.addEventListener('afterUpdateStroke', () => {
-            checkCanSubmit();
-        });
+        signaturePad.addEventListener('afterUpdateStroke', () => { checkCanSubmit(); });
     }
 
     function clearSignature() {
@@ -1036,33 +988,29 @@
     }
 
     function checkCanSubmit() {
-        const btn = document.getElementById('btnSubmit');
-        const canSubmit = signaturePad && !signaturePad.isEmpty() && acceptedCount === TOTAL_DOCS;
-        btn.disabled = !canSubmit;
+        document.getElementById('btnSubmit').disabled =
+            !signaturePad || signaturePad.isEmpty() || acceptedCount !== TOTAL_DOCS;
     }
 
     // ===========================
     // STEP 3: SUBMIT
     // ===========================
-    async function enviarConsentiments() {
+    async function enviarConsentimientos() {
         if (!signaturePad || signaturePad.isEmpty()) {
-            document.getElementById('submitError').textContent = 'Si us plau, dibuixa la teva firma primer.';
+            document.getElementById('submitError').textContent = 'Por favor, dibuja tu firma primero.';
             document.getElementById('submitError').classList.remove('hidden');
             return;
         }
 
         document.getElementById('submitError').classList.add('hidden');
-
-        const btn = document.getElementById('btnSubmit');
-        btn.disabled = true;
-        btn.textContent = 'Enviant...';
+        document.getElementById('btnSubmit').disabled = true;
+        document.getElementById('btnSubmit').textContent = 'Enviando...';
 
         showScreen('screenLoading');
-        document.getElementById('loadingMsg').textContent = 'Guardant la teva firma i generant el document...';
+        document.getElementById('loadingMsg').textContent = 'Guardando tu firma y generando el documento...';
 
         try {
             const signatureImage = signaturePad.toDataURL('image/png');
-            const now = new Date().toISOString();
 
             const resp = await fetch(WEBHOOK_URL, {
                 method: 'POST',
@@ -1075,28 +1023,28 @@
                     apellidos: patientData.lname || patientData.apellidos || '',
                     signature_image: signatureImage,
                     documents_signed: DOCUMENTS.map(d => d.id),
-                    timestamp: now,
-                    fecha_firma: new Date().toLocaleDateString('ca-ES')
+                    timestamp: new Date().toISOString(),
+                    fecha_firma: new Date().toLocaleDateString('es-ES')
                 })
             });
 
             const data = await resp.json();
 
             if (data && data.success) {
-                const today = new Date().toLocaleDateString('ca-ES', { day: '2-digit', month: '2-digit', year: 'numeric' });
-                document.getElementById('successDate').textContent = today;
+                document.getElementById('successDate').textContent =
+                    new Date().toLocaleDateString('es-ES', { day: '2-digit', month: '2-digit', year: 'numeric' });
                 showScreen('screenSuccess');
             } else {
-                throw new Error(data?.message || 'Error desconegut');
+                throw new Error(data?.message || 'Error desconocido');
             }
 
         } catch (err) {
             showScreen('screenDocuments');
-            document.getElementById('submitError').textContent = 'Ha hagut un error en enviar. Torna-ho a intentar o contacta amb la clínica.';
+            document.getElementById('submitError').textContent = 'Ha habido un error al enviar. Vuelve a intentarlo o contacta con la clínica.';
             document.getElementById('submitError').classList.remove('hidden');
             const btn = document.getElementById('btnSubmit');
             btn.disabled = false;
-            btn.innerHTML = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg> Firmar i enviar tots els documents`;
+            btn.innerHTML = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg> Firmar y enviar todos los documentos`;
             console.error(err);
         }
     }
@@ -1106,21 +1054,15 @@
     // ===========================
     function showScreen(id) {
         ['screenIdentify', 'screenLoading', 'screenAlreadySigned', 'screenDocuments', 'screenSuccess']
-            .forEach(s => {
-                const el = document.getElementById(s);
-                if (s === id) el.classList.remove('hidden');
-                else el.classList.add('hidden');
-            });
+            .forEach(s => document.getElementById(s).classList.toggle('hidden', s !== id));
     }
 
     function formatDate(dateStr) {
         if (!dateStr) return null;
-        try {
-            return new Date(dateStr).toLocaleDateString('ca-ES', { day: '2-digit', month: '2-digit', year: 'numeric' });
-        } catch { return dateStr; }
+        try { return new Date(dateStr).toLocaleDateString('es-ES', { day: '2-digit', month: '2-digit', year: 'numeric' }); }
+        catch { return dateStr; }
     }
 
-    // Handle canvas resize
     window.addEventListener('resize', () => {
         if (!signaturePad) return;
         const canvas = document.getElementById('signatureCanvas');
