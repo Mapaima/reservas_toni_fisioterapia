@@ -799,18 +799,6 @@
 
         showScreen('screenLoading');
 
-        // ── DEMO MODE: si se abre localmente (file://) salta el webhook ──
-        const isLocal = window.location.protocol === 'file:';
-        if (isLocal) {
-            await new Promise(r => setTimeout(r, 800));
-            patientData = { dni, fname: 'Paciente', lname: 'Demo', patientId: 'DEMO', already_signed: false };
-            renderPatientInfo();
-            renderDocuments();
-            showScreen('screenDocuments');
-            return;
-        }
-        // ─────────────────────────────────────────────────────────────────
-
         try {
             const resp = await fetch(WEBHOOK_URL, {
                 method: 'POST',
