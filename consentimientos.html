@@ -8,6 +8,7 @@
     <meta name="description" content="Firma los consentimientos informados de Toni Vercher Fisioterapia de forma segura y digital.">
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/signature_pad@4.1.7/dist/signature_pad.umd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.2/dist/jspdf.umd.min.js"></script>
     <style>
         :root {
             --primary-color: #1b8a7b;
@@ -1000,6 +1001,12 @@
         try {
             const signatureImage = signaturePad.toDataURL('image/png');
 
+            // Generate one PDF per consent document client-side
+            const pdfs = {};
+            for (const docData of DOCUMENTS) {
+                pdfs[docData.id] = buildConsentPDF(docData, patientData, signatureImage);
+            }
+
             const resp = await fetch(WEBHOOK_URL, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -1011,6 +1018,7 @@
                     apellidos: patientData.lname || patientData.apellidos || '',
                     signature_image: signatureImage,
                     documents_signed: DOCUMENTS.map(d => d.id),
+                    pdfs: pdfs,
                     timestamp: new Date().toISOString(),
                     fecha_firma: new Date().toLocaleDateString('es-ES')
                 })
@@ -1035,6 +1043,152 @@
             btn.innerHTML = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg> Firmar y enviar todos los documentos`;
             console.error(err);
         }
+    }
+
+    // ===========================
+    // PDF GENERATION
+    // ===========================
+    function cleanForPDF(text) {
+        return text
+            .normalize('NFC')
+            .replace(/­/g, '')
+            .replace(/ /g, ' ')
+            .replace(/​/g, '')
+            .replace(/‌/g, '')
+            .replace(/‍/g, '')
+            .replace(/﻿/g, '')
+            .replace(/['‘’ʼ]/g, "'")
+            .replace(/[“”]/g, '"')
+            .replace(/·/g, '.')
+            .replace(/–/g, '-')
+            .replace(/—/g, '--')
+            .replace(/…/g, '...');
+    }
+
+    function parseDocBody(html) {
+        const parser = new DOMParser();
+        const dom = parser.parseFromString('<div>' + html + '</div>', 'text/html');
+        const container = dom.querySelector('div');
+        const blocks = [];
+        function walk(node) {
+            if (node.nodeType === Node.TEXT_NODE) {
+                const t = node.textContent.trim();
+                if (t) blocks.push({ type: 'p', text: cleanForPDF(t) });
+            } else if (node.tagName === 'P') {
+                const t = node.textContent.trim();
+                if (t) blocks.push({ type: 'p', text: cleanForPDF(t) });
+            } else if (node.tagName === 'H3') {
+                const t = node.textContent.trim();
+                if (t) blocks.push({ type: 'h3', text: cleanForPDF(t) });
+            } else if (node.tagName === 'UL') {
+                node.querySelectorAll('li').forEach(li => {
+                    const t = li.textContent.trim();
+                    if (t) blocks.push({ type: 'li', text: cleanForPDF(t) });
+                });
+            } else {
+                node.childNodes.forEach(walk);
+            }
+        }
+        container.childNodes.forEach(walk);
+        return blocks.filter(b => b.text);
+    }
+
+    function buildConsentPDF(docData, patient, signatureDataUrl) {
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
+        const W = 210, margin = 20, usable = W - margin * 2, lineH = 4.5;
+
+        const fullName = [patient.fname || patient.nombre || '', patient.lname || patient.apellidos || ''].join(' ').trim();
+        const today = new Date();
+        const dateStr = today.toLocaleDateString('es-ES', { day: '2-digit', month: '2-digit', year: 'numeric' });
+        const histNum = String(patient.pubpid || patient.pid || patient.patientId || '').padStart(4, '0');
+
+        // Header (top right)
+        doc.setFont('helvetica', 'normal');
+        doc.setFontSize(9);
+        doc.setTextColor(80);
+        doc.text(fullName, W - margin, 15, { align: 'right' });
+        doc.text('DNI: ' + patient.dni, W - margin, 19, { align: 'right' });
+        doc.text('Fecha: ' + dateStr + ' / Nº Historia: ' + histNum, W - margin, 23, { align: 'right' });
+
+        doc.setDrawColor(200);
+        doc.line(margin, 27, W - margin, 27);
+
+        // Title
+        doc.setFont('helvetica', 'bold');
+        doc.setFontSize(16);
+        doc.setTextColor(20);
+        const title = docData.title.replace(/Consentimiento\s+Informado\s*[·\-]\s*/i, '').toUpperCase();
+        doc.text(title, W / 2, 40, { align: 'center' });
+
+        // Content
+        let y = 52;
+        doc.setFontSize(10);
+        const blocks = parseDocBody(docData.body);
+
+        function justifyLines(lines, x, maxW) {
+            for (let i = 0; i < lines.length; i++) {
+                if (y > 270) { doc.addPage(); y = 20; }
+                if (i < lines.length - 1) {
+                    doc.text([lines[i], ''], x, y, { align: 'justify', maxWidth: maxW });
+                } else {
+                    doc.text(lines[i], x, y);
+                }
+                y += lineH;
+            }
+        }
+
+        for (const block of blocks) {
+            if (block.type === 'h3') {
+                y += 2;
+                doc.setFont('helvetica', 'bold');
+                doc.setTextColor(20);
+                const lines = doc.splitTextToSize(block.text, usable);
+                for (const line of lines) {
+                    if (y > 270) { doc.addPage(); y = 20; }
+                    doc.text(line, margin, y);
+                    y += lineH;
+                }
+                y += 2;
+            } else if (block.type === 'li') {
+                doc.setFont('helvetica', 'normal');
+                doc.setTextColor(30);
+                const indent = 5, bw = usable - indent;
+                const lines = doc.splitTextToSize(block.text, bw);
+                if (y > 270) { doc.addPage(); y = 20; }
+                doc.text('•', margin, y);
+                justifyLines(lines, margin + indent, bw);
+                y += 1;
+            } else {
+                doc.setFont('helvetica', 'normal');
+                doc.setTextColor(30);
+                const lines = doc.splitTextToSize(block.text, usable);
+                justifyLines(lines, margin, usable);
+                y += 3;
+            }
+        }
+
+        // Signature
+        if (y > 245) { doc.addPage(); y = 20; }
+        y += 8;
+        const sigDate = today.toLocaleDateString('es-ES', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+        doc.setFont('helvetica', 'normal');
+        doc.setFontSize(10);
+        doc.setTextColor(30);
+        doc.text('En Enguera, a ' + sigDate + '.', margin, y);
+        y += 10;
+        doc.setFont('helvetica', 'bold');
+        doc.setFontSize(9);
+        doc.text('Firmantes:', margin, y);
+        y += 6;
+        if (signatureDataUrl) {
+            try { doc.addImage(signatureDataUrl, 'PNG', margin, y, 60, 20); } catch(e) {}
+            y += 24;
+        }
+        doc.setFont('helvetica', 'normal');
+        doc.text(fullName, margin, y);
+
+        return doc.output('datauristring');
     }
 
     // ===========================
