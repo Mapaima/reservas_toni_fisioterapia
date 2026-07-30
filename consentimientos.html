@@ -1093,6 +1093,22 @@
         return blocks.filter(b => b.text);
     }
 
+    function substitutePatientData(text, patient) {
+        const today = new Date();
+        const dateStr = today.toLocaleDateString('es-ES', { day: '2-digit', month: '2-digit', year: 'numeric' });
+        const histNum = String(patient.pubpid || patient.pid || patient.patientId || '').padStart(4, '0');
+        const fullName = [patient.fname || patient.nombre || '', patient.lname || patient.apellidos || ''].join(' ').trim();
+        return text
+            .replace(/\{\{NOMBRE_PACIENTE\}\}/g, patient.fname || patient.nombre || '')
+            .replace(/\{\{APELLIDOS_PACIENTE\}\}/g, patient.lname || patient.apellidos || '')
+            .replace(/\{\{NOMBRE_COMPLETO\}\}/g, fullName)
+            .replace(/\{\{NIF_PACIENTE\}\}/g, patient.dni || patient.ss || '')
+            .replace(/\{\{DNI_PACIENTE\}\}/g, patient.dni || patient.ss || '')
+            .replace(/\{\{FECHA_FIRMA\}\}/g, dateStr)
+            .replace(/\{\{DOMICILIO_PACIENTE\}\}/g, patient.street || '')
+            .replace(/\{\{NUM_HISTORIA\}\}/g, histNum);
+    }
+
     function buildConsentPDF(docData, patient, signatureDataUrl) {
         const { jsPDF } = window.jspdf;
         const doc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
@@ -1124,7 +1140,8 @@
         // Content
         let y = 52;
         doc.setFontSize(10);
-        const blocks = parseDocBody(docData.body);
+        const substitutedBody = substitutePatientData(docData.body, patient);
+        const blocks = parseDocBody(substitutedBody);
 
         function justifyLines(lines, x, maxW) {
             for (let i = 0; i < lines.length; i++) {
