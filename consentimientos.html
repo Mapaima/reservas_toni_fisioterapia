@@ -530,6 +530,12 @@
                     </div>
                 </div>
 
+                <!-- Minor toggle -->
+                <label class="consent-check-label" style="margin-bottom:20px; font-size:13px; color:#ccc;">
+                    <input type="checkbox" class="consent-checkbox" id="chkMinor" onchange="onMinorToggle(this)">
+                    <span>El paciente es <strong>menor de edad</strong> — actúo como tutor/representante legal</span>
+                </label>
+
                 <!-- Progress -->
                 <div class="progress-section">
                     <div class="progress-header">
@@ -543,6 +549,30 @@
 
                 <!-- Consent list -->
                 <div class="consent-list" id="consentList"></div>
+
+                <!-- Tutor section (minor patients) -->
+                <div id="tutorSection" style="display:none; margin-bottom:20px;">
+                    <div class="identify-card" style="background:rgba(241,196,15,0.05); border-color:rgba(241,196,15,0.25);">
+                        <div style="font-size:13px; font-weight:700; color:#f1c40f; text-transform:uppercase; letter-spacing:1px; margin-bottom:14px;">
+                            👨‍👩‍👧 Datos del tutor legal
+                        </div>
+                        <p style="font-size:13px; color:var(--text-secondary); margin-bottom:16px; line-height:1.5;">
+                            Al ser el paciente menor de edad, introduce los datos del tutor o representante legal que firma este consentimiento.
+                        </p>
+                        <div style="margin-bottom:12px;">
+                            <label for="tutorNombre">Nombre del tutor</label>
+                            <input type="text" id="tutorNombre" placeholder="Nombre">
+                        </div>
+                        <div style="margin-bottom:12px;">
+                            <label for="tutorApellidos">Apellidos del tutor</label>
+                            <input type="text" id="tutorApellidos" placeholder="Apellidos">
+                        </div>
+                        <div>
+                            <label for="tutorDni">DNI / NIE del tutor</label>
+                            <input type="text" id="tutorDni" placeholder="Ej. 12345678X" maxlength="12">
+                        </div>
+                    </div>
+                </div>
 
                 <!-- Signature section -->
                 <div class="signature-section" id="signatureSection" style="display:none;">
@@ -981,6 +1011,10 @@
             !signaturePad || signaturePad.isEmpty() || acceptedCount !== TOTAL_DOCS;
     }
 
+    function onMinorToggle(checkbox) {
+        document.getElementById('tutorSection').style.display = checkbox.checked ? 'block' : 'none';
+    }
+
     // ===========================
     // STEP 3: SUBMIT
     // ===========================
@@ -1000,6 +1034,18 @@
 
         try {
             const signatureImage = signaturePad.toDataURL('image/png');
+
+            // Attach tutor data to patientData if minor
+            const isMinor = document.getElementById('chkMinor').checked;
+            if (isMinor) {
+                patientData.tutor_nombre    = document.getElementById('tutorNombre').value.trim();
+                patientData.tutor_apellidos = document.getElementById('tutorApellidos').value.trim();
+                patientData.tutor_dni       = document.getElementById('tutorDni').value.trim().toUpperCase();
+            } else {
+                patientData.tutor_nombre    = '';
+                patientData.tutor_apellidos = '';
+                patientData.tutor_dni       = '';
+            }
 
             // Generate one PDF per consent document client-side
             const pdfs = {};
@@ -1106,7 +1152,10 @@
             .replace(/\{\{DNI_PACIENTE\}\}/g, patient.dni || patient.ss || '')
             .replace(/\{\{FECHA_FIRMA\}\}/g, dateStr)
             .replace(/\{\{DOMICILIO_PACIENTE\}\}/g, patient.street || '')
-            .replace(/\{\{NUM_HISTORIA\}\}/g, histNum);
+            .replace(/\{\{NUM_HISTORIA\}\}/g, histNum)
+            .replace(/\{\{NOMBRE_TUTOR\}\}/g, patient.tutor_nombre || '')
+            .replace(/\{\{APELLIDOS_TUTOR\}\}/g, patient.tutor_apellidos || '')
+            .replace(/\{\{DNI_TUTOR\}\}/g, patient.tutor_dni || '');
     }
 
     function buildConsentPDF(docData, patient, signatureDataUrl) {
