@@ -434,7 +434,16 @@
         const token = urlParams.get('token');
         const email = urlParams.get('email');
 
+        // Detectar enlace roto al cargar la página (no esperar al click)
+        if (!eid || !token) {
+            errorMessage.textContent = 'Enlace inválido o caducado. Por favor, abre el enlace directamente desde el email. Si el problema persiste, contacta con la clínica.';
+            errorMessage.classList.remove('hidden');
+            checkbox.disabled = true;
+            btnSecure.disabled = true;
+        }
+
         checkbox.addEventListener('change', function() {
+            if (!eid || !token) return;
             btnSecure.disabled = !this.checked;
         });
 
