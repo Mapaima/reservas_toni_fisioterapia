@@ -1092,6 +1092,15 @@
                     <label>Email</label>
                     <input type="email" id="wl_email" required placeholder="Tu correo electrónico">
                 </div>
+                <div class="form-group" style="margin-bottom: 20px;">
+                    <label>Tratamiento</label>
+                    <select id="wl_tratamiento" required>
+                        <option value="" disabled selected>Selecciona un tratamiento</option>
+                        <option value="sesion_fisioterapia">Sesión Fisioterapia</option>
+                        <option value="combinado">Combinado</option>
+                        <option value="bomba">Bomba de Vacío</option>
+                    </select>
+                </div>
                 
                 <div class="form-group" style="margin-bottom: 20px;">
                     <label style="display: flex; align-items: flex-start; cursor: pointer; text-transform: none; font-size: 14px; line-height: 1.4;">
@@ -1511,7 +1520,10 @@
                         action: 'join_waitlist',
                         especialista: document.getElementById('wl_cualquiera').checked ? 'cualquiera' : selectEspecialista.value,
                         nombre: document.getElementById('wl_nombre').value,
-                        email: document.getElementById('wl_email').value
+                        apellidos: document.getElementById('wl_apellidos').value,
+                        telefono: document.getElementById('wl_telefono').value,
+                        email: document.getElementById('wl_email').value,
+                        tratamiento: document.getElementById('wl_tratamiento').value
                     })
                 });
                 document.getElementById('waitlistModal').classList.remove('active');
