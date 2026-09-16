@@ -371,7 +371,7 @@
                     <div class="policy-item">
                         <div class="policy-item-icon check">✓</div>
                         <div class="policy-item-text">
-                            <h3>Cancelación con más de 24 horas de antelación</h3>
+                            <h3>Cancelación con más de 20 horas de antelación</h3>
                             <p>Sin cargo. Puedes cancelar libremente desde tu área de paciente o contactando con la clínica.</p>
                         </div>
                     </div>
@@ -381,7 +381,7 @@
                             <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
                         </div>
                         <div class="policy-item-text">
-                            <h3>Entre 24 y 15 horas de antelación</h3>
+                            <h3>Entre 20 y 10 horas de antelación</h3>
                             <p>Se cargará el <strong>50% del importe de la sesión</strong> como penalización por cancelación tardía.</p>
                         </div>
                     </div>
@@ -391,17 +391,7 @@
                             <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
                         </div>
                         <div class="policy-item-text">
-                            <h3>Entre 15 y 10 horas de antelación</h3>
-                            <p>Se cargará el <strong>60% del importe de la sesión</strong> como penalización por cancelación tardía.</p>
-                        </div>
-                    </div>
-
-                    <div class="policy-item">
-                        <div class="policy-item-icon clock">
-                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
-                        </div>
-                        <div class="policy-item-text">
-                            <h3>Entre 10 y 5 horas de antelación</h3>
+                            <h3>Entre 10 y 2 horas de antelación</h3>
                             <p>Se cargará el <strong>75% del importe de la sesión</strong> como penalización por cancelación tardía.</p>
                         </div>
                     </div>
@@ -409,8 +399,8 @@
                     <div class="policy-item">
                         <div class="policy-item-icon alert">!</div>
                         <div class="policy-item-text">
-                            <h3>No presentación sin aviso previo</h3>
-                            <p>Se cargará el <strong>100% del importe de la sesión</strong> por ausencia no comunicada.</p>
+                            <h3>Menos de 2 horas o no presentación sin aviso</h3>
+                            <p>Se cargará el <strong>100% del importe de la sesión</strong> por ausencia o cancelación de última hora.</p>
                         </div>
                     </div>
                 </div>
@@ -441,7 +431,7 @@
     <script>
         const CONFIG = {
             // Reemplaza esto con el Webhook que procesará las tarjetas manuales
-            WEBHOOK_URL: 'https://app-toni-fisioterapia-openemr.ahgpie.easypanel.host/interface/modules/custom_modules/api_cobro_manual.php'
+            WEBHOOK_URL: 'https://app-toni-fisioterapia-n8n.ahgpie.easypanel.host/webhook/cobro-manual'
         };
 
         const checkbox = document.getElementById('policy_accept');
@@ -454,16 +444,7 @@
         const token = urlParams.get('token');
         const email = urlParams.get('email');
 
-        // Detectar enlace roto al cargar la página (no esperar al click)
-        if (!eid || !token) {
-            errorMessage.textContent = 'Enlace inválido o caducado. Por favor, abre el enlace directamente desde el email. Si el problema persiste, contacta con la clínica.';
-            errorMessage.classList.remove('hidden');
-            checkbox.disabled = true;
-            btnSecure.disabled = true;
-        }
-
         checkbox.addEventListener('change', function() {
-            if (!eid || !token) return;
             btnSecure.disabled = !this.checked;
         });
 
