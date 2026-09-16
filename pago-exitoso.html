@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cita Confirmada | Toni Vercher Fisioterapia</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #1b8a7b;
+            --primary-hover: #156d61;
+            --secondary-color: #8d735b;
+            --success-color: #2ecc71;
+            --background-dark: #0f1211;
+            --surface-color: #1a1e1d;
+            --text-primary: #ffffff;
+            --text-secondary: #a0a8a7;
+            --glass-border: rgba(27, 138, 123, 0.2);
+            --glass-bg: rgba(26, 30, 29, 0.85);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            background-color: var(--background-dark);
+            background-image:
+                radial-gradient(circle at 15% 50%, rgba(27, 138, 123, 0.08) 0%, transparent 35%),
+                radial-gradient(circle at 85% 30%, rgba(141, 115, 91, 0.05) 0%, transparent 35%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            color: var(--text-primary);
+        }
+
+        .container {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            max-width: 480px;
+            width: 100%;
+            border-radius: 28px;
+            border: 1px solid var(--glass-border);
+            box-shadow: 0 40px 100px -20px rgba(0, 0, 0, 0.8);
+            overflow: hidden;
+            position: relative;
+            text-align: center;
+        }
+
+        .container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, var(--success-color), transparent);
+        }
+
+        .header {
+            padding: 45px 35px 15px;
+        }
+
+        .brand-logo {
+            font-size: 1.3rem;
+            font-weight: 700;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            margin-bottom: 25px;
+            color: white;
+            display: inline-block;
+            border-bottom: 1px solid var(--glass-border);
+            padding-bottom: 5px;
+        }
+
+        .brand-logo span {
+            font-weight: 300;
+            display: block;
+            font-size: 0.85rem;
+            letter-spacing: 5px;
+            margin-top: 5px;
+            color: var(--secondary-color);
+        }
+
+        .success-icon-wrapper {
+            width: 86px;
+            height: 86px;
+            border-radius: 50%;
+            background: rgba(46, 204, 113, 0.12);
+            border: 2px solid rgba(46, 204, 113, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 10px auto 25px;
+            box-shadow: 0 0 35px rgba(46, 204, 113, 0.2);
+            animation: pulse 2.5s infinite;
+        }
+
+        .success-icon {
+            width: 44px;
+            height: 44px;
+            color: var(--success-color);
+        }
+
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(46, 204, 113, 0.3); }
+            70% { box-shadow: 0 0 0 16px rgba(46, 204, 113, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(46, 204, 113, 0); }
+        }
+
+        .content {
+            padding: 0 35px 45px;
+        }
+
+        h1 {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 12px;
+            color: #ffffff;
+            letter-spacing: 0.5px;
+        }
+
+        p.desc {
+            font-size: 15px;
+            color: var(--text-secondary);
+            line-height: 1.6;
+            margin-bottom: 26px;
+        }
+
+        .info-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 18px;
+            padding: 18px 20px;
+            text-align: left;
+            margin-bottom: 28px;
+        }
+
+        .info-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 14px;
+            color: #d6dedc;
+            margin-bottom: 10px;
+        }
+
+        .info-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .info-item svg {
+            width: 18px;
+            height: 18px;
+            color: var(--primary-color);
+            flex-shrink: 0;
+        }
+
+        .btn-home {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            width: 100%;
+            background: linear-gradient(135deg, var(--primary-color) 0%, #137363 100%);
+            color: white;
+            padding: 16px 24px;
+            border-radius: 16px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 15px;
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 10px 25px rgba(27, 138, 123, 0.35);
+            transition: all 0.3s ease;
+        }
+
+        .btn-home:hover {
+            background: linear-gradient(135deg, #1fa391 0%, #178572 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 15px 30px rgba(27, 138, 123, 0.45);
+        }
+
+        .footer-note {
+            margin-top: 20px;
+            font-size: 12px;
+            color: #65706e;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="brand-logo">
+                Toni Vercher
+                <span>Fisioterapia</span>
+            </div>
+
+            <div class="success-icon-wrapper">
+                <svg class="success-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="20 6 9 17 4 12"></polyline>
+                </svg>
+            </div>
+
+            <h1>¡Cita Asegurada!</h1>
+            <p class="desc">Tus datos y tarjeta de garantía han sido registrados con éxito en nuestra pasarela segura.</p>
+        </div>
+
+        <div class="content">
+            <div class="info-card">
+                <div class="info-item">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                    <span>Sin cargos ahora. Solo garantía de asistencia.</span>
+                </div>
+                <div class="info-item">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+                    <span>Recibirás recordatorios antes de tu sesión.</span>
+                </div>
+                <div class="info-item">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                    <span>¡Te esperamos en la clínica!</span>
+                </div>
+            </div>
+
+            <a href="https://tonivercherfisioterapia.com" class="btn-home">
+                Finalizar y cerrar
+            </a>
+
+            <div class="footer-note">
+                Ya puedes cerrar esta pestaña si lo deseas.
+            </div>
+        </div>
+    </div>
+</body>
+</html>
