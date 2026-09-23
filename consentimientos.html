@@ -1052,7 +1052,7 @@
                     nombre: patientData.fname || patientData.nombre || '',
                     apellidos: patientData.lname || patientData.apellidos || '',
                     signature_image: signatureImage,
-                    documents_signed: activeDocuments.map(d => d.db_id || d.id),
+                    documents_signed: activeDocuments.map(d => d.id),
                     timestamp: new Date().toISOString(),
                     fecha_firma: new Date().toLocaleDateString('es-ES')
                 })
