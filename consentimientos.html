@@ -8,7 +8,6 @@
     <meta name="description" content="Firma los consentimientos informados de Toni Vercher Fisioterapia de forma segura y digital.">
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/signature_pad@4.1.7/dist/signature_pad.umd.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.2/dist/jspdf.umd.min.js"></script>
     <style>
         :root {
             --primary-color: #1b8a7b;
@@ -366,14 +365,15 @@
 
         .signature-wrapper {
             position: relative;
-            border: 2px dashed rgba(27, 138, 123, 0.4);
+            border: 2px dashed rgba(27, 138, 123, 0.6);
             border-radius: 16px;
             overflow: hidden;
-            background: rgba(255,255,255,0.02);
-            transition: border-color 0.3s ease;
+            background: #ffffff;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
         }
 
-        .signature-wrapper.has-sig { border-color: var(--primary-color); border-style: solid; }
+        .signature-wrapper.has-sig { border-color: #2ecc71; border-style: solid; }
 
         .signature-hint {
             position: absolute;
@@ -385,30 +385,36 @@
         }
 
         .signature-hint.hidden-hint { opacity: 0; }
-        .signature-hint .hint-icon { font-size: 28px; display: block; margin-bottom: 8px; opacity: 0.3; }
-        .signature-hint p { font-size: 13px; color: var(--text-secondary); opacity: 0.6; }
+        .signature-hint .hint-icon { font-size: 28px; display: block; margin-bottom: 6px; opacity: 0.5; }
+        .signature-hint p { font-size: 13px; color: #555555; font-weight: 500; }
 
         #signatureCanvas {
             width: 100%; height: 160px;
             display: block; cursor: crosshair; touch-action: none;
+            background: #ffffff;
         }
 
         .signature-actions {
             display: flex; justify-content: flex-end;
             padding: 8px 12px;
-            border-top: 1px solid rgba(255,255,255,0.04);
+            background: #f8f9fa;
+            border-top: 1px solid #e9ecef;
         }
 
         .btn-clear-sig {
-            background: transparent !important; border: none !important;
-            color: var(--text-secondary) !important; font-size: 12px !important;
-            padding: 6px 10px !important; margin: 0 !important; width: auto !important;
+            background: rgba(0, 0, 0, 0.05) !important; border: 1px solid rgba(0, 0, 0, 0.1) !important;
+            color: #444444 !important; font-size: 12px !important;
+            border-radius: 8px !important;
+            padding: 6px 12px !important; margin: 0 !important; width: auto !important;
             text-transform: none !important; letter-spacing: 0 !important;
-            font-weight: 500 !important; box-shadow: none !important; cursor: pointer !important;
+            font-weight: 600 !important; box-shadow: none !important; cursor: pointer !important;
         }
 
         .btn-clear-sig:hover:not(:disabled) {
-            color: white !important; transform: none !important; box-shadow: none !important;
+            background: rgba(231, 76, 60, 0.1) !important;
+            color: #e74c3c !important;
+            border-color: rgba(231, 76, 60, 0.3) !important;
+            transform: none !important; box-shadow: none !important;
         }
 
         /* --- CONFIRM META --- */
@@ -530,12 +536,6 @@
                     </div>
                 </div>
 
-                <!-- Minor toggle -->
-                <label class="consent-check-label" style="margin-bottom:20px; font-size:13px; color:#ccc;">
-                    <input type="checkbox" class="consent-checkbox" id="chkMinor" onchange="onMinorToggle(this)">
-                    <span>El paciente es <strong>menor de edad</strong> — actúo como tutor/representante legal</span>
-                </label>
-
                 <!-- Progress -->
                 <div class="progress-section">
                     <div class="progress-header">
@@ -549,30 +549,6 @@
 
                 <!-- Consent list -->
                 <div class="consent-list" id="consentList"></div>
-
-                <!-- Tutor section (minor patients) -->
-                <div id="tutorSection" style="display:none; margin-bottom:20px;">
-                    <div class="identify-card" style="background:rgba(241,196,15,0.05); border-color:rgba(241,196,15,0.25);">
-                        <div style="font-size:13px; font-weight:700; color:#f1c40f; text-transform:uppercase; letter-spacing:1px; margin-bottom:14px;">
-                            👨‍👩‍👧 Datos del tutor legal
-                        </div>
-                        <p style="font-size:13px; color:var(--text-secondary); margin-bottom:16px; line-height:1.5;">
-                            Al ser el paciente menor de edad, introduce los datos del tutor o representante legal que firma este consentimiento.
-                        </p>
-                        <div style="margin-bottom:12px;">
-                            <label for="tutorNombre">Nombre del tutor</label>
-                            <input type="text" id="tutorNombre" placeholder="Nombre">
-                        </div>
-                        <div style="margin-bottom:12px;">
-                            <label for="tutorApellidos">Apellidos del tutor</label>
-                            <input type="text" id="tutorApellidos" placeholder="Apellidos">
-                        </div>
-                        <div>
-                            <label for="tutorDni">DNI / NIE del tutor</label>
-                            <input type="text" id="tutorDni" placeholder="Ej. 12345678X" maxlength="12">
-                        </div>
-                    </div>
-                </div>
 
                 <!-- Signature section -->
                 <div class="signature-section" id="signatureSection" style="display:none;">
@@ -818,7 +794,7 @@
     let patientData = null;
     let signaturePad = null;
     let acceptedCount = 0;
-    const TOTAL_DOCS = DOCUMENTS.length;
+    let activeDocuments = DOCUMENTS;
 
     // ===========================
     // STEP 1: VERIFY
@@ -848,13 +824,21 @@
 
             patientData = { ...data, dni };
 
-            if (data.already_signed) {
+            // Obtener documentos que el paciente YA ha firmado previamente
+            const signedDocIds = data.signed_documents || data.signed_docs || data.documents_signed || [];
+
+            // Filtrar y mostrar ÚNICAMENTE los consentimientos que le FALTAN por firmar
+            activeDocuments = DOCUMENTS.filter(doc => !signedDocIds.includes(doc.id));
+
+            // Si ya ha firmado TODOS los documentos actuales
+            if (signedDocIds.length > 0 && activeDocuments.length === 0) {
                 document.getElementById('signedDate').textContent = formatDate(data.signed_date) || 'anteriormente';
                 showScreen('screenAlreadySigned');
                 return;
             }
 
-            renderPatientInfo();
+            // Si le falta alguno (o es nuevo paciente)
+            renderPatientInfo(signedDocIds.length > 0, activeDocuments.length);
             renderDocuments();
             showScreen('screenDocuments');
 
@@ -878,7 +862,7 @@
     // ===========================
     // STEP 2: RENDER DOCUMENTS
     // ===========================
-    function renderPatientInfo() {
+    function renderPatientInfo(hasPreviousSigns = false, pendingCount = 0) {
         const name = patientData.fname || patientData.nombre || '';
         const fullName = [name, patientData.lname || patientData.apellidos || ''].join(' ').trim() || 'Paciente';
         const initials = fullName.split(' ').map(w => w[0]).slice(0, 2).join('').toUpperCase();
@@ -887,6 +871,15 @@
         document.getElementById('patientName').textContent = fullName;
         document.getElementById('confirmName').textContent = fullName;
         document.getElementById('confirmDni').textContent = patientData.dni;
+
+        const subTextEl = document.querySelector('.welcome-text p');
+        if (subTextEl) {
+            if (hasPreviousSigns && pendingCount > 0) {
+                subTextEl.textContent = `Tienes ${pendingCount} nuevo(s) consentimiento(s) pendiente(s) de firma.`;
+            } else {
+                subTextEl.textContent = 'Lee y acepta cada uno de los documentos para poder firmar.';
+            }
+        }
 
         const today = new Date();
         document.getElementById('confirmDate').textContent =
@@ -898,7 +891,7 @@
         list.innerHTML = '';
         acceptedCount = 0;
 
-        DOCUMENTS.forEach((doc, idx) => {
+        activeDocuments.forEach((doc, idx) => {
             const item = document.createElement('div');
             item.className = 'consent-item';
             item.id = `doc-${doc.id}`;
@@ -922,11 +915,15 @@
             list.appendChild(item);
         });
 
-        toggleDoc(DOCUMENTS[0].id);
+        updateProgress();
+        if (activeDocuments.length > 0) {
+            toggleDoc(activeDocuments[0].id);
+        }
     }
 
     function toggleDoc(id) {
         const item = document.getElementById(`doc-${id}`);
+        if (!item) return;
         const isOpen = item.classList.contains('open');
         document.querySelectorAll('.consent-item').forEach(el => el.classList.remove('open'));
         if (!isOpen) item.classList.add('open');
@@ -941,14 +938,14 @@
             numEl.textContent = '✓';
             acceptedCount++;
             item.classList.remove('open');
-            const currentIdx = DOCUMENTS.findIndex(d => d.id === id);
-            const nextDoc = DOCUMENTS[currentIdx + 1];
+            const currentIdx = activeDocuments.findIndex(d => d.id === id);
+            const nextDoc = activeDocuments[currentIdx + 1];
             if (nextDoc && !document.getElementById(`chk-${nextDoc.id}`).checked) {
                 setTimeout(() => toggleDoc(nextDoc.id), 300);
             }
         } else {
             item.classList.remove('signed');
-            numEl.textContent = DOCUMENTS.findIndex(d => d.id === id) + 1;
+            numEl.textContent = activeDocuments.findIndex(d => d.id === id) + 1;
             acceptedCount--;
         }
 
@@ -957,14 +954,15 @@
     }
 
     function updateProgress() {
-        const pct = (acceptedCount / TOTAL_DOCS) * 100;
+        const total = activeDocuments.length;
+        const pct = total > 0 ? (acceptedCount / total) * 100 : 0;
         document.getElementById('progressBar').style.width = pct + '%';
-        document.getElementById('progressLabel').textContent = `${acceptedCount} / ${TOTAL_DOCS}`;
+        document.getElementById('progressLabel').textContent = `${acceptedCount} / ${total}`;
     }
 
     function checkIfAllAccepted() {
         const sigSection = document.getElementById('signatureSection');
-        if (acceptedCount === TOTAL_DOCS) {
+        if (acceptedCount === activeDocuments.length && activeDocuments.length > 0) {
             sigSection.style.display = 'block';
             sigSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
             initSignaturePad();
@@ -984,10 +982,10 @@
         canvas.height = 160;
 
         signaturePad = new SignaturePad(canvas, {
-            backgroundColor: 'rgba(0,0,0,0)',
+            backgroundColor: '#ffffff',
             penColor: '#000000',
-            minWidth: 0.5,
-            maxWidth: 1.5,
+            minWidth: 1.0,
+            maxWidth: 2.5,
         });
 
         signaturePad.addEventListener('beginStroke', () => {
@@ -1008,11 +1006,7 @@
 
     function checkCanSubmit() {
         document.getElementById('btnSubmit').disabled =
-            !signaturePad || signaturePad.isEmpty() || acceptedCount !== TOTAL_DOCS;
-    }
-
-    function onMinorToggle(checkbox) {
-        document.getElementById('tutorSection').style.display = checkbox.checked ? 'block' : 'none';
+            !signaturePad || signaturePad.isEmpty() || acceptedCount !== activeDocuments.length;
     }
 
     // ===========================
@@ -1035,24 +1029,6 @@
         try {
             const signatureImage = signaturePad.toDataURL('image/png');
 
-            // Attach tutor data to patientData if minor
-            const isMinor = document.getElementById('chkMinor').checked;
-            if (isMinor) {
-                patientData.tutor_nombre    = document.getElementById('tutorNombre').value.trim();
-                patientData.tutor_apellidos = document.getElementById('tutorApellidos').value.trim();
-                patientData.tutor_dni       = document.getElementById('tutorDni').value.trim().toUpperCase();
-            } else {
-                patientData.tutor_nombre    = '';
-                patientData.tutor_apellidos = '';
-                patientData.tutor_dni       = '';
-            }
-
-            // Generate one PDF per consent document client-side
-            const pdfs = {};
-            for (const docData of DOCUMENTS) {
-                pdfs[docData.id] = buildConsentPDF(docData, patientData, signatureImage);
-            }
-
             const resp = await fetch(WEBHOOK_URL, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -1063,8 +1039,7 @@
                     nombre: patientData.fname || patientData.nombre || '',
                     apellidos: patientData.lname || patientData.apellidos || '',
                     signature_image: signatureImage,
-                    documents_signed: DOCUMENTS.map(d => d.id),
-                    pdfs: pdfs,
+                    documents_signed: activeDocuments.map(d => d.id),
                     timestamp: new Date().toISOString(),
                     fecha_firma: new Date().toLocaleDateString('es-ES')
                 })
@@ -1089,172 +1064,6 @@
             btn.innerHTML = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg> Firmar y enviar todos los documentos`;
             console.error(err);
         }
-    }
-
-    // ===========================
-    // PDF GENERATION
-    // ===========================
-    function cleanForPDF(text) {
-        return text
-            .normalize('NFC')
-            .replace(/­/g, '')
-            .replace(/ /g, ' ')
-            .replace(/​/g, '')
-            .replace(/‌/g, '')
-            .replace(/‍/g, '')
-            .replace(/﻿/g, '')
-            .replace(/['‘’ʼ]/g, "'")
-            .replace(/[“”]/g, '"')
-            .replace(/·/g, '.')
-            .replace(/–/g, '-')
-            .replace(/—/g, '--')
-            .replace(/…/g, '...');
-    }
-
-    function parseDocBody(html) {
-        const parser = new DOMParser();
-        const dom = parser.parseFromString('<div>' + html + '</div>', 'text/html');
-        const container = dom.querySelector('div');
-        const blocks = [];
-        function walk(node) {
-            if (node.nodeType === Node.TEXT_NODE) {
-                const t = node.textContent.trim();
-                if (t) blocks.push({ type: 'p', text: cleanForPDF(t) });
-            } else if (node.tagName === 'P') {
-                const t = node.textContent.trim();
-                if (t) blocks.push({ type: 'p', text: cleanForPDF(t) });
-            } else if (node.tagName === 'H3') {
-                const t = node.textContent.trim();
-                if (t) blocks.push({ type: 'h3', text: cleanForPDF(t) });
-            } else if (node.tagName === 'UL') {
-                node.querySelectorAll('li').forEach(li => {
-                    const t = li.textContent.trim();
-                    if (t) blocks.push({ type: 'li', text: cleanForPDF(t) });
-                });
-            } else {
-                node.childNodes.forEach(walk);
-            }
-        }
-        container.childNodes.forEach(walk);
-        return blocks.filter(b => b.text);
-    }
-
-    function substitutePatientData(text, patient) {
-        const today = new Date();
-        const dateStr = today.toLocaleDateString('es-ES', { day: '2-digit', month: '2-digit', year: 'numeric' });
-        const histNum = String(patient.pubpid || patient.pid || patient.patientId || '').padStart(4, '0');
-        const fullName = [patient.fname || patient.nombre || '', patient.lname || patient.apellidos || ''].join(' ').trim();
-        return text
-            .replace(/\{\{NOMBRE_PACIENTE\}\}/g, patient.fname || patient.nombre || '')
-            .replace(/\{\{APELLIDOS_PACIENTE\}\}/g, patient.lname || patient.apellidos || '')
-            .replace(/\{\{NOMBRE_COMPLETO\}\}/g, fullName)
-            .replace(/\{\{NIF_PACIENTE\}\}/g, patient.dni || patient.ss || '')
-            .replace(/\{\{DNI_PACIENTE\}\}/g, patient.dni || patient.ss || '')
-            .replace(/\{\{FECHA_FIRMA\}\}/g, dateStr)
-            .replace(/\{\{DOMICILIO_PACIENTE\}\}/g, patient.street || '')
-            .replace(/\{\{NUM_HISTORIA\}\}/g, histNum)
-            .replace(/\{\{NOMBRE_TUTOR\}\}/g, patient.tutor_nombre || '')
-            .replace(/\{\{APELLIDOS_TUTOR\}\}/g, patient.tutor_apellidos || '')
-            .replace(/\{\{DNI_TUTOR\}\}/g, patient.tutor_dni || '');
-    }
-
-    function buildConsentPDF(docData, patient, signatureDataUrl) {
-        const { jsPDF } = window.jspdf;
-        const doc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
-        const W = 210, margin = 20, usable = W - margin * 2, lineH = 4.5;
-
-        const fullName = [patient.fname || patient.nombre || '', patient.lname || patient.apellidos || ''].join(' ').trim();
-        const today = new Date();
-        const dateStr = today.toLocaleDateString('es-ES', { day: '2-digit', month: '2-digit', year: 'numeric' });
-        const histNum = String(patient.pubpid || patient.pid || patient.patientId || '').padStart(4, '0');
-
-        // Header (top right)
-        doc.setFont('helvetica', 'normal');
-        doc.setFontSize(9);
-        doc.setTextColor(80);
-        doc.text(fullName, W - margin, 15, { align: 'right' });
-        doc.text('DNI: ' + patient.dni, W - margin, 19, { align: 'right' });
-        doc.text('Fecha: ' + dateStr + ' / Nº Historia: ' + histNum, W - margin, 23, { align: 'right' });
-
-        doc.setDrawColor(200);
-        doc.line(margin, 27, W - margin, 27);
-
-        // Title
-        doc.setFont('helvetica', 'bold');
-        doc.setFontSize(16);
-        doc.setTextColor(20);
-        const title = docData.title.replace(/Consentimiento\s+Informado\s*[·\-]\s*/i, '').toUpperCase();
-        doc.text(title, W / 2, 40, { align: 'center' });
-
-        // Content
-        let y = 52;
-        doc.setFontSize(10);
-        const substitutedBody = substitutePatientData(docData.body, patient);
-        const blocks = parseDocBody(substitutedBody);
-
-        function justifyLines(lines, x, maxW) {
-            for (let i = 0; i < lines.length; i++) {
-                if (y > 270) { doc.addPage(); y = 20; }
-                if (i < lines.length - 1) {
-                    doc.text([lines[i], ''], x, y, { align: 'justify', maxWidth: maxW });
-                } else {
-                    doc.text(lines[i], x, y);
-                }
-                y += lineH;
-            }
-        }
-
-        for (const block of blocks) {
-            if (block.type === 'h3') {
-                y += 2;
-                doc.setFont('helvetica', 'bold');
-                doc.setTextColor(20);
-                const lines = doc.splitTextToSize(block.text, usable);
-                for (const line of lines) {
-                    if (y > 270) { doc.addPage(); y = 20; }
-                    doc.text(line, margin, y);
-                    y += lineH;
-                }
-                y += 2;
-            } else if (block.type === 'li') {
-                doc.setFont('helvetica', 'normal');
-                doc.setTextColor(30);
-                const indent = 5, bw = usable - indent;
-                const lines = doc.splitTextToSize(block.text, bw);
-                if (y > 270) { doc.addPage(); y = 20; }
-                doc.text('•', margin, y);
-                justifyLines(lines, margin + indent, bw);
-                y += 1;
-            } else {
-                doc.setFont('helvetica', 'normal');
-                doc.setTextColor(30);
-                const lines = doc.splitTextToSize(block.text, usable);
-                justifyLines(lines, margin, usable);
-                y += 3;
-            }
-        }
-
-        // Signature
-        if (y > 245) { doc.addPage(); y = 20; }
-        y += 8;
-        const sigDate = today.toLocaleDateString('es-ES', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
-        doc.setFont('helvetica', 'normal');
-        doc.setFontSize(10);
-        doc.setTextColor(30);
-        doc.text('En Enguera, a ' + sigDate + '.', margin, y);
-        y += 10;
-        doc.setFont('helvetica', 'bold');
-        doc.setFontSize(9);
-        doc.text('Firmantes:', margin, y);
-        y += 6;
-        if (signatureDataUrl) {
-            try { doc.addImage(signatureDataUrl, 'PNG', margin, y, 60, 20); } catch(e) {}
-            y += 24;
-        }
-        doc.setFont('helvetica', 'normal');
-        doc.text(fullName, margin, y);
-
-        return doc.output('datauristring');
     }
 
     // ===========================
