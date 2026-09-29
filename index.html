@@ -1144,7 +1144,11 @@
                     existingPatientId = data.patientId;
                     rellenarPaciente(data, email);
                     document.getElementById('emailNotFoundMsg').classList.add('hidden');
-                    personalDataSection.querySelectorAll('.form-group').forEach(g => g.classList.add('hidden'));
+                    personalDataSection.querySelectorAll('.form-group').forEach(g => {
+                        g.classList.add('hidden');
+                        const input = g.querySelector('input, select, textarea');
+                        if (input) input.required = false;
+                    });
                     welcomePatientMessage.innerHTML = '<p style="margin-bottom:0;font-weight:600">✨ ¡Hola de nuevo! Te hemos reconocido por tu email. Solo elige tu tratamiento y cita.</p>';
                     welcomePatientMessage.classList.remove('hidden');
                 } else {
@@ -1152,6 +1156,13 @@
                     existingPatientId = null;
                     document.getElementById('emailNotFoundMsg').classList.remove('hidden');
                     welcomePatientMessage.classList.add('hidden');
+                    personalDataSection.querySelectorAll('.form-group').forEach(g => {
+                        g.classList.remove('hidden');
+                        const input = g.querySelector('input, select, textarea');
+                        if (input && ['nombre', 'primer_apellido', 'fechaNacimiento', 'genero', 'dni', 'telefono', 'ocupacion', 'direccion', 'codigo_postal', 'localidad', 'provincia', 'pais'].includes(input.id)) {
+                            input.required = true;
+                        }
+                    });
                 }
             } catch (e) { console.error('Error comprobando paciente', e); }
         });
@@ -1181,7 +1192,11 @@
                     existingPatientId = data.patientId;
                     rellenarPaciente(data, document.getElementById('email').value);
                     document.getElementById('dni').value = dni;
-                    personalDataSection.querySelectorAll('.form-group').forEach(g => g.classList.add('hidden'));
+                    personalDataSection.querySelectorAll('.form-group').forEach(g => {
+                        g.classList.add('hidden');
+                        const input = g.querySelector('input, select, textarea');
+                        if (input) input.required = false;
+                    });
                     welcomePatientMessage.innerHTML = '<p style="margin-bottom:0;font-weight:600">✨ ¡Te hemos encontrado por tu DNI! Actualizaremos tu ficha con tu nuevo email.</p>';
                     welcomePatientMessage.classList.remove('hidden');
                 }
